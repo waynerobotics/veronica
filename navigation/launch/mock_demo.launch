@@ -1,0 +1,54 @@
+<launch>
+
+
+
+<!-- #############    Sensors  ##############-->
+
+<node pkg="localization" type="encoders" name="encoders"/>
+<node pkg="localization" type="gps" name="gps"/>
+<node pkg="localization" type="imu" name="imu"/>
+<node pkg="localization" type="kalman_filter" name="kalman_filter"/>
+
+<node pkg="perception" type="lidar" name="lidar"/>
+<node pkg="perception" type="camera" name="camera"/>
+
+
+<node pkg="mapping" type="lane_detector" name="lane_detector"/>
+<node pkg="mapping" type="lane_to_laser" name="lane_to_laser"/>
+<node pkg="mapping" type="scan_merger" name="scan_merger"/>
+<node pkg="mapping" type="gmapper" name="gmapper"/>
+
+
+
+<node pkg="path_planning" type="costmap_2d" name="costmap_2d"/>
+<node pkg="path_planning" type="global_planner" name="global_planner"/>
+<node pkg="path_planning" type="local_planner" name="local_planner"/>
+<node pkg="path_planning" type="waypoint_generator" name="waypoint_generator"/>
+<node pkg="path_planning" type="drive_controller" name="drive_controller"/>
+
+
+
+
+
+
+
+
+
+
+
+
+<node pkg="rqt_graph" type="rqt_graph" name="rqt_graph"/>
+
+
+
+
+<!-- #############    Drive and Motor Controllers  ##############-->
+
+
+
+
+
+
+
+
+</launch>
