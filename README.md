@@ -2,7 +2,7 @@
 
 ROS workspace for the Wayne Robotics team's IGVC '21 robot: Veronica. The repo has has been re-organized into a workspace to contain all the core packages in accordance with the current software architecture [here](https://github.com/waynerobotics/vision/wiki/Software). The previous vision package has also been merged into this repo. For the older repo's commit history goto : [here](https://github.com/waynerobotics/vision/commits/master).
 
-[![version](https://img.shields.io/badge/version-beta-green.svg?style=plastic)](https://shields.io/)  [![wiki](https://img.shields.io/badge/wiki-passing-green.svg?style=plastic)](https://github.com/waynerobotics/vision/wiki/Software)  [![GitHub issues](https://img.shields.io/github/issues/waynerobotics/veronica?style=plastic)](https://github.com/waynerobotics/veronica/issues)
+[![version](https://img.shields.io/badge/version-beta-blue.svg?style=plastic)](https://shields.io/)  [![wiki](https://img.shields.io/badge/wiki-passing-blue.svg?style=plastic)](https://github.com/waynerobotics/vision/wiki/Software)  [![GitHub issues](https://img.shields.io/github/issues/waynerobotics/veronica?style=plastic)](https://github.com/waynerobotics/veronica/issues)
 
 Software | version
 --- | ---
