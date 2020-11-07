@@ -1,8 +1,18 @@
 # Veronica
 
-ROS workspace for the Wayne Robotics team's IGVC '21 robot: Veronica. The repo has has been re-organized into a workspace to contain all the core packages in accordance with the current software architecture [here](https://github.com/waynerobotics/vision/wiki/Software). The previous vision package has also been merged into this repo. For the older repo's commit history goto : [here](https://github.com/waynerobotics/vision/commits/master).
+ROS workspace for the Wayne Robotics team's IGVC '21 robot: Veronica. The repo has has been re-organized into a workspace to contain all the core packages in accordance with the current software architecture [here](https://github.com/waynerobotics/vision/wiki/Software). The previous vision package has also been merged into this repo. 
 
-[![version](https://img.shields.io/badge/version-beta-blue.svg?style=plastic)](https://shields.io/)  [![wiki](https://img.shields.io/badge/wiki-passing-blue.svg?style=plastic)](https://github.com/waynerobotics/vision/wiki/Software)  [![GitHub issues](https://img.shields.io/github/issues/waynerobotics/veronica?style=plastic)](https://github.com/waynerobotics/veronica/issues)
+Sub-modules | About
+--- | ---
+[Alexa](https://github.com/waynerobotics/alexa) | The robot's Alexa layer that runs roslaunch files from voice commands using Alexa skills and Flask-Ask
+[GUI](https://github.com/waynerobotics/Ego_GUI) | Simple GUI to launch different modes. Uses Tkinter/Qt in Python.
+[Motor Driver]() | The node on the Arduino that listens to command velocities and translates to differential-drive PWM output.
+[Status Indicator LED Strip]() | The RGB LED strip that shows the robot's status / diagnostics codes
+[Vision Master](https://github.com/ringo47/vision_master) and [Vision](https://github.com/waynerobotics/vision) | Initial vision workspaces that have been merged into this base repo.
+
+For initial vision workspaces, goto: [here](https://github.com/waynerobotics/vision/) or [here](https://github.com/ringo47/vision_master)
+
+[![version](https://img.shields.io/badge/version-beta-blue.svg?style=plastic)](https://shields.io/)  [![wiki](https://img.shields.io/badge/wiki-passing-blue.svg?style=plastic)](https://github.com/waynerobotics/vision/wiki)  [![GitHub issues](https://img.shields.io/github/issues/waynerobotics/veronica?style=plastic)](https://github.com/waynerobotics/veronica/issues)
 
 Software | version
 --- | ---
@@ -11,7 +21,7 @@ ROS | Melodic
 OpenCV | 3.4.1
 Python | 3.6
 
-### Commit code of conduct.
+### Before you commit.
 - [x] Github recently renamed the 'master' branch to 'main' branch so make sure to commit to the correct branch.
 - [x] Add a .gitignore file and add everything except /src and /media.
 - [x] The weight files for the neural networks will be large (~500MB for YOLOv3) and exceed file size for regular code commits. Install _Large file Storage_, Git LFS from [here](https://git-lfs.github.com/). 
