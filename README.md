@@ -10,7 +10,6 @@ Sub-modules | About
 [Status Indicator LED Strip]() | The RGB LED strip that shows the robot's status / diagnostics codes
 [Vision Master](https://github.com/ringo47/vision_master) and [Vision](https://github.com/waynerobotics/vision) | Initial vision workspaces that have been merged into this base repo.
 
-For initial vision workspaces, goto: [here](https://github.com/waynerobotics/vision/) or [here](https://github.com/ringo47/vision_master)
 
 [![version](https://img.shields.io/badge/version-beta-blue.svg?style=plastic)](https://shields.io/)  [![wiki](https://img.shields.io/badge/wiki-passing-blue.svg?style=plastic)](https://github.com/waynerobotics/vision/wiki)  [![GitHub issues](https://img.shields.io/github/issues/waynerobotics/veronica?style=plastic)](https://github.com/waynerobotics/veronica/issues)
 
