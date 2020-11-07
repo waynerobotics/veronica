@@ -4,10 +4,11 @@ ROS workspace for the Wayne Robotics team's IGVC '21 robot: Veronica. The repo h
 
 Sub-modules | About
 --- | ---
-[Alexa](https://github.com/waynerobotics/alexa) | The robot's Alexa layer that runs roslaunch files from voice commands using Alexa skills and Flask-Ask
+[Alexa](https://github.com/waynerobotics/alexa) | The robot's Alexa layer that runs roslaunch files from voice commands using Alexa skills and Flask-Ask.
 [GUI](https://github.com/waynerobotics/Ego_GUI) | Simple GUI to launch different modes. Uses Tkinter/Qt in Python.
-[Motor Driver]() | The node on the Arduino that listens to command velocities and translates to differential-drive PWM output.
-[Status Indicator LED Strip]() | The RGB LED strip that shows the robot's status / diagnostics codes
+[Motor Driver](https://github.com/waynerobotics/Motor-Drivers) | The node on the Arduino that listens to command velocities and translates to differential-drive PWM output.
+[Status Indicator LED Strip](https://github.com/waynerobotics/status_strip) | The RGB LED strip that shows the robot's status / diagnostics codes.
+[IGVC Solids](https://github.com/waynerobotics/igvc_solids) | Contains the CAD files of the 3D-Printed cases, machined uprights and others.
 [Vision Master](https://github.com/ringo47/vision_master) and [Vision](https://github.com/waynerobotics/vision) | Initial vision workspaces that have been merged into this base repo.
 
 
