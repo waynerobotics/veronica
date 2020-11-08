@@ -1,4 +1,15 @@
-# Veronica
+<h1 align='center'> Veronica </h1>
+<p align="center">
+    <a href="https://github.com/ringo47">
+      <img alt="version" src="https://img.shields.io/badge/version-beta_v1.1-blue.svg?style=plastic" />
+    </a>
+    <a href="https://github.com/ringo47">
+      <img src="https://img.shields.io/badge/veronica-wiki-00f6900.svg?style=plastic" />
+    </a>
+    <a href="https://github.com/ringo47">
+      <img alt="Issues" src="https://img.shields.io/github/issues/waynerobotics/veronica?style=plastic" />
+    </a>
+ </p>
 
 ROS workspace for the Wayne Robotics team's IGVC '21 robot: Veronica. The repo has has been re-organized into a workspace to contain all the core packages in accordance with the current software architecture [here](https://github.com/waynerobotics/vision/wiki/Software). The previous vision package has also been merged into this repo. 
 
@@ -12,7 +23,7 @@ Sub-modules | About
 [Vision Master](https://github.com/ringo47/vision_master) and [Vision](https://github.com/waynerobotics/vision) | Initial vision workspaces that have been merged into this base repo.
 
 
-[![version](https://img.shields.io/badge/version-beta-blue.svg?style=plastic)](https://shields.io/)  [![wiki](https://img.shields.io/badge/wiki-passing-blue.svg?style=plastic)](https://github.com/waynerobotics/vision/wiki)  [![GitHub issues](https://img.shields.io/github/issues/waynerobotics/veronica?style=plastic)](https://github.com/waynerobotics/veronica/issues)
+<!--[![version](https://img.shields.io/badge/version-beta-blue.svg?style=plastic)](https://shields.io/)  [![wiki](https://img.shields.io/badge/wiki-passing-blue.svg?style=plastic)](https://github.com/waynerobotics/vision/wiki)  [![GitHub issues](https://img.shields.io/github/issues/waynerobotics/veronica?style=plastic)](https://github.com/waynerobotics/veronica/issues)-->
 
 Software | version
 --- | ---
