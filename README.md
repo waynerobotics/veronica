@@ -1,12 +1,12 @@
 <h1 align='center'> Veronica </h1>
 <p align="center">
-    <a href="https://github.com/ringo47">
+    <a href="https://github.com/waynerobotics/veronica">
       <img alt="version" src="https://img.shields.io/badge/version-beta_v1.1-blue.svg?style=plastic" />
     </a>
-    <a href="https://github.com/ringo47">
+    <a href="https://github.com/waynerobotics/veronica/wiki">
       <img src="https://img.shields.io/badge/veronica-wiki-00f6900.svg?style=plastic" />
     </a>
-    <a href="https://github.com/ringo47">
+    <a href="https://github.com/waynerobotics/veronica/issues">
       <img alt="Issues" src="https://img.shields.io/github/issues/waynerobotics/veronica?style=plastic" />
     </a>
  </p>
