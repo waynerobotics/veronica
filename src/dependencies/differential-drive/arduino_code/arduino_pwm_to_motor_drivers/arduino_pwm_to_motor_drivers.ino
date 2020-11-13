@@ -13,31 +13,32 @@ ros::NodeHandle nh;
 
 bool get_requested_direction(int requested_pwm)
 {
-  return (requested_pwm > 0) ? 1:0;
+    return (requested_pwm > 0) ? 1 : 0;
 }
 
 //if PwmReq*PwmOut is negative, that means the wheel is switching
 //directions and we should bring to a stop before switching directions
 bool is_direction_change(int requested_pwm, int last_pwm)
 {
-    if(requested_pwm*last_pwm < 0)
+    if (requested_pwm * last_pwm < 0)
         return true;
     else
         return false;
 }
 
 //this section increments PWM changes instead of jarring/dangerous sudden big changes
-int get_new_pwm_out(int requestedPwm, int lastPwm){      
-     
-    if(is_direction_change(requestedPwm, lastPwm))
-        requestedPwm = 0;        
-      
+int get_new_pwm_out(int requestedPwm, int lastPwm)
+{
+
+    if (is_direction_change(requestedPwm, lastPwm))
+        requestedPwm = 0;
+
     if (abs(requestedPwm) > lastPwm)
         return lastPwm + PWM_CHANGE_INCREMENT;
     else if (abs(requestedPwm) < lastPwm)
-        return lastPwm-PWM_CHANGE_INCREMENT;
-    else 
-        return requestedPwm;   
+        return lastPwm - PWM_CHANGE_INCREMENT;
+    else
+        return requestedPwm;
 }
 
 //this happens when right wheel cmd message is recieved
@@ -51,7 +52,7 @@ void rightMessageCb(const std_msgs::Float32 &request_pwm)
 
     //update pwm value that will actually be written
     lastPwm = get_new_pwm_out(requestedPwm, lastPwm);
-    
+
     //actually output pwm values
     analogWrite(PWM_RIGHT, lastPwm);
 }
@@ -67,7 +68,7 @@ void leftMessageCb(const std_msgs::Float32 &request_pwm)
 
     //update pwm value that will actually be written
     lastPwm = get_new_pwm_out(requestedPwm, lastPwm);
-    
+
     //actually output pwm values
     analogWrite(PWM_LEFT, lastPwm);
 }
