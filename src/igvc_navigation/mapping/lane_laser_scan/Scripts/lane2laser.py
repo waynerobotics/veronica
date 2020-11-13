@@ -2,7 +2,7 @@
 
 import sys
 import rospy
-from cv2 import cv2 # To make PyLint recognize cv2
+import cv2 # To make PyLint recognize cv2
 from std_msgs.msg import String
 from std_msgs.msg import Float32
 from sensor_msgs.msg import Image
