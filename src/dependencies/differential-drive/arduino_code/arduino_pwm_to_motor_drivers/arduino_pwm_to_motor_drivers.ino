@@ -2,9 +2,9 @@
 #include <std_msgs/Float32.h>
 
 #define PWM_RIGHT 5
-#define DIR_RIGHT 5
-#define PWM_LEFT 5
-#define DIR_LEFT 5
+#define DIR_RIGHT 6
+#define PWM_LEFT 7
+#define DIR_LEFT 8
 #define MIN_PWM 50
 #define MAX_PWM 150
 #define PWM_CHANGE_INCREMENT 2
@@ -44,6 +44,19 @@ int get_new_pwm_out(int requestedPwm, int lastPwm)
 //this happens when right wheel cmd message is recieved
 void rightMessageCb(const std_msgs::Float32 &request_pwm)
 {
+
+    //this blinks the onboard LED for debugging. One blink per pwm value of 10.
+    //DO NOT try to run robot witht his uncommented, as it adds significant delay before updating pwm output
+    //can verify rosserial connection and that arduino is recieving topics with command line commend:
+    //rostopic pub -1 rmotor_pwm_cmd std_msgs/Float32 150   (where last argument is a pwm value from 0-255)
+    // for (int i = 0; i <  static_cast<int>(request_pwm.data) / 10; i++)
+    // {
+    //     delay(300);
+    //     digitalWrite(LED_BUILTIN, HIGH);
+    //     delay(300);
+    //     digitalWrite(LED_BUILTIN, LOW);
+    // }
+
     static int lastPwm = 0;
     int requestedPwm = (int)request_pwm.data;
 
@@ -79,6 +92,19 @@ ros::Subscriber<std_msgs::Float32> subLeft("lmotor_pwm_cmd", &leftMessageCb);
 
 void setup()
 {
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, 0);
+    digitalWrite(LED_BUILTIN, 1);
+    delay(500);
+    digitalWrite(LED_BUILTIN, 0);
+    delay(500);
+    digitalWrite(LED_BUILTIN, 1);
+    delay(500);
+    digitalWrite(LED_BUILTIN, 0);
+    digitalWrite(LED_BUILTIN, 1);
+    delay(500);
+    digitalWrite(LED_BUILTIN, 0);
+
     pinMode(PWM_RIGHT, OUTPUT);
     pinMode(DIR_RIGHT, OUTPUT);
     pinMode(PWM_LEFT, OUTPUT);

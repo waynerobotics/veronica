@@ -1,0 +1,8 @@
+prefix=/home/lloyd/veronica/install
+
+Name: lane_grid
+Description: Description of lane_grid
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
