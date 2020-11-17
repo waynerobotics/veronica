@@ -1,2 +1,3 @@
-camera_port_id: '/dev/tty/video2'
-lidar_port_id: '/dev/tty/ACM0'
+camera_port_id: '/dev/video2'
+lidar_port_id: '/dev/ttyACM0'
+indicator_port_id: '/dev/ttyUSB0'

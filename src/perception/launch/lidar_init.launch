@@ -1,0 +1,3 @@
+<launch>
+  <node name="hokuyo_scan" pkg="urg_node" type="urg_node" />
+</launch>
