@@ -10,13 +10,14 @@ lbrombach2@gmail.com
 #include <ros.h>
 #include <std_msgs/Float32.h>
 
-#define PWM_RIGHT 5
-#define DIR_RIGHT 6
-#define PWM_LEFT 7
-#define DIR_LEFT 8
-#define MIN_PWM 50
-#define MAX_PWM 150
-#define PWM_CHANGE_INCREMENT 2
+#define PWM_RIGHT 6   // PWM output pin for right motor
+#define DIR_RIGHT 3   // Direction output pin for right motor
+
+#define PWM_LEFT 5    // PWM output pin for left motor
+#define DIR_LEFT 2    // Direction output pin for left motor
+#define MIN_PWM 50    //program outputs zero below this value to avoid energized motor below the movement threshold
+#define MAX_PWM 150   //adjust to set max speed
+#define PWM_CHANGE_INCREMENT 2  //adjust to change how quickly output changes
 
 ros::NodeHandle nh;
 
