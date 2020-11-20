@@ -1,3 +1,12 @@
+/*
+ros_pwm_handler.ino is a ROS (Robot Operating System) node that runs on
+an arduino and subscribes to a pair of Float32 messages (as published for example, by the differential drive package - 
+http://wiki.ros.org/differential_drive) and in turn sends that out as a PWM signal to the motor drivers. 
+
+Lloyd Brombach, November 2020
+lbrombach2@gmail.com
+*/
+
 #include <ros.h>
 #include <std_msgs/Float32.h>
 
@@ -26,7 +35,7 @@ bool is_direction_change(int requested_pwm, int last_pwm)
         return false;
 }
 
-//this section increments PWM changes instead of jarring/dangerous sudden big changes
+//this section increments PWM changes instead of making jarring/dangerous sudden big changes
 int get_new_pwm_out(int requestedPwm, int lastPwm)
 {
 
@@ -44,18 +53,6 @@ int get_new_pwm_out(int requestedPwm, int lastPwm)
 //this happens when right wheel cmd message is recieved
 void rightMessageCb(const std_msgs::Float32 &request_pwm)
 {
-
-    //this blinks the onboard LED for debugging. One blink per pwm value of 10.
-    //DO NOT try to run robot witht his uncommented, as it adds significant delay before updating pwm output
-    //can verify rosserial connection and that arduino is recieving topics with command line commend:
-    //rostopic pub -1 rmotor_pwm_cmd std_msgs/Float32 150   (where last argument is a pwm value from 0-255)
-    // for (int i = 0; i <  static_cast<int>(request_pwm.data) / 10; i++)
-    // {
-    //     delay(300);
-    //     digitalWrite(LED_BUILTIN, HIGH);
-    //     delay(300);
-    //     digitalWrite(LED_BUILTIN, LOW);
-    // }
 
     static int lastPwm = 0;
     int requestedPwm = (int)request_pwm.data;
