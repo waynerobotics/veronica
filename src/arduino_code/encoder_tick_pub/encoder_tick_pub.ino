@@ -17,8 +17,8 @@ lbrombach2@gmail.com
 #define PUBLISH_INTERVAL 50
 #define LEFT_ENCODER_A 2
 #define LEFT_ENCODER_B 3
-#define RIGHT_ENCODER_A 18
-#define RIGHT_ENCODER_B 19
+#define RIGHT_ENCODER_A 6
+#define RIGHT_ENCODER_B 7
 
 // The left quadrature encoder uses external interupts 0 and 1 which are associated with pins 2 and 3
 QuadratureEncoder leftEncoder(LEFT_ENCODER_A, LEFT_ENCODER_B);
