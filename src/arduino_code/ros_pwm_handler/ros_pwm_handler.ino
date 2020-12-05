@@ -1,10 +1,10 @@
 /*
-ros_pwm_handler.ino is a ROS (Robot Operating System) node that runs on
-an arduino and subscribes to a pair of Float32 messages (as published for example, by the differential drive package - 
-http://wiki.ros.org/differential_drive) and in turn sends that out as a PWM signal to the motor drivers. 
+  ros_pwm_handler.ino is a ROS (Robot Operating System) node that runs on
+  an arduino and subscribes to a pair of Float32 messages (as published for example, by the differential drive package -
+  http://wiki.ros.org/differential_drive) and in turn sends that out as a PWM signal to the motor drivers.
 
-Lloyd Brombach, November 2020
-lbrombach2@gmail.com
+  Lloyd Brombach, November 2020
+  lbrombach2@gmail.com
 */
 
 #include <ros.h>
@@ -23,65 +23,65 @@ ros::NodeHandle nh;
 
 bool get_requested_direction(int requested_pwm)
 {
-    return (requested_pwm > 0) ? 1 : 0;
+  return (requested_pwm > 0) ? 1 : 0;
 }
 
 //if PwmReq*PwmOut is negative, that means the wheel is switching
 //directions and we should bring to a stop before switching directions
 bool is_direction_change(int requested_pwm, int last_pwm)
 {
-    if (requested_pwm * last_pwm < 0)
-        return true;
-    else
-        return false;
+  if (requested_pwm * last_pwm < 0)
+    return true;
+  else
+    return false;
 }
 
 //this section increments PWM changes instead of making jarring/dangerous sudden big changes
 int get_new_pwm_out(int requestedPwm, int lastPwm)
 {
 
-    if (is_direction_change(requestedPwm, lastPwm))
-        requestedPwm = 0;
+  if (is_direction_change(requestedPwm, lastPwm))
+    requestedPwm = 0;
 
-    if (abs(requestedPwm) > lastPwm)
-        return lastPwm + PWM_CHANGE_INCREMENT;
-    else if (abs(requestedPwm) < lastPwm)
-        return lastPwm - PWM_CHANGE_INCREMENT;
-    else
-        return requestedPwm;
+  if (abs(requestedPwm) > lastPwm)
+    return lastPwm + PWM_CHANGE_INCREMENT;
+  else if (abs(requestedPwm) < lastPwm)
+    return lastPwm - PWM_CHANGE_INCREMENT;
+  else
+    return requestedPwm;
 }
 
 //this happens when right wheel cmd message is recieved
 void rightMessageCb(const std_msgs::Float32 &request_pwm)
 {
 
-    static int lastPwm = 0;
-    int requestedPwm = (int)request_pwm.data;
+  static int lastPwm = 0;
+  int requestedPwm = (int)request_pwm.data;
 
-    //set direction pins - invert get_requested_dir() output if motor runs backwards
-    digitalWrite(DIR_RIGHT, get_requested_direction(requestedPwm));
+  //set direction pins - invert get_requested_dir() output if motor runs backwards
+  digitalWrite(DIR_RIGHT, !get_requested_direction(requestedPwm));
 
-    //update pwm value that will actually be written
-    lastPwm = get_new_pwm_out(requestedPwm, lastPwm);
+  //update pwm value that will actually be written
+  lastPwm = get_new_pwm_out(requestedPwm, lastPwm);
 
-    //actually output pwm values
-    analogWrite(PWM_RIGHT, lastPwm);
+  //actually output pwm values
+  analogWrite(PWM_RIGHT, lastPwm);
 }
 
 //this happens when left wheel cmd message is recieved
 void leftMessageCb(const std_msgs::Float32 &request_pwm)
 {
-    static int lastPwm = 0;
-    int requestedPwm = (int)request_pwm.data;
+  static int lastPwm = 0;
+  int requestedPwm = (int)request_pwm.data;
 
-    //set direction pins - invert get_requested_dir() output if motor runs backwards
-    digitalWrite(DIR_LEFT, get_requested_direction(requestedPwm));
+  //set direction pins - invert get_requested_dir() output if motor runs backwards
+  digitalWrite(DIR_LEFT, !get_requested_direction(requestedPwm));
 
-    //update pwm value that will actually be written
-    lastPwm = get_new_pwm_out(requestedPwm, lastPwm);
+  //update pwm value that will actually be written
+  lastPwm = get_new_pwm_out(requestedPwm, lastPwm);
 
-    //actually output pwm values
-    analogWrite(PWM_LEFT, lastPwm);
+  //actually output pwm values
+  analogWrite(PWM_LEFT, lastPwm);
 }
 
 //subscribe to cmd_vel
@@ -90,35 +90,35 @@ ros::Subscriber<std_msgs::Float32> subLeft("lmotor_pwm_cmd", &leftMessageCb);
 
 void setup()
 {
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWrite(LED_BUILTIN, 0);
-    digitalWrite(LED_BUILTIN, 1);
-    delay(500);
-    digitalWrite(LED_BUILTIN, 0);
-    delay(500);
-    digitalWrite(LED_BUILTIN, 1);
-    delay(500);
-    digitalWrite(LED_BUILTIN, 0);
-    digitalWrite(LED_BUILTIN, 1);
-    delay(500);
-    digitalWrite(LED_BUILTIN, 0);
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, 0);
+  digitalWrite(LED_BUILTIN, 1);
+  delay(500);
+  digitalWrite(LED_BUILTIN, 0);
+  delay(500);
+  digitalWrite(LED_BUILTIN, 1);
+  delay(500);
+  digitalWrite(LED_BUILTIN, 0);
+  digitalWrite(LED_BUILTIN, 1);
+  delay(500);
+  digitalWrite(LED_BUILTIN, 0);
 
-    pinMode(PWM_RIGHT, OUTPUT);
-    pinMode(DIR_RIGHT, OUTPUT);
-    pinMode(PWM_LEFT, OUTPUT);
-    pinMode(DIR_LEFT, OUTPUT);
-    analogWrite(PWM_LEFT, 0);
-    analogWrite(PWM_RIGHT, 0);
-    digitalWrite(DIR_LEFT, 0);
-    digitalWrite(DIR_RIGHT, 0);
+  pinMode(PWM_RIGHT, OUTPUT);
+  pinMode(DIR_RIGHT, OUTPUT);
+  pinMode(PWM_LEFT, OUTPUT);
+  pinMode(DIR_LEFT, OUTPUT);
+  analogWrite(PWM_LEFT, 0);
+  analogWrite(PWM_RIGHT, 0);
+  digitalWrite(DIR_LEFT, 0);
+  digitalWrite(DIR_RIGHT, 0);
 
-    nh.initNode();
-    nh.subscribe(subRight);
-    nh.subscribe(subLeft);
+  nh.initNode();
+  nh.subscribe(subRight);
+  nh.subscribe(subLeft);
 }
 
 void loop()
 {
-    nh.spinOnce();
-    delay(20);
+  nh.spinOnce();
+  delay(20);
 }

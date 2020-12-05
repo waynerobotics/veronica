@@ -15,8 +15,8 @@ lbrombach2@gmail.com
 #include <std_msgs/Float32.h>
 
 #define PUBLISH_INTERVAL 50
-#define LEFT_ENCODER_A 2
-#define LEFT_ENCODER_B 3
+#define LEFT_ENCODER_A 3
+#define LEFT_ENCODER_B 2
 #define RIGHT_ENCODER_A 6
 #define RIGHT_ENCODER_B 7
 
