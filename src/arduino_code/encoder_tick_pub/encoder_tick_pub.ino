@@ -1,12 +1,12 @@
 /*
-encoder_tick_pub.ino is a ROS (Robot Operating System) publisher node that runs on
-and publishes an std_msgs::Int16 (-32,768 to 32,767) wheel encoder ticks
-for both left and right wheels. 
+  encoder_tick_pub.ino is a ROS (Robot Operating System) publisher node that runs on
+  and publishes an std_msgs::Int16 (-32,768 to 32,767) wheel encoder ticks
+  for both left and right wheels.
 
-The QuadratureEncoderInt16.h file needs to be copied into a folder called QuadratureEncoderInt16 under the
-libraries folder that is used by the Arduino environment so that it becomes accessible to Arduino programs.
-Lloyd Brombach, November 2020
-lbrombach2@gmail.com
+  The QuadratureEncoderInt16.h file needs to be copied into a folder called QuadratureEncoderInt16 under the
+  libraries folder that is used by the Arduino environment so that it becomes accessible to Arduino programs.
+  Lloyd Brombach, November 2020
+  lbrombach2@gmail.com
 */
 
 #include <ros.h>
@@ -39,62 +39,68 @@ ros::Publisher pubRight("rightWheel", &rightCount);
 
 void setup()
 {
-    nh.initNode();
-    nh.advertise(pubLeft);
-    nh.advertise(pubRight);
 
-    attachInterrupt(digitalPinToInterrupt(LEFT_ENCODER_A), HandleInterruptLeftA, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(LEFT_ENCODER_B), HandleInterruptLeftB, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(RIGHT_ENCODER_A), HandleInterruptRightA, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(RIGHT_ENCODER_B), HandleInterruptRightB, CHANGE);
+  nh.initNode();
+  nh.advertise(pubLeft);
+  nh.advertise(pubRight);
+  
+  pinMode(LEFT_ENCODER_A, INPUT_PULLUP); 
+  pinMode(LEFT_ENCODER_B, INPUT_PULLUP); 
+  pinMode(RIGHT_ENCODER_A, INPUT_PULLUP); 
+  pinMode(RIGHT_ENCODER_B, INPUT_PULLUP);
+  
+  attachInterrupt(digitalPinToInterrupt(LEFT_ENCODER_A), HandleInterruptLeftA, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(LEFT_ENCODER_B), HandleInterruptLeftB, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(RIGHT_ENCODER_A), HandleInterruptRightA, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(RIGHT_ENCODER_B), HandleInterruptRightB, CHANGE);
 
-    //***If above interrupts don't work, try declaring this way: ***//
-    //attachInterrupt(0, HandleInterruptLeftA, CHANGE); // Pin 2
-    //attachInterrupt(1, HandleInterruptLeftB, CHANGE); // Pin 3
-    //attachInterrupt(5, HandleInterruptRightA, CHANGE); // Pin 18
-    //attachInterrupt(4, HandleInterruptRightB, CHANGE); // Pin 19
+  //***If above interrupts don't work, try declaring this way: ***//
+  //attachInterrupt(0, HandleInterruptLeftA, CHANGE); // Pin 2
+  //attachInterrupt(1, HandleInterruptLeftB, CHANGE); // Pin 3
+  //attachInterrupt(5, HandleInterruptRightA, CHANGE); // Pin 18
+  //attachInterrupt(4, HandleInterruptRightB, CHANGE); // Pin 19
 }
 
 void loop()
 {
-    static long previousMilliseconds = 0;
-    
-    unsigned long currentMilliseconds = millis();
-    unsigned long milliSecsSinceLastUpdate = abs(currentMilliseconds - previousMilliseconds);
-    
-    if (milliSecsSinceLastUpdate > PUBLISH_INTERVAL)
-    {
-        // save the last time we updated
-        previousMilliseconds = currentMilliseconds;
+  static long previousMilliseconds = 0;
 
-        pubLeft.publish(&leftCount);
-        pubRight.publish(&rightCount);
-    }
+  unsigned long currentMilliseconds = millis();
+  unsigned long milliSecsSinceLastUpdate = abs(currentMilliseconds - previousMilliseconds);
 
-    nh.spinOnce();
-    delay(20);
+  if (milliSecsSinceLastUpdate > PUBLISH_INTERVAL)
+  {
+    // save the last time we updated
+    previousMilliseconds = currentMilliseconds;
+
+    pubLeft.publish(&leftCount);
+    pubRight.publish(&rightCount);
+  }
+
+  nh.spinOnce();
+  delay(20);
 }
 
 void HandleInterruptLeftA()
 {
-    leftEncoder.OnAChanged();
-    leftCount.data = (int)leftEncoder.getPosition();
+  leftEncoder.OnAChanged();
+  leftCount.data = (int)leftEncoder.getPosition();
 }
 
 void HandleInterruptLeftB()
 {
-    leftEncoder.OnBChanged();
-    leftCount.data = (int)leftEncoder.getPosition();
+  leftEncoder.OnBChanged();
+  leftCount.data = (int)leftEncoder.getPosition();
 
 }
 void HandleInterruptRightA()
 {
-    rightEncoder.OnAChanged();
-    rightCount.data = (int)rightEncoder.getPosition();
+  rightEncoder.OnAChanged();
+  rightCount.data = (int)rightEncoder.getPosition();
 }
 
 void HandleInterruptRightB()
 {
-    rightEncoder.OnBChanged();
-    rightCount.data = (int)rightEncoder.getPosition();
+  rightEncoder.OnBChanged();
+  rightCount.data = (int)rightEncoder.getPosition();
 }
