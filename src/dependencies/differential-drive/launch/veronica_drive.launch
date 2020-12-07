@@ -4,6 +4,15 @@
 
 <launch>
 
+<node pkg="rosserial_python" type="serial_node.py" name="rosserial_encoders" > <!--cmd_vel to tgt_velocity in m/s -->
+    <param name="port" value="/dev/ttyACM0" />
+    
+</node>
+
+<node pkg="rosserial_python" type="serial_node.py" name="rosserial_motorDriver" > <!--cmd_vel to tgt_velocity in m/s -->
+    <param name="port" value="/dev/ttyUSB0" />
+    
+</node>
 <!-- #############    Drive and Motor Controllers  ##############-->
 
 <!--node pkg="rqt_robot_steering" type="rqt_robot_steering" name="rqt_robot_steering"/-->
@@ -23,12 +32,12 @@
     <param name="Kp" value="150" />
     <param name="Ki" value="110" />
     <param name="Kd" value="50.00" />
-    <param name="out_min" value="-110" />
-    <param name="out_max" value="110" />
+    <param name="out_min" value="-140" />
+    <param name="out_max" value="140" />
     <param name="rate" value="20" />
     <param name="rolling_pts" value="2" />
     <param name="timeout_ticks" value="3" />
-    <param name="ticks_meter" value="2250" />
+    <param name="ticks_meter" value="1440" />
     <param name="vel_threshold" value="0.001" />
     <param name="encoder_min" value="-32768" />
     <param name="encoder_max" value="32768" />
@@ -42,12 +51,12 @@
     <param name="Kp" value="150" />
     <param name="Ki" value="110" />
     <param name="Kd" value="50.00" />
-    <param name="out_min" value="-110" />
-    <param name="out_max" value="110" />
+    <param name="out_min" value="-140" />
+    <param name="out_max" value="140" />
     <param name="rate" value="20" />
     <param name="rolling_pts" value="2" />
     <param name="timeout_ticks" value="3" />
-    <param name="ticks_meter" value="2250" />
+    <param name="ticks_meter" value="1440" />
     <param name="vel_threshold" value="0.001" />
     <param name="encoder_min" value="-32768" />
     <param name="encoder_max" value="32768" />

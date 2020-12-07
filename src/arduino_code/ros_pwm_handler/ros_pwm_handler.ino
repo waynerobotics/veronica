@@ -9,6 +9,7 @@
 
 #include <ros.h>
 #include <std_msgs/Float32.h>
+#include <std_msgs/Int16.h>
 
 #define PWM_RIGHT 6   // PWM output pin for right motor
 #define DIR_RIGHT 3   // Direction output pin for right motor
@@ -19,6 +20,10 @@
 #define MAX_PWM 150   //adjust to set max speed
 #define PWM_CHANGE_INCREMENT 2  //adjust to change how quickly output changes
 
+std_msgs::Int16 left;
+std_msgs::Int16 right;
+ros::Publisher pubLeft("leftFromArduino", &left);
+ros::Publisher pubRight("rightFromArduino", &right);
 ros::NodeHandle nh;
 
 bool get_requested_direction(int requested_pwm)
@@ -66,6 +71,9 @@ void rightMessageCb(const std_msgs::Float32 &request_pwm)
 
   //actually output pwm values
   analogWrite(PWM_RIGHT, lastPwm);
+  right.data = PWM_RIGHT;
+  pubRight.publish(&right);
+
 }
 
 //this happens when left wheel cmd message is recieved
@@ -82,14 +90,19 @@ void leftMessageCb(const std_msgs::Float32 &request_pwm)
 
   //actually output pwm values
   analogWrite(PWM_LEFT, lastPwm);
+  left.data = PWM_LEFT;
+  pubLeft.publish(&left);
+
 }
 
 //subscribe to cmd_vel
 ros::Subscriber<std_msgs::Float32> subRight("rmotor_pwm_cmd", &rightMessageCb);
 ros::Subscriber<std_msgs::Float32> subLeft("lmotor_pwm_cmd", &leftMessageCb);
 
+
 void setup()
 {
+  // Serial.begin(9600);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, 0);
   digitalWrite(LED_BUILTIN, 1);
@@ -115,6 +128,9 @@ void setup()
   nh.initNode();
   nh.subscribe(subRight);
   nh.subscribe(subLeft);
+  nh.advertise(pubLeft);
+  nh.advertise(pubRight);
+
 }
 
 void loop()
