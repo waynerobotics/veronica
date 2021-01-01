@@ -17,6 +17,7 @@
 
 <node pkg="rqt_robot_steering" type="rqt_robot_steering" name="rqt_robot_steering" />
 
+<rosparam param="base_width">0.245</rosparam>
 <node pkg="differential_drive" type="twist_to_motors.py" name="twist_to_motors" > <!--cmd_vel to tgt_velocity in m/s -->
     <param name="base_width" value=".224" />
     <param name="rate" value="20" />
@@ -24,13 +25,16 @@
     <remap from="twist" to="cmd_vel" />
 </node>
 
+<rosparam param="ticks_meter">1070</rosparam>
+
+
 <node pkg="differential_drive" type="pid_velocity.py" name="left_pid_velocity" > <!-- lwheel tgt_velocity to pwm_val-->
     <remap from="motor_cmd" to="lmotor_pwm_cmd" />
     <remap from="wheel_vel" to="lwheel_vel" />
     <remap from="wheel" to="leftWheel" />
     <remap from="wheel_vtarget" to="lwheel_vtarget" />
     <param name="Kp" value="50" />
-    <param name="Ki" value="0" />
+    <param name="Ki" value="100" />
     <param name="Kd" value="0" />
     <param name="out_min" value="-140" />
     <param name="out_max" value="140" />
@@ -49,7 +53,7 @@
     <remap from="wheel" to="rightWheel" />
     <remap from="wheel_vtarget" to="rwheel_vtarget" />
     <param name="Kp" value="50" />
-    <param name="Ki" value="0" />
+    <param name="Ki" value="100" />
     <param name="Kd" value="0" />
     <param name="out_min" value="-140" />
     <param name="out_max" value="140" />
