@@ -27,8 +27,6 @@ ros::NodeHandle nh;
 
 std_msgs::Int16 left;
 std_msgs::Int16 right;
-ros::Publisher pubLeft("leftFromArduino", &left);
-ros::Publisher pubRight("rightFromArduino", &right);
 
 
 bool get_requested_direction(int requested_pwm)
@@ -111,8 +109,6 @@ void setup()
   nh.initNode();
   nh.subscribe(subRight);
   nh.subscribe(subLeft);
-  nh.advertise(pubLeft);
-  nh.advertise(pubRight);
 
 }
 
@@ -134,23 +130,22 @@ void loop()
 
 
   //set direction pins - invert get_requested_dir() output if motor runs backwards
-  digitalWrite(DIR_LEFT, get_requested_direction(nextLeft));
-  digitalWrite(DIR_RIGHT, get_requested_direction(nextRight));
+  if(abs(nextLeft) <= PWM_CHANGE_INCREMENT)
+  {
+    digitalWrite(DIR_LEFT, get_requested_direction(nextLeft));
+  }
+    if(abs(nextRight) <= PWM_CHANGE_INCREMENT)
+  {
+    digitalWrite(DIR_RIGHT, get_requested_direction(nextRight));
+  }  
+  
 
 
   //actually output pwm values
-  analogWrite(PWM_LEFT, nextLeft);
-  analogWrite(PWM_RIGHT, nextRight);
+  analogWrite(PWM_LEFT, abs(nextLeft));
+  analogWrite(PWM_RIGHT, abs(nextRight));
 
   lastLeft = nextLeft;
   lastRight = nextRight;
-
-  std_msgs::Int16 l;
-  l.data = nextLeft;
-  pubLeft.publish(&l);
-
-  std_msgs::Int16 r;
-  r.data = lastRight;
-  pubRight.publish(&r);
 
 }

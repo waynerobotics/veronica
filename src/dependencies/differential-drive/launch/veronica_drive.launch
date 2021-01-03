@@ -19,8 +19,8 @@
 
 <rosparam param="base_width">0.245</rosparam>
 <node pkg="differential_drive" type="twist_to_motors.py" name="twist_to_motors" > <!--cmd_vel to tgt_velocity in m/s -->
-    <param name="base_width" value=".224" />
-    <param name="rate" value="20" />
+    <param name="base_width" value=".888" />
+    <param name="rate" value="30" />
     <param name="timeout_ticks" value="3" />
     <remap from="twist" to="cmd_vel" />
 </node>
@@ -38,7 +38,7 @@
     <param name="Kd" value="0" />
     <param name="out_min" value="-140" />
     <param name="out_max" value="140" />
-    <param name="rate" value="20" />
+    <param name="rate" value="30" />
     <param name="rolling_pts" value="2" />
     <param name="timeout_ticks" value="3" />
     <param name="ticks_meter" value="1070.0" />
@@ -52,12 +52,12 @@
     <remap from="wheel_vel" to="rwheel_vel" />
     <remap from="wheel" to="rightWheel" />
     <remap from="wheel_vtarget" to="rwheel_vtarget" />
-    <param name="Kp" value="50" />
+    <param name="Kp" value="70" />
     <param name="Ki" value="100" />
     <param name="Kd" value="0" />
     <param name="out_min" value="-140" />
     <param name="out_max" value="140" />
-    <param name="rate" value="20" />
+    <param name="rate" value="30" />
     <param name="rolling_pts" value="2" />
     <param name="timeout_ticks" value="3" />
     <param name="ticks_meter" value="1070.0" />
