@@ -1,4 +1,4 @@
-prefix=/home/lloyd/veronica/install
+prefix=/home/warriorrobotics/veronica/install
 
 Name: rosserial_vex_cortex
 Description: Description of rosserial_vex_cortex

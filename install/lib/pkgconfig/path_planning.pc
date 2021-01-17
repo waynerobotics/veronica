@@ -1,4 +1,4 @@
-prefix=/home/lloyd/veronica/install
+prefix=/home/warriorrobotics/veronica/install
 
 Name: path_planning
 Description: Description of path_planning

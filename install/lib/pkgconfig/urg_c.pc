@@ -1,4 +1,4 @@
-prefix=/home/lloyd/veronica/install
+prefix=/home/warriorrobotics/veronica/install
 
 Name: urg_c
 Description: Description of urg_c

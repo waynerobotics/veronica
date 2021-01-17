@@ -1,4 +1,4 @@
-prefix=/home/lloyd/veronica/install
+prefix=/home/warriorrobotics/veronica/install
 
 Name: lane_grid
 Description: Description of lane_grid

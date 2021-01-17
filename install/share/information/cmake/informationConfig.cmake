@@ -67,14 +67,14 @@ set(information_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(information_SOURCE_PREFIX /home/lloyd/veronica/src/information)
-  set(information_DEVEL_PREFIX /home/lloyd/veronica/devel)
+  set(information_SOURCE_PREFIX /home/warriorrobotics/veronica/src/information)
+  set(information_DEVEL_PREFIX /home/warriorrobotics/veronica/devel)
   set(information_INSTALL_PREFIX "")
   set(information_PREFIX ${information_DEVEL_PREFIX})
 else()
   set(information_SOURCE_PREFIX "")
   set(information_DEVEL_PREFIX "")
-  set(information_INSTALL_PREFIX /home/lloyd/veronica/install)
+  set(information_INSTALL_PREFIX /home/warriorrobotics/veronica/install)
   set(information_PREFIX ${information_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/lloyd/veronica/install/lib;/home/lloyd/veronica/devel/lib;/home/lloyd/catkin_ws/devel/lib;/opt/ros/melodic/lib)
+    foreach(path /home/warriorrobotics/veronica/install/lib;/home/warriorrobotics/veronica/devel/lib;/opt/ros/melodic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

@@ -1,7 +1,7 @@
 /*
   encoder_tick_pub.ino is a ROS (Robot Operating System) publisher node that runs on
   and publishes an std_msgs::Int16 (-32,768 to 32,767) wheel encoder ticks
-  for both left and right wheels.
+  for both left and right wheels. Tested on arduino nano every
 
   The QuadratureEncoderInt16.h file needs to be copied into a folder called QuadratureEncoderInt16 under the
   libraries folder that is used by the Arduino environment so that it becomes accessible to Arduino programs.
@@ -39,7 +39,8 @@ ros::Publisher pubRight("rightWheel", &rightCount);
 
 void setup()
 {
-
+ // Serial.begin(9600);
+ // nh.getHardware()->setBaud(9600);
   nh.initNode();
   nh.advertise(pubLeft);
   nh.advertise(pubRight);

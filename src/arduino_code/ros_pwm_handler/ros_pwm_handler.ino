@@ -1,6 +1,6 @@
 /*
   ros_pwm_handler.ino is a ROS (Robot Operating System) node that runs on
-  an arduino and subscribes to a pair of Float32 messages (as published for example, by the differential drive package -
+  an arduino nano and subscribes to a pair of Float32 messages (as published for example, by the differential drive package -
   http://wiki.ros.org/differential_drive) and in turn sends that out as a PWM signal to the motor drivers.
 
   Lloyd Brombach, November 2020
@@ -23,11 +23,12 @@
 int left_cmd = 0;
 int right_cmd = 0;
 
+
 ros::NodeHandle nh;
 
 std_msgs::Int16 left;
 std_msgs::Int16 right;
-
+ros::Publisher pubLeft("left", &left);
 
 bool get_requested_direction(int requested_pwm)
 {
@@ -106,10 +107,12 @@ void setup()
   digitalWrite(DIR_LEFT, 0);
   digitalWrite(DIR_RIGHT, 0);
 
+ // Serial.begin(9600);
+ // nh.getHardware()->setBaud(9600);
   nh.initNode();
   nh.subscribe(subRight);
   nh.subscribe(subLeft);
-
+nh.advertise(pubLeft);
 }
 
 
@@ -117,6 +120,7 @@ void setup()
 void loop()
 {
   nh.spinOnce();
+
   static int lastLeft = 0;
   static int lastRight = 0;
 
@@ -128,6 +132,8 @@ void loop()
   int nextLeft = get_new_pwm_out(left_cmd, lastLeft);
   int nextRight = get_new_pwm_out(right_cmd, lastRight);
 
+  left.data = nextLeft;
+  pubLeft.publish(&left);
 
   //set direction pins - invert get_requested_dir() output if motor runs backwards
   if(abs(nextLeft) <= PWM_CHANGE_INCREMENT)
@@ -144,6 +150,8 @@ void loop()
   //actually output pwm values
   analogWrite(PWM_LEFT, abs(nextLeft));
   analogWrite(PWM_RIGHT, abs(nextRight));
+
+  //analogWrite(PWM_LEFT, 0);
 
   lastLeft = nextLeft;
   lastRight = nextRight;

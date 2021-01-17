@@ -67,14 +67,14 @@ set(lane_laser_scan_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(lane_laser_scan_SOURCE_PREFIX /home/lloyd/veronica/src/igvc_navigation/mapping/lane_laser_scan)
-  set(lane_laser_scan_DEVEL_PREFIX /home/lloyd/veronica/devel)
+  set(lane_laser_scan_SOURCE_PREFIX /home/warriorrobotics/veronica/src/igvc_navigation/mapping/lane_laser_scan)
+  set(lane_laser_scan_DEVEL_PREFIX /home/warriorrobotics/veronica/devel)
   set(lane_laser_scan_INSTALL_PREFIX "")
   set(lane_laser_scan_PREFIX ${lane_laser_scan_DEVEL_PREFIX})
 else()
   set(lane_laser_scan_SOURCE_PREFIX "")
   set(lane_laser_scan_DEVEL_PREFIX "")
-  set(lane_laser_scan_INSTALL_PREFIX /home/lloyd/veronica/install)
+  set(lane_laser_scan_INSTALL_PREFIX /home/warriorrobotics/veronica/install)
   set(lane_laser_scan_PREFIX ${lane_laser_scan_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/lloyd/veronica/install/lib;/home/lloyd/veronica/devel/lib;/home/lloyd/catkin_ws/devel/lib;/opt/ros/melodic/lib)
+    foreach(path /home/warriorrobotics/veronica/install/lib;/home/warriorrobotics/veronica/devel/lib;/opt/ros/melodic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
