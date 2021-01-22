@@ -1,0 +1,18 @@
+<!-- ### This launch file is enables manual drive with any node that publishes cmd_vel  ### -->
+<!-- ### Requires encoder ticks published to topics lwheel (std_msgs/Int16) && rwheel (std_msgs/Int16)  ### -->
+<!-- ### publishes wheel motor pwm values motor controller arduino should subscribe to -->
+
+<launch>
+
+<!-- insert absolute path to your map file or use find, as below-->
+<!--arg name="map_file" default="$(find [package where your yaml file is])/mymapName.yaml"/-->
+<arg name="map_file" default="$(find veronica)/maps/course_map.yaml"/>
+
+
+<include file="/home/warriorrobotics/veronica/src/veronica/launch/manual_drive.launch" />
+
+
+
+<!-- Run the map server -->
+<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+</launch>

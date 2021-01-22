@@ -26,10 +26,9 @@ const double initialY = 0.0;
 const double initialTheta = 0.00000000001;
 const double PI = 3.141592;
 
-const double ticksPerwheelRev = 508.8; //not in use. just a reference for now
-const double wheelRadius = .03575;     // 55.18;
-const double WHEEL_BASE = .224;        //223.8375mm actually
-const double TICKS_PER_M = 1125 * 2;   //1.1645; //1.365 is on hard floor. carpet avg is 1.1926. overall avg = 1.1645
+const double wheelRadius = .03575;
+const double WHEEL_BASE = .888;
+const double TICKS_PER_M = 1070 * 2;
 
 double leftDistance = 0;
 double rightDistance = 0;
@@ -221,9 +220,8 @@ int main(int argc, char **argv)
     //advertise publisher of full odom msg where orientation is quaternion
     pub_quat = node.advertise<nav_msgs::Odometry>("encoder/odom_quat", 100);
 
-
     //BEGIN set initial odom//
-    //****This below can be commented out if we wish to prevent this node from 
+    //****This below can be commented out if we wish to prevent this node from
     //pushblishing until we explicitly set initial pose with rviz or manual pose and goal pub node
     oldOdom.pose.pose.position.x = 0;
     oldOdom.pose.pose.position.y = 0;
