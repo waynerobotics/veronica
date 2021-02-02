@@ -109,7 +109,7 @@ class Ui_MainWindow(object):
             # subprocess.Popen(["roslaunch", "lane_follower","lane_follower_bag.launch"])
             print("Status Check")
         elif text == 'Kill All':
-            # TODO: Test master kill
+            # TODO: Test kill master
             system("killall -9 rosmaster")
             time.sleep(1.0)
             print("All Nodes Down!")
