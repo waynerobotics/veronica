@@ -12,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   sensor_msgs
+  tf
+  tf2
 )
 
 ## System dependencies are found with CMake's conventions
@@ -225,3 +227,6 @@ target_link_libraries(imu  ${catkin_LIBRARIES})
 
 add_executable(kalman_filter src/kalman_filter.cpp)
 target_link_libraries(kalman_filter  ${catkin_LIBRARIES})
+
+add_executable(tf_pub src/tf_pub.cpp)
+target_link_libraries(tf_pub ${catkin_LIBRARIES})

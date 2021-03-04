@@ -1,0 +1,25 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/warriorrobotics/veronica/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/warriorrobotics/veronica/src/dependencies/cv_bridge/include/**",
+        "/home/warriorrobotics/veronica/src/dependencies/laser_proc/include/**",
+        "/home/warriorrobotics/veronica/src/dependencies/robot_pose_ekf/include/**",
+        "/home/warriorrobotics/veronica/src/rosserial/rosserial_server/include/**",
+        "/home/warriorrobotics/veronica/src/rosserial/rosserial_test/include/**",
+        "/home/warriorrobotics/veronica/src/dependencies/urg_node/include/**",
+        "/home/warriorrobotics/veronica/src/dependencies/usb_cam/include/**",
+        "/home/warriorrobotics/veronica/src/zed-ros-wrapper/zed_interfaces/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}

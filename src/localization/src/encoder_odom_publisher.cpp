@@ -230,7 +230,7 @@ int main(int argc, char **argv)
     //END set initial odom//
 
     ros::Rate loop_rate(30);
-    while (ros::ok)
+    while (ros::ok())
     {
         ros::spinOnce();
         if (initialPoseRecieved)

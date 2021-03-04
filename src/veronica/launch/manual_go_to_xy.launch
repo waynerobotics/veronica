@@ -11,8 +11,15 @@
 
 <include file="/home/warriorrobotics/veronica/src/veronica/launch/manual_drive.launch" />
 
+<node pkg="localization" type="rviz_click_to_2d" name="rviz_click_to_2d"/>
+<node pkg=" localization" type="manual_pose_and_goal_pub" name="manual_pub" output="screen"/>
+
+<node pkg="path_planning" type="p_drive_controller" name="p _drive_controller"> <!--pubs cmd_vel-->
+  <remap from="waypoint_2d" to="goal_2d" />  <!-- UNCOMMENT REMAP TO RUN DIRECTLY FROM CLICKS INSTEAD OF PATH PLANNER -->
+</node>
 
 
 <!-- Run the map server -->
-<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+<!--node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" /-->
+
 </launch>

@@ -219,3 +219,6 @@ target_link_libraries(local_planner  ${catkin_LIBRARIES})
 
 add_executable(drive_controller src/drive_controller.cpp)
 target_link_libraries(drive_controller  ${catkin_LIBRARIES})
+
+add_executable(p_drive_controller src/p_drive_controller.cpp)
+target_link_libraries(p_drive_controller  ${catkin_LIBRARIES})

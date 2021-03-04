@@ -1,5 +1,4 @@
 {
-    "python.pythonPath": "/usr/bin/python3",
     "files.associations": {
         "*.ino": "cpp",
         "*.ipp": "cpp",
@@ -73,5 +72,9 @@
         "string_view": "cpp",
         "core": "cpp",
         "*.txx": "cpp"
-    }
+    },
+    "python.autoComplete.extraPaths": [
+        "/home/warriorrobotics/veronica/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ]
 }

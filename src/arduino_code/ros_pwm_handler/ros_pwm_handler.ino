@@ -18,7 +18,7 @@
 #define DIR_LEFT 2 //2    // Direction output pin for left motor
 #define MIN_PWM 50    //program outputs zero below this value to avoid energized motor below the movement threshold
 #define MAX_PWM 150   //adjust to set max speed
-#define PWM_CHANGE_INCREMENT 2  //adjust to change how quickly output changes
+#define PWM_CHANGE_INCREMENT 5  //adjust to change how quickly output changes
 
 int left_cmd = 0;
 int right_cmd = 0;
@@ -85,18 +85,6 @@ ros::Subscriber<std_msgs::Float32> subLeft("lmotor_pwm_cmd", &leftMessageCb);
 void setup()
 {
   // Serial.begin(9600);
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, 0);
-  digitalWrite(LED_BUILTIN, 1);
-  delay(500);
-  digitalWrite(LED_BUILTIN, 0);
-  delay(500);
-  digitalWrite(LED_BUILTIN, 1);
-  delay(500);
-  digitalWrite(LED_BUILTIN, 0);
-  digitalWrite(LED_BUILTIN, 1);
-  delay(500);
-  digitalWrite(LED_BUILTIN, 0);
 
   pinMode(PWM_RIGHT, OUTPUT);
   pinMode(DIR_RIGHT, OUTPUT);

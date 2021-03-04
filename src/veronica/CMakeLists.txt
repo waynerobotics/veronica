@@ -10,6 +10,10 @@ project(veronica)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  move_base 
+ # my_tf_configuration_dep 
+ # my_odom_configuration_dep 
+ # my_sensor_configuration_dep
 )
 
 ## System dependencies are found with CMake's conventions
