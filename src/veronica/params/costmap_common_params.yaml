@@ -1,16 +1,22 @@
 obstacle_range: 4.5
 raytrace_range: 3.5
 footprint: [[0.2, 0.305], [0.2, -0.305], [-0.741, -0.305], [-0.741, 0.305]]
+footprint_padding: 0.1
 #robot_radius: ir_of_robot
 inflation_radius: 0.55
 
-observation_sources: laser_scan_sensor
+plugins:
+  - { name: obstacles_layer, type: "costmap_2d::ObstacleLayer" }
+  - { name: inflater_layer, type: "costmap_2d::InflationLayer" }
 
-laser_scan_sensor:
-  {
-    sensor_frame: frame_name,
-    data_type: LaserScan,
-    topic: scan,
-    marking: true,
-    clearing: true,
-  }
+obstacles_layer:
+  observation_sources: laser_scan_sensor
+
+  laser_scan_sensor:
+    {
+      sensor_frame: laser,
+      data_type: LaserScan,
+      topic: scan,
+      marking: true,
+      clearing: true,
+    }
