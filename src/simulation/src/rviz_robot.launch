@@ -1,0 +1,5 @@
+<launch>
+	<param name="robot_description" textfile="$(find wayne_robotics)/src/robot_model.urdf"/>
+	<node name="rviz" pkg="rviz" type="rviz" args="-d model.rviz"/>
+	<node name="transformer" pkg="wayne_robotics" type="robot_simulator.py"/>
+</launch>

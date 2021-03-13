@@ -1,0 +1,11 @@
+<launch>
+	<rosparam file="$(find wayne_robotics)/config/Trans_PID_config.yaml" command="load"/>
+
+	<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+		output="screen" ns="wayne_robotics_model" args="joint_left_velocity
+joint_right_velocity"/>
+
+	<include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+	<param name="robot_description" textfile="$(find wayne_robotics)/src/robot_model.urdf"/>
+	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -x 0 -y 0 -z 0.5 -model robot -param robot_description"/>
+</launch>
