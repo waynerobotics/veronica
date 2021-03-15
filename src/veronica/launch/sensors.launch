@@ -6,13 +6,15 @@
 <!--include file="$(find veronica)/launch/zed_for_rtab.launch" /-->
 
 <!-- #############    Localization **COMMENT OUT IF USING ZED ODOM** ##############-->
-<node pkg="localization" type="encoder_odom_publisher" name="encoder_odom_publisher" /> 
+<node pkg="localization" type="encoder_odom_publisher" name="encoder_odom_publisher" >
+  
+</node> 
 
 
 <!-- #############    Laser scanner  ##############-->
 <node pkg="urg_node" type="urg_node" name="urg_node" >    
 </node>
-<node pkg="tf" type="static_transform_publisher" name="tf_base_link_laser" args="0 0 0 0 0 0 base_link laser 10" />    
+<node pkg="tf" type="static_transform_publisher" name="tf_base_link_laser" args="0.127 0 0.305 0 0 0 base_link laser 10" />    
 
 
 

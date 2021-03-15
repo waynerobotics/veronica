@@ -1,22 +1,29 @@
-obstacle_range: 4.5
-raytrace_range: 3.5
+map_type: costmap
 footprint: [[0.2, 0.305], [0.2, -0.305], [-0.741, -0.305], [-0.741, 0.305]]
 footprint_padding: 0.1
-#robot_radius: ir_of_robot
-inflation_radius: 0.55
+transform_tolerance: 0.5
 
-plugins:
-  - { name: obstacles_layer, type: "costmap_2d::ObstacleLayer" }
-  - { name: inflater_layer, type: "costmap_2d::InflationLayer" }
+obstacle_layer:
+  enable: true
+  obstacle_range: 4.5
+  raytrace_range: 3.5
 
-obstacles_layer:
-  observation_sources: laser_scan_sensor
+  # observation_sources: laser_scan_sensor
+  # laser_scan_sensor:
+  #   {
+  #     sensor_frame: laser,
+  #     data_type: LaserScan,
+  #     topic: scan,
+  #     marking: true,
+  #     clearing: true,
+  #   }
 
-  laser_scan_sensor:
-    {
-      sensor_frame: laser,
-      data_type: LaserScan,
-      topic: scan,
-      marking: true,
-      clearing: true,
-    }
+inflation_layer:
+  enabled: true
+  cost_scaling_factor: 5.0 # exponential rate at which the obstacle cost drops off (default: 10)
+  inflation_radius: 0.3 # max distance from an obstacle at which costs are incurred for planning paths.
+
+static_layer:
+  enabled: true
+  map_topic: "map"
+  subscribe_to_updates: true

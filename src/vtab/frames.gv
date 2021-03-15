@@ -1,0 +1,18 @@
+digraph G {
+"zed_camera_center" -> "zed_baro_link"[label="Broadcaster: /zed/zed_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1615841821.758 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "zed_camera_center"[label="Broadcaster: /zed/zed_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1615841821.758 sec old)\nBuffer length: 0.000 sec\n"];
+"odom" -> "base_link"[label="Broadcaster: /zed/zed_node\nAverage rate: 591.549 Hz\nMost recent transform: 1615841821.779 ( -0.021 sec old)\nBuffer length: 4.973 sec\n"];
+"zed_camera_center" -> "zed_left_camera_frame"[label="Broadcaster: /zed/zed_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1615841821.758 sec old)\nBuffer length: 0.000 sec\n"];
+"zed_left_camera_frame" -> "zed_left_camera_optical_frame"[label="Broadcaster: /zed/zed_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1615841821.758 sec old)\nBuffer length: 0.000 sec\n"];
+"zed_camera_center" -> "zed_mag_link"[label="Broadcaster: /zed/zed_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1615841821.758 sec old)\nBuffer length: 0.000 sec\n"];
+"zed_camera_center" -> "zed_right_camera_frame"[label="Broadcaster: /zed/zed_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1615841821.758 sec old)\nBuffer length: 0.000 sec\n"];
+"zed_right_camera_frame" -> "zed_right_camera_optical_frame"[label="Broadcaster: /zed/zed_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1615841821.758 sec old)\nBuffer length: 0.000 sec\n"];
+"zed_left_camera_frame" -> "zed_temp_left_link"[label="Broadcaster: /zed/zed_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1615841821.758 sec old)\nBuffer length: 0.000 sec\n"];
+"zed_right_camera_frame" -> "zed_temp_right_link"[label="Broadcaster: /zed/zed_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1615841821.758 sec old)\nBuffer length: 0.000 sec\n"];
+"map" -> "odom"[label="Broadcaster: /zed/zed_node\nAverage rate: 591.549 Hz\nMost recent transform: 1615841821.779 ( -0.021 sec old)\nBuffer length: 4.973 sec\n"];
+"zed_left_camera_frame" -> "zed_imu_link"[label="Broadcaster: /zed/zed_node\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1615841821.758 sec old)\nBuffer length: 0.000 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1615841821.758"[ shape=plaintext ] ;
+ }->"map";
+}
