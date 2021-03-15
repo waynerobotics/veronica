@@ -1,0 +1,14 @@
+wayne_robotics_model:
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100
+
+  joint_left_velocity:
+    type: effort_controllers/JointVelocityController
+    joint: left_wheel_joint
+    pid: {p: 100, i: 50, d: 0}
+
+  joint_right_velocity:
+    type: effort_controllers/JointVelocityController
+    joint: right_wheel_joint
+    pid: {p: 100, i: 50, d: 0}
