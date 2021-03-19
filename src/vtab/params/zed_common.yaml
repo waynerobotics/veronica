@@ -1,4 +1,4 @@
-# params/common_yaml
+# params/zed_common_yaml
 # Common parameters to Stereolabs ZED and ZED mini cameras
 ---
 # Dynamic parameters cannot have a namespace

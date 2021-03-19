@@ -3,6 +3,11 @@ footprint: [[0.2, 0.305], [0.2, -0.305], [-0.741, -0.305], [-0.741, 0.305]]
 footprint_padding: 0.1
 transform_tolerance: 0.5
 
+static_map:
+  enabled: true
+  map_topic: "/zed/map"
+  subscribe_to_updates: true
+
 obstacle_layer:
   enable: true
   obstacle_range: 4.5
@@ -23,7 +28,3 @@ inflation_layer:
   cost_scaling_factor: 5.0 # exponential rate at which the obstacle cost drops off (default: 10)
   inflation_radius: 0.3 # max distance from an obstacle at which costs are incurred for planning paths.
 
-static_layer:
-  enabled: true
-  map_topic: "map"
-  subscribe_to_updates: true

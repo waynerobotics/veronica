@@ -4,7 +4,6 @@
     <!-- Localization-only mode -->
     <arg name="localization"            default="false"/>
     <arg if="$(arg localization)" name="args" default=""/>
-    <arg unless="$(arg localization)" name="args" default="--delete_db_on_start"/>
     <!-- RGB-D related topics -->
     <arg name="rgb_topic"               default="/zed/zed_node/rgb/image_rect_color" />
     <arg name="depth_topic"             default="/zed/zed_node/depth/depth_registered" />

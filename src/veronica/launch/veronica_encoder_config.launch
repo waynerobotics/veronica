@@ -9,7 +9,6 @@
 <node type="rviz" name="rviz" pkg="rviz" args="-d $(find veronica)/veronicaRviz.rviz" />
 <node pkg="localization" type="rviz_click_to_2d" name="rviz_click_to_2d" />
 
-   <master auto="start"/>
  <!-- Run the map server --> 
     <node name="map_server" pkg="map_server" type="map_server" args="$(find veronica)/maps/course_map.pgm .1"/>
 

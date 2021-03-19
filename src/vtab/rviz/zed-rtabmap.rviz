@@ -3,7 +3,12 @@ Panels:
     Help Height: 78
     Name: Displays
     Property Tree Widget:
-      Expanded: ~
+      Expanded:
+        - /2D Map1
+        - /2D Map1/Status1
+        - /Path1
+        - /Path2
+        - /Map1
       Splitter Ratio: 0.5
     Tree Height: 455
   - Class: rviz/Selection
@@ -65,9 +70,11 @@ Visualization Manager:
         3D Map: false
         Grid: true
         Ground: true
+        Map: true
         Obstacles: true
         Odometry: false
-        Path: false
+        Path: true
+        Polygon: true
         Prob. Map: true
         RobotModel: false
         TF: true
@@ -133,11 +140,11 @@ Visualization Manager:
       Visual Enabled: true
     - Alpha: 1
       Class: rviz/Map
-      Color Scheme: map
-      Draw Behind: true
+      Color Scheme: costmap
+      Draw Behind: false
       Enabled: true
       Name: 2D Map
-      Topic: /zed/map
+      Topic: /move_base/global_costmap/costmap
       Unreliable: true
       Use Timestamp: false
       Value: true
@@ -153,7 +160,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -170,12 +177,12 @@ Visualization Manager:
       Unreliable: true
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 0.6223877668380737
-        Min Value: -0.3206186294555664
+        Max Value: 0.40144509077072144
+        Min Value: -0.28175488114356995
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -183,7 +190,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: AxisColor
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -200,7 +207,7 @@ Visualization Manager:
       Unreliable: true
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -213,7 +220,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -230,7 +237,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
@@ -251,7 +258,7 @@ Visualization Manager:
       Radius: 0.029999999329447746
       Shaft Diameter: 0.10000000149011612
       Shaft Length: 0.10000000149011612
-      Topic: /zed/mapPath
+      Topic: /move_base/TrajectoryPlannerROS/global_plan
       Unreliable: true
       Value: true
     - Angle Tolerance: 0.10000000149011612
@@ -310,7 +317,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -327,65 +334,61 @@ Visualization Manager:
       Unreliable: true
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Class: rviz/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        base_link:
-          Value: true
-        map:
-          Value: true
-        odom:
-          Value: true
-        zed_baro_link:
-          Value: false
-        zed_camera_center:
-          Value: true
-        zed_imu_link:
-          Value: true
-        zed_left_camera_frame:
-          Value: false
-        zed_left_camera_optical_frame:
-          Value: false
-        zed_mag_link:
-          Value: true
-        zed_right_camera_frame:
-          Value: false
-        zed_right_camera_optical_frame:
-          Value: false
-        zed_temp_left_link:
-          Value: false
-        zed_temp_right_link:
-          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          odom:
-            base_link:
-              zed_camera_center:
-                zed_baro_link:
-                  {}
-                zed_left_camera_frame:
-                  zed_imu_link:
-                    {}
-                  zed_left_camera_optical_frame:
-                    {}
-                  zed_temp_left_link:
-                    {}
-                zed_mag_link:
-                  {}
-                zed_right_camera_frame:
-                  zed_right_camera_optical_frame:
-                    {}
-                  zed_temp_right_link:
-                    {}
+        {}
       Update Interval: 0
+      Value: false
+    - Alpha: 1
+      Class: rviz/Polygon
+      Color: 25; 255; 0
+      Enabled: true
+      Name: Polygon
+      Topic: /move_base/local_costmap/footprint
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz/Path
+      Color: 252; 233; 79
+      Enabled: true
+      Head Diameter: 0.30000001192092896
+      Head Length: 0.20000000298023224
+      Length: 0.30000001192092896
+      Line Style: Lines
+      Line Width: 0.029999999329447746
+      Name: Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Radius: 0.029999999329447746
+      Shaft Diameter: 0.10000000149011612
+      Shaft Length: 0.10000000149011612
+      Topic: /move_base/TrajectoryPlannerROS/local_plan
+      Unreliable: false
+      Value: true
+    - Alpha: 0.699999988079071
+      Class: rviz/Map
+      Color Scheme: costmap
+      Draw Behind: false
+      Enabled: true
+      Name: Map
+      Topic: /move_base/local_costmap/costmap
+      Unreliable: false
+      Use Timestamp: false
       Value: true
   Enabled: true
   Global Options:
@@ -415,7 +418,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.8743386268615723
+      Distance: 14.372267723083496
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -430,10 +433,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.9297966361045837
+      Pitch: 0.7347970604896545
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.105391502380371
+      Yaw: 2.8004016876220703
     Saved: ~
 Window Geometry:
   Camera:
