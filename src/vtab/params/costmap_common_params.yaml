@@ -1,12 +1,13 @@
 map_type: costmap
 
 footprint: [[0.2, 0.305], [0.2, -0.305], [-0.741, -0.305], [-0.741, 0.305]]
-footprint_padding: 0.1
-inflation_radius: 0.55
+#footprint: [[0.19, 0.52], [0.19, -0.52], [-0.72, -0.52], [-0.72, 0.52]]
+footprint_padding: 0.2
+
+inflation_radius: 0.6
 transform_tolerance: 1
 
 controller_patience: 2.0
-
 
 static_map:
   enabled: true
@@ -15,12 +16,11 @@ static_map:
 
 obstacle_layer:
   enable: true
-  obstacle_range: 4.5
-  raytrace_range: 3.5
+  obstacle_range: 5
+  raytrace_range: 4
 
 inflation_layer:
   enabled: true
-  cost_scaling_factor: 5.0 # exponential rate at which the obstacle cost drops off (default: 10)
-  inflation_radius: 0.3 # max distance from an obstacle at which costs are incurred for planning paths.
-
+  cost_scaling_factor: 2 # exponential rate at which the obstacle cost drops off (default: 10)
+  inflation_radius: 0.6 # max distance from an obstacle at which costs are incurred for planning paths.
 

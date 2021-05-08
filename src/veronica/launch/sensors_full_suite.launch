@@ -1,5 +1,7 @@
-<?xml version="1.0"?> 
 <launch>
+
+<!-- #############    Zed section  ##############-->
+
     <arg name="svo_file"             default="" /> <!-- <arg name="svo_file" default="path/to/svo/file.svo"> -->
     <arg name="stream"               default="" /> <!-- <arg name="stream" default="<ip_address>:<port>"> -->
     <arg name="zed_node_name"        default="zed_node" />
@@ -10,7 +12,6 @@
 
     <!-- <include file="$(find vtab)/launch/zed_laserscan_nodelet.launch" /> -->
 	
-    <group ns="$(arg camera_name)">
         <!-- ZED Wrapper Node-->
         <include file="$(find vtab)/launch/include/zed_camera.launch.xml">
             <arg name="camera_name"         value="$(arg camera_name)" />
@@ -21,26 +22,33 @@
             <arg name="base_frame"          value="$(arg base_frame)" />
             <arg name="publish_urdf"        value="$(arg publish_urdf)" />
         </include>    
-  
-        <!-- RTAB-Map -->
-        <arg name="custom_rtabmap_launch_file" default="$(find vtab)/launch/include/sl_rtabmap.launch.xml"/>
-        <include file="$(arg custom_rtabmap_launch_file)">
-            <arg name="localization"            default="false" />
-            <arg name="odom_topic"              default="$(arg zed_node_name)/odom" />
-            <arg name="rgb_topic"               default="$(arg zed_node_name)/rgb/image_rect_color" />
-            <arg name="depth_topic"             default="$(arg zed_node_name)/depth/depth_registered" />
-            <arg name="camera_info_topic"       default="$(arg zed_node_name)/rgb/camera_info" />
-            <arg name="depth_camera_info_topic" default="$(arg zed_node_name)/depth/camera_info" />
 
-        </include>   
 
-        <!-- Rviz -->
-        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find vtab)/rviz/zed-rtabmap.rviz" output="screen" /> 
-    </group>
 
-    <include file="$(find veronica)/launch/base_drive.launch" />
-    <include file="$(find rtk_gps)/launch/ntrip_mcors_detroit1.launch" />
-    <node pkg="rqt_robot_steering" type="rqt_robot_steering" name="rqt_robot_steering" />
+<!-- #############    Laser scanner  ##############-->
+<node pkg="urg_node" type="urg_node" name="urg_node" >    
+</node>
+<node pkg="tf" type="static_transform_publisher" name="tf_base_link_laser" args="0.127 0 0.305 0 0 0 base_link laser 10" />  
+
+
+<!-- #############    GPS -  UNCOMMENT THE correct LOCATION FOR THE MISSION  ##############-->
+<include file="$(find rtk_gps)/launch/ntrip_mcors_detroit1.launch" />
+
+
+
+
+  <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+    <remap from="vo" to="zed_node/odom"/>
+    <remap from="imu" to="zed_node/imu/data"/>
+    <param name="output_frame" value="odom"/>
+    <param name="freq" value="30.0"/>
+    <param name="sensor_timeout" value="1.0"/>
+    <param name="odom_used" value="true"/>
+    <param name="imu_used" value="true"/>
+    <param name="vo_used" value="true"/>
+    <param name="debug" value="false"/>
+    <param name="self_diagnose" value="false"/>
+  </node>
 
 
 </launch>

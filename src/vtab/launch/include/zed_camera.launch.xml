@@ -72,6 +72,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <node name="$(arg node_name)" pkg="zed_wrapper" type="zed_wrapper_node" output="screen" required="true"><!-- launch-prefix="valgrind" -->
         <rosparam file="$(find zed_wrapper)/params/common.yaml" command="load" />
         <!--rosparam file="$(find vtab)/params/zed_common.yaml" command="load" /-->
+      <!--  /////////Heyyyy ... find the zed_common in zed_wrapper and set max distance to maybe 10 -->
+       <!-- /////////(edit, maybe doesn't matter since mapping is false)-->
+       <!-- /////////then check any params in zed2 .yaml. Try to reduce any extra data.. consider -->
+       <!-- ///////// going from .05 resolution to .075 or .1 -->
+       <!-- ///////// HAVE to get cpu usage down to get move base to work properly-->
+       <!-- //////// for whatever reason, nothing works at all if find vtab is set..for now editing yamls in zed-wrapper -->
 
         <rosparam file="$(find zed_wrapper)/params/$(arg camera_model).yaml" command="load" />
 

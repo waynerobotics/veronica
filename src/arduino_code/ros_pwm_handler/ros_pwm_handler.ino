@@ -11,13 +11,13 @@
 #include <std_msgs/Float32.h>
 #include <std_msgs/Int16.h>
 
-#define PWM_RIGHT 5 //6   // PWM output pin for right motor
-#define DIR_RIGHT 3 // 3   // Direction output pin for right motor
+#define PWM_RIGHT 5  // PWM output pin for right motor
+#define DIR_RIGHT 3  // Direction output pin for right motor
 
-#define PWM_LEFT 6 //5    // PWM output pin for left motor
-#define DIR_LEFT 2 //2    // Direction output pin for left motor
-#define MIN_PWM 50    //program outputs zero below this value to avoid energized motor below the movement threshold
-#define MAX_PWM 150   //adjust to set max speed
+#define PWM_LEFT 6   // PWM output pin for left motor
+#define DIR_LEFT 2   // Direction output pin for left motor
+#define MIN_PWM 50   //program outputs zero below this value to avoid energized motor below the movement threshold
+#define MAX_PWM 150  //adjust to set max speed
 #define PWM_CHANGE_INCREMENT 5  //adjust to change how quickly output changes
 
 int left_cmd = 0;
@@ -84,7 +84,6 @@ ros::Subscriber<std_msgs::Float32> subLeft("lmotor_pwm_cmd", &leftMessageCb);
 
 void setup()
 {
-  // Serial.begin(9600);
 
   pinMode(PWM_RIGHT, OUTPUT);
   pinMode(DIR_RIGHT, OUTPUT);
@@ -95,12 +94,11 @@ void setup()
   digitalWrite(DIR_LEFT, 0);
   digitalWrite(DIR_RIGHT, 0);
 
- // Serial.begin(9600);
- // nh.getHardware()->setBaud(9600);
+
   nh.initNode();
   nh.subscribe(subRight);
   nh.subscribe(subLeft);
-nh.advertise(pubLeft);
+  nh.advertise(pubLeft);
 }
 
 
@@ -124,15 +122,15 @@ void loop()
   pubLeft.publish(&left);
 
   //set direction pins - invert get_requested_dir() output if motor runs backwards
-  if(abs(nextLeft) <= PWM_CHANGE_INCREMENT)
+  if (abs(nextLeft) <= PWM_CHANGE_INCREMENT)
   {
     digitalWrite(DIR_LEFT, get_requested_direction(nextLeft));
   }
-    if(abs(nextRight) <= PWM_CHANGE_INCREMENT)
+  if (abs(nextRight) <= PWM_CHANGE_INCREMENT)
   {
     digitalWrite(DIR_RIGHT, get_requested_direction(nextRight));
-  }  
-  
+  }
+
 
 
   //actually output pwm values

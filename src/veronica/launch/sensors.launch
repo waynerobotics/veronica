@@ -2,21 +2,24 @@
 
 
 
-<!-- #############    Localization  ##############-->
-<!--include file="$(find veronica)/launch/zed_for_rtab.launch" /-->
-
-<!-- #############    Localization **COMMENT OUT IF USING ZED ODOM** ##############-->
-<node pkg="localization" type="encoder_odom_publisher" name="encoder_odom_publisher" >
-  
-</node> 
+<!-- #############    GPS -  UNCOMMENT THE correct LOCATION FOR THE MISSION  ##############-->
+<include file="$(find rtk_gps)/launch/ntrip_mcors_detroit1.launch" />
 
 
-<!-- #############    Laser scanner  ##############-->
-<node pkg="urg_node" type="urg_node" name="urg_node" >    
-</node>
-<node pkg="tf" type="static_transform_publisher" name="tf_base_link_laser" args="0.127 0 0.305 0 0 0 base_link laser 10" />    
 
 
+  <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+    <remap from="vo" to="zed_node/odom"/>
+    <remap from="imu" to="zed_node/imu/data"/>
+    <param name="output_frame" value="odom"/>
+    <param name="freq" value="30.0"/>
+    <param name="sensor_timeout" value="1.0"/>
+    <param name="odom_used" value="true"/>
+    <param name="imu_used" value="true"/>
+    <param name="vo_used" value="true"/>
+    <param name="debug" value="false"/>
+    <param name="self_diagnose" value="false"/>
+  </node>
 
 
 </launch>

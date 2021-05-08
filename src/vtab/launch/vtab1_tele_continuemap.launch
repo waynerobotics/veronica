@@ -40,6 +40,7 @@
 
     <include file="$(find veronica)/launch/base_drive.launch" />
     <node pkg="rqt_robot_steering" type="rqt_robot_steering" name="rqt_robot_steering" />
+    <include file="$(find rtk_gps)/launch/ntrip_mcors_detroit1.launch" />
 
 
 </launch>

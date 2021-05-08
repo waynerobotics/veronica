@@ -7,12 +7,12 @@ subscribe_scan: false
 subscribe_scan_cloud: false
 subscribe_user_data: false
 subscribe_odom_info: false
-map_always_update: true
+map_always_update: false
 
 #database_path: "~/.ros/rtabmap2.db"
 #config_path: "~/.ros/rtabmap2.cfg"
-database_path: "~/.ros/rtabmap.db"
-config_path: "~/.ros/rtabmap.cfg"
+database_path: "~/.ros/yardwgps.db"
+config_path: "~/.ros/yardwgps.cfg"
 
 frame_id: "base_link"
 map_frame_id: "map"
@@ -30,8 +30,14 @@ queue_size: 10
 
 scan_normal_k: 0
 
+Rtabmap:
+    LoopGPS: true
+
+RGBD:
+    SavedLocalizationIgnored: true
+
 Grid:
-    3D: true
+    3D: false
     FlatObstacleDetected: true
     MapFrameProjection: false
     GroundIsObstacle: false
@@ -39,22 +45,22 @@ Grid:
     RayTracing: true
     FromDepth: true
     NormalsSegmentation: false
-    CellSize: 0.05
-    ClusterRadius: 0.1
-    MinClusterSize: 3
+    CellSize: 0.1
+    ClusterRadius: 0.2
+    MinClusterSize: 2
     DepthDecimation: 1
     DepthRoiRatios: [0.0, 0.0, 0.0, 0.0]
     FootprintHeight: 2.0
-    FootprintLength: 0.18
-    FootprintWidth: 0.18
+    FootprintLength: 0.66
+    FootprintWidth: 1.0
     MaxGroundAngle: 30.0
     MinGroundHeight: -0.5
     # MinGroundHeight: -0.5
-    MaxGroundHeight: 0.25
+    MaxGroundHeight: 0.4
     # MaxGroundHeight: -0.4
     MaxObstacleHeight: 2.0
     # MaxObstacleHeight: 0.1
-    NoiseFilteringMinNeighbors: 5
+    NoiseFilteringMinNeighbors: 3
     NoiseFilteringRadius: 0.1
     NormalK: 20
     RangeMin: 0.7

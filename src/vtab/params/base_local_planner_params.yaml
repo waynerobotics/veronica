@@ -2,33 +2,38 @@ TrajectoryPlannerROS:
   # Current limits based on AZ3 standalone configuration.
   acc_lim_x: 1.5
   acc_lim_y: 0
-  acc_lim_theta: 1.00
-  max_vel_x: 1.5
+  acc_lim_theta: 2.0
+  max_vel_x: 1.0
   min_vel_x: -0.4
-  max_vel_theta: .7
-  min_vel_theta: -0.7
-  min_in_place_vel_theta: -0.4
-  max_rotational_vel: 0.550
-  min_in_place_rotational_vel: -0.4
-  escape_vel: -0.15
+  max_vel_theta: .04
+  min_vel_theta: -0.04
+  min_in_place_vel_theta: -0.04 #try a positive number? (ref clearpath husky yaml )
+  max_rotational_vel: 0.04
+  min_in_place_rotational_vel: -0.04
+  escape_vel: -0.25
+  backup_vel: -0.25
   holonomic_robot: false
-  meter_scoring: true
+  meter_scoring: true # Whether the gdist_scale and pdist_scale parameters should assume that goal_distance and path_distance are expressed in units of meters or cells. Cells are assumed by default (false).
 
   # Goal Tolerance Parameters
-  xy_goal_tolerance: 0.20
-  yaw_goal_tolerance: 0.15
+  xy_goal_tolerance: 0.3
+  yaw_goal_tolerance: 0.3
 
-  sim_time: 1.7
+  # Forward Simulation Parameters
+  sim_time: 3.6
   #sim_granularity: 0.05
-  sim_granularity: 0.05
+  sim_granularity: 0.2 #husky .02
+  angular_sim_granularity: 0.1
   #vx_samples: 18
-  vx_samples: 18
+  vx_samples: 8 #husky 6
   #vtheta_samples: 20
   vtheta_samples: 20
 
-  path_distance_bias: 5.0
-  goal_distance_bias: 1.0
-  occdist_scale: 0.02
+  # Trajectory scoring parameters
+  path_distance_bias: 12.0 #default 32.0
+  goal_distance_bias: 24.0 #default 24.0
+  occdist_scale: 0.07 #The weighting for how much the controller should attempt to avoid obstacles. default 0.01
+  forward_point_distance: 0.00 #default .325
   #goal_distance_bias: 0.8
   #path_distance_bias: 0.6
   #occdist_scale: 0.01
@@ -36,4 +41,11 @@ TrajectoryPlannerROS:
   #heading_lookahead: 0.325
   dwa: true
 
-  oscillation_reset_dist: 0.05
+  oscillation_reset_dist: 0.1
+
+BaseGlobalPlanner:
+  allow_unknown: true
+  use_dijkstra: false #Use A* instead
+  use_quadratic: false
+  use_grid_path: false
+  old_navfn_behavior: false

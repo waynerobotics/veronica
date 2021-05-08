@@ -1,0 +1,13 @@
+<?xml version="1.0"?> 
+<launch>  
+
+    
+    <include file="$(find veronica)/launch/base_drive.launch" />
+    <include file="$(find veronica)/launch/sensors_full_suite.launch" />
+    <node pkg="rqt_robot_steering" type="rqt_robot_steering" name="rqt_robot_steering" />
+
+    <!-- Rviz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find vtab)/rviz/teleop.rviz" output="screen" /> 
+
+
+</launch>
