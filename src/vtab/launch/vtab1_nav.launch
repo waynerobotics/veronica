@@ -38,8 +38,8 @@
         <node name="rviz" pkg="rviz" type="rviz" args="-d $(find vtab)/rviz/zed-rtabmap.rviz" output="screen" /> 
     </group>
 
-    <include file="$(find veronica)/launch/alt_base_drive.launch" />
-     <include file="$(find veronica)/launch/sensors.launch" />
+    <include file="$(find veronica)/launch/base_drive.launch" />
+     <!--include file="$(find veronica)/launch/sensors.launch" /-->
 
     
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">

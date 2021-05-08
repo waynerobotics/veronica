@@ -215,8 +215,8 @@ class PidVelocity():
 
 
 #####################################END my checking here END ###########################
-#####################################START my checking here START ###########################
-#####################################START my checking here START ###########################
+#####################################END my checking here END ###########################
+#####################################END my checking here END ###########################
 
         if (self.target == 0):
             self.motor = 0
@@ -244,6 +244,7 @@ class PidVelocity():
 #        rospy.logdebug("-D- %s wheelCallback msg.data= %0.3f wheel_latest = %0.3f mult=%0.3f" % (self.nodename, enc, self.wheel_latest, self.wheel_mult))
 
     ######################################################
+
 
     def targetCallback(self, msg):
         ######################################################

@@ -3,13 +3,21 @@ TrajectoryPlannerROS:
   acc_lim_x: 1.5
   acc_lim_y: 0
   acc_lim_theta: 2.0
+
   max_vel_x: 1.0
   min_vel_x: -0.4
-  max_vel_theta: .04
-  min_vel_theta: -0.04
-  min_in_place_vel_theta: -0.04 #try a positive number? (ref clearpath husky yaml )
-  max_rotational_vel: 0.04
-  min_in_place_rotational_vel: -0.04
+  max_vel_trans: 1.0
+  min_vel_trans: 0.2
+
+  max_vel_theta: .4
+  min_vel_theta: -0.11
+
+  min_in_place_vel_theta: -0.11 #try a positive number? (ref clearpath husky yaml )
+  max_rotational_vel: 0.4
+  min_in_place_rotational_vel: -0.11
+  min_rot_vel: .25
+  max_rot_vel: .5
+
   escape_vel: -0.25
   backup_vel: -0.25
   holonomic_robot: false
@@ -20,25 +28,25 @@ TrajectoryPlannerROS:
   yaw_goal_tolerance: 0.3
 
   # Forward Simulation Parameters
-  sim_time: 3.6
+  sim_time: 3.4
   #sim_granularity: 0.05
   sim_granularity: 0.2 #husky .02
   angular_sim_granularity: 0.1
   #vx_samples: 18
-  vx_samples: 8 #husky 6
+  vx_samples: 20 #husky 6
   #vtheta_samples: 20
-  vtheta_samples: 20
+  vtheta_samples: 40
 
   # Trajectory scoring parameters
-  path_distance_bias: 12.0 #default 32.0
-  goal_distance_bias: 24.0 #default 24.0
-  occdist_scale: 0.07 #The weighting for how much the controller should attempt to avoid obstacles. default 0.01
-  forward_point_distance: 0.00 #default .325
+  path_distance_bias: 24.0 #default 32.0
+  goal_distance_bias: 8 #default 24.0
+  occdist_scale: 0.02 #The weighting for how much the controller should attempt to avoid obstacles. default 0.01
+  forward_point_distance: 0.325 #default .325
   #goal_distance_bias: 0.8
   #path_distance_bias: 0.6
   #occdist_scale: 0.01
-  heading_lookahead: 1.0
-  #heading_lookahead: 0.325
+  heading_lookahead: 1.0 #How far to look ahead in meters when scoring different in-place-rotation trajectories
+  heading_scoring: false #Whether to score based on the robot's heading to the path or its distance from the path. default false
   dwa: true
 
   oscillation_reset_dist: 0.1

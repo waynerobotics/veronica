@@ -10,7 +10,7 @@
 
   <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
     <remap from="vo" to="zed_node/odom"/>
-    <remap from="imu" to="zed_node/imu/data"/>
+    <remap from="imu_data" to="zed_node/imu/data"/>
     <param name="output_frame" value="odom"/>
     <param name="freq" value="30.0"/>
     <param name="sensor_timeout" value="1.0"/>
