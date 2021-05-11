@@ -40,6 +40,11 @@
 
     <include file="$(find veronica)/launch/base_drive.launch" />
      <!--include file="$(find veronica)/launch/sensors.launch" /-->
+     rosrun veronica path_optimizer costmap:=/move_base/global_costmap/costmap
+
+    <!--node pkg="veronica" type="path_optimizer" name="path_optimizer">
+        <remap from="costmap" to="/move_base/global_costmap/costmap"/>
+    </node-->
 
     
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">

@@ -108,10 +108,13 @@ void optimize(const nav_msgs::Path &path){
  //   }
 
         //starting at last goal (path[0]) and checking each waypoint until we find clear straight line to a cell
-    while (obstacle_on_line == true &&   newPath.poses[furthestFreeCell--] != path.poses.front())
+    while (obstacle_on_line == true &&   newPath.poses[furthestFreeCell] != path.poses.front())
     {
-        cout<<"furthest free cell = "<<furthestFreeCell<<" and val = "
-            <<(int)_map->data[getIndex(originX, originY, newPath.poses[furthestFreeCell].pose, _map)] <<endl;
+        cout << "furthest free cell = " << furthestFreeCell << " and val = "
+             << (int)_map->data[getIndex(originX, originY, newPath.poses[furthestFreeCell].pose, _map)]
+             << "   and x, y = " << getX(newPath.poses[furthestFreeCell].pose, _map)
+             << ", " << getY(newPath.poses[furthestFreeCell].pose, _map) << endl;
+
 
         //we're going to iterate between points. set our start and endpoints for iterating
         int startX, endX, startY, endY;
@@ -179,23 +182,23 @@ void optimize(const nav_msgs::Path &path){
                 y, _map);
             }
         }
+        furthestFreeCell--;
     }
-    //if in a gray area, optimize might think the closest straight path is the current location
+
+    //
     //make sure at least one cell remains or planner will simply publish the start (current) and the robot won't move
+    //todo This might be where to add a curved trajectory - might be nudging around curve
+    //
     if(furthestFreeCell == 0)
     {
         furthestFreeCell = 1;
     }
   //  cout << "FOUND FURTHEST STRAIGHT LINE FROM START TO waypoint at x, y = " << path[furthestFreeCell].x << ", " << path[furthestFreeCell].y << endl;
 
-    //pop cells off waypoint list until we get to furthestFreeCell
-    while (furthestFreeCell !=0)
-    {
-      //  ###################erase elements here
-        newPath.poses.erase(newPath.poses.begin()+ --furthestFreeCell);
-    }
-    //put start back for visualization waypoint list
-  //  path.push_back(cell(start));
+    //erase cells between start and the first obstacle-on-path encounter 
+    //(leaving element 0 is for visual purposes - serve the furthest free cell to the drive controller (now element[1]))
+    newPath.poses.erase(newPath.poses.begin()+1, newPath.poses.begin()+furthestFreeCell);
+
     pathPub.publish(newPath);
 }
 
