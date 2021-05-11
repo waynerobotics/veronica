@@ -207,3 +207,6 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(path_optimizer src/path_optimizer.cpp)
+target_link_libraries(path_optimizer ${catkin_LIBRARIES})

@@ -7,6 +7,8 @@ Panels:
         - /2D Map1
         - /2D Map1/Status1
         - /Path1
+        - /Map1
+        - /Map1/Status1
       Splitter Ratio: 0.5
     Tree Height: 455
   - Class: rviz/Selection
@@ -140,12 +142,12 @@ Visualization Manager:
       Class: rviz/Map
       Color Scheme: costmap
       Draw Behind: false
-      Enabled: true
+      Enabled: false
       Name: 2D Map
       Topic: /move_base/global_costmap/costmap
       Unreliable: true
       Use Timestamp: false
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -384,7 +386,7 @@ Visualization Manager:
       Draw Behind: false
       Enabled: true
       Name: Map
-      Topic: /move_base/local_costmap/costmap
+      Topic: /copied_map
       Unreliable: false
       Use Timestamp: false
       Value: true
