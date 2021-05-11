@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   move_base 
+  tf
  # my_tf_configuration_dep 
  # my_odom_configuration_dep 
  # my_sensor_configuration_dep
@@ -210,3 +211,6 @@ include_directories(
 
 add_executable(path_optimizer src/path_optimizer.cpp)
 target_link_libraries(path_optimizer ${catkin_LIBRARIES})
+
+add_executable(planb_drive src/planb_drive.cpp)
+target_link_libraries(planb_drive ${catkin_LIBRARIES})
