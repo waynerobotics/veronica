@@ -65,7 +65,7 @@ void map_handler(const nav_msgs::OccupancyGridPtr &costmap)
 
             if (!init_complete)
             {
-                cout << "Map recieved. Initializing _map size "
+                std::cout << "Map recieved. Initializing _map size "
                      << _map->info.width << " x " << _map->info.height << " = " << costmap->data.size() << "  at resolution "
                      << _map->info.resolution << "\nOrigin: "
                      << _map->info.origin.position.x << ", " << _map->info.origin.position.y << endl
@@ -90,6 +90,7 @@ void map_handler(const nav_msgs::OccupancyGridPtr &costmap)
 
 //optimize path with the latest maps we have
 void optimize(const nav_msgs::Path &path){
+    std::cout << "in optimize() 1" << endl;
     nav_msgs::Path newPath;
     newPath.header.frame_id = "map";
     newPath.header.stamp = ros::Time::now();
@@ -106,11 +107,13 @@ void optimize(const nav_msgs::Path &path){
  //       _map->data[getIndex(originX, originY, path.poses[i].pose.position.x / _map->info.resolution, 
  //                           path.poses[i].pose.position.y / _map->info.resolution, _map)] = 100;
  //   }
+   std:: cout << "in optimize() 2:  " << newPath.poses[furthestFreeCell].pose.position.x 
+    <<"..." << path.poses.front().pose.position.x << endl;
 
-        //starting at last goal (path[0]) and checking each waypoint until we find clear straight line to a cell
+    //starting at last goal (path[0]) and checking each waypoint until we find clear straight line to a cell
     while (obstacle_on_line == true &&   newPath.poses[furthestFreeCell] != path.poses.front())
     {
-        cout << "furthest free cell = " << furthestFreeCell << " and val = "
+        std::cout << "furthest free cell = " << furthestFreeCell << " and val = "
              << (int)_map->data[getIndex(originX, originY, newPath.poses[furthestFreeCell].pose, _map)]
              << "   and x, y = " << getX(newPath.poses[furthestFreeCell].pose, _map)
              << ", " << getY(newPath.poses[furthestFreeCell].pose, _map) << endl;
@@ -193,11 +196,17 @@ void optimize(const nav_msgs::Path &path){
     {
         furthestFreeCell = 1;
     }
-  //  cout << "FOUND FURTHEST STRAIGHT LINE FROM START TO waypoint at x, y = " << path[furthestFreeCell].x << ", " << path[furthestFreeCell].y << endl;
+
+    std::cout << "FOUND FURTHEST STRAIGHT LINE FROM START TO waypoint at x, y = " 
+    << path.poses[furthestFreeCell].pose.position.x << ", " 
+    << path.poses[furthestFreeCell].pose.position.y << endl;
 
     //erase cells between start and the first obstacle-on-path encounter 
     //(leaving element 0 is for visual purposes - serve the furthest free cell to the drive controller (now element[1]))
     newPath.poses.erase(newPath.poses.begin()+1, newPath.poses.begin()+furthestFreeCell);
+
+
+
 
     pathPub.publish(newPath);
 }
@@ -224,7 +233,11 @@ int main(int argc, char **argv)
     {
 
         ros::spinOnce();
-        mapPub.publish(_map);
+     //   cout << "Loop 1" << endl;
+        if(_map != nullptr){
+            mapPub.publish(_map);
+        }
+      //  cout << "Loop2" << endl;
         loop_rate.sleep();
     }
 

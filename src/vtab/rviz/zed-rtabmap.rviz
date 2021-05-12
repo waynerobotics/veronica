@@ -142,12 +142,12 @@ Visualization Manager:
       Class: rviz/Map
       Color Scheme: costmap
       Draw Behind: false
-      Enabled: false
+      Enabled: true
       Name: 2D Map
       Topic: /move_base/global_costmap/costmap
       Unreliable: true
       Use Timestamp: false
-      Value: false
+      Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -258,8 +258,8 @@ Visualization Manager:
       Radius: 0.029999999329447746
       Shaft Diameter: 0.10000000149011612
       Shaft Length: 0.10000000149011612
-      Topic: /move_base/TrajectoryPlannerROS/global_plan
-      Unreliable: true
+      Topic: /planb_path
+      Unreliable: false
       Value: true
     - Angle Tolerance: 0.10000000149011612
       Class: rviz/Odometry
@@ -361,7 +361,7 @@ Visualization Manager:
       Buffer Length: 1
       Class: rviz/Path
       Color: 252; 233; 79
-      Enabled: true
+      Enabled: false
       Head Diameter: 0.30000001192092896
       Head Length: 0.20000000298023224
       Length: 0.30000001192092896
@@ -379,7 +379,7 @@ Visualization Manager:
       Shaft Length: 0.10000000149011612
       Topic: /move_base/TrajectoryPlannerROS/local_plan
       Unreliable: false
-      Value: true
+      Value: false
     - Alpha: 0.699999988079071
       Class: rviz/Map
       Color Scheme: costmap
@@ -418,7 +418,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 20.525115966796875
+      Distance: 4.351128101348877
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -433,10 +433,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.2297965288162231
+      Pitch: 1.1897965669631958
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.0535728931427
+      Yaw: 2.4185726642608643
     Saved: ~
 Window Geometry:
   Camera:
