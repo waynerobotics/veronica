@@ -27,13 +27,15 @@
 using namespace std;
 
 ros::Publisher pubVelocity;
+ros::Publisher pubGoal; //see pubNewGoal() comments
+
 nav_msgs::Odometry odom;
 geometry_msgs::Twist cmdVel;
 geometry_msgs::PoseStamped desired;
 nav_msgs::Path path;
 const double PI = 3.141592;
 const double Ka = 0.25;
-const double Kb = -.5; 
+const double Kb = -.5;
 const double Klv = .5; //.4;
 const double initialX = 0.0;
 const double initialY = 0.0;
@@ -54,6 +56,13 @@ void updatePose(const nav_msgs::Odometry &currentOdom)
   odom.pose.pose.orientation.z = currentOdom.pose.pose.orientation.z;
   odom.pose.pose.orientation.w = currentOdom.pose.pose.orientation.w;
   odomInitialized = true;
+}
+
+//after reaching a waypoint, this is claled to publish the original final (within the path) goal so
+//the global planner and path optimizer provide a new path
+void getNewPath()
+{
+  pubGoal.publish(path.poses.back());
 }
 
 void updatePath(const nav_msgs::Path &_path)
@@ -100,10 +109,10 @@ double getEuler(const geometry_msgs::Pose &pose)
 {
   double euler;
   tf::Quaternion q(
-    odom.pose.pose.orientation.x,
-    odom.pose.pose.orientation.y,
-    odom.pose.pose.orientation.z, 
-    odom.pose.pose.orientation.w);
+      odom.pose.pose.orientation.x,
+      odom.pose.pose.orientation.y,
+      odom.pose.pose.orientation.z,
+      odom.pose.pose.orientation.w);
 
   tf::Matrix3x3 m(q);
   double roll, pitch, yaw;
@@ -122,7 +131,7 @@ double getAngularError()
   double angularError = thetaBearing - odomEuler;
   angularError = (angularError > PI) ? angularError - (2 * PI) : angularError;
   angularError = (angularError < -PI) ? angularError + (2 * PI) : angularError;
-  cout << "odomHeading: "<<odomEuler<< "  ...  angular error = " << angularError << endl;
+  cout << "odomHeading: " << odomEuler << "  ...  angular error = " << angularError << endl;
   return angularError;
 }
 
@@ -140,20 +149,30 @@ void set_velocity()
   static bool got_zero = false;
   double final_desired_heading_error = getEuler(desired.pose) - getEuler(odom.pose.pose);
 
-  cout << "set_vel step1: distError = " << getDistanceError() <<"  and FINAL desired heading error: " << final_desired_heading_error<< endl;
+  cout << "set_vel step1: distError = " << getDistanceError() << "  and FINAL desired heading error: " << final_desired_heading_error << endl;
+  //not at position - keep moving
   if (abs(getDistanceError()) >= DISTANCE_TOLERANCE / 2 && got_zero == false) //got_zero is a flag that I have made it the waypoint and have stopped - it is time to pivot to goal pose
   {
     location_met = false;
   }
-  else if (abs(getDistanceError()) < DISTANCE_TOLERANCE/3)
+  //close enough to goal. issue stop
+  else if (abs(getDistanceError()) < DISTANCE_TOLERANCE / 3)
   {
     location_met = true;
     if (got_zero == false)
     {
       pubVelocity.publish(cmdVel); //publish stop cmd
+
+      //if our path size is greater than 2 (start and goal), then we ask the global planner
+      //and path optimizer to recalculate and give us a new one.
+      if (path.poses.size() > 2)
+      {
+        getNewPath();
+      }
+
       if (odom.twist.twist.linear.x == 0 && odom.twist.twist.angular.z == 0)
       {
-        got_zero = true;
+        got_zero = true; //wheels have stopped.
       }
       else
       {
@@ -169,7 +188,7 @@ void set_velocity()
   {
     angle_met = false;
   }
-  else if (abs(angularError) < ANGULAR_TOLERANCE/2)
+  else if (abs(angularError) < ANGULAR_TOLERANCE / 2)
   {
     angle_met = true;
   }
@@ -182,7 +201,7 @@ void set_velocity()
   }
   else if (waypointActive == true && abs(getDistanceError()) >= DISTANCE_TOLERANCE && location_met == false)
   {
-        cout << "anglestuff 2" << endl;
+    cout << "anglestuff 2" << endl;
 
     cmdVel.linear.x = Klv * getDistanceError();
     cmdVel.angular.z = (Ka * angularError);
@@ -195,7 +214,7 @@ void set_velocity()
 
   if (location_met && abs(final_desired_heading_error) < ANGULAR_TOLERANCE)
   {
-    cout << "Target Achieved desired heading : odomHeading = " << getEuler(desired.pose)<<" : " << getEuler(odom.pose.pose) <<endl;
+    cout << "Target Achieved desired heading : odomHeading = " << getEuler(desired.pose) << " : " << getEuler(odom.pose.pose) << endl;
     waypointActive = false;
     got_zero = false;
   }
@@ -212,6 +231,7 @@ int main(int argc, char **argv)
   ros::Subscriber subCurrentPose = node.subscribe("odom", 10, updatePose, ros::TransportHints().tcpNoDelay());
   ros::Subscriber subDesiredPose = node.subscribe("planb_path", 1, updatePath, ros::TransportHints().tcpNoDelay());
   pubVelocity = node.advertise<geometry_msgs::Twist>("planb_cmd_vel", 1);
+  pubGoal = node.advertise<geometry_msgs::PoseStamped>("move_base_simple/goal", 1);
 
   ros::Rate loop_rate(10);
   while (ros::ok())
