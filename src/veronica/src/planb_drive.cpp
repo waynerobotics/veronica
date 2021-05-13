@@ -33,13 +33,13 @@ geometry_msgs::PoseStamped desired;
 nav_msgs::Path path;
 const double PI = 3.141592;
 const double Ka = 0.25;
-const double Kb = -.5;
-const double Klv = .4;
+const double Kb = -.5; 
+const double Klv = .5; //.4;
 const double initialX = 0.0;
 const double initialY = 0.0;
 const double ANGULAR_TOLERANCE = .1;
 const double ENROUTE_ANGULAR_TOLERANCE = .4; //this is "close enough" to be moving toward goal
-const double DISTANCE_TOLERANCE = .2;
+const double DISTANCE_TOLERANCE = .1;
 const double MAX_LINEAR_VEL = 2;
 
 bool waypointActive = false;
@@ -108,6 +108,7 @@ double getEuler(const geometry_msgs::Pose &pose)
   tf::Matrix3x3 m(q);
   double roll, pitch, yaw;
   m.getRPY(roll, pitch, yaw);
+
   return yaw;
 }
 
@@ -121,7 +122,7 @@ double getAngularError()
   double angularError = thetaBearing - odomEuler;
   angularError = (angularError > PI) ? angularError - (2 * PI) : angularError;
   angularError = (angularError < -PI) ? angularError + (2 * PI) : angularError;
-  cout << "angular error = " << angularError << endl;
+  cout << "odomHeading: "<<odomEuler<< "  ...  angular error = " << angularError << endl;
   return angularError;
 }
 
@@ -139,11 +140,12 @@ void set_velocity()
   static bool got_zero = false;
   double final_desired_heading_error = getEuler(desired.pose) - getEuler(odom.pose.pose);
 
-  if (abs(getDistanceError()) >= ANGULAR_TOLERANCE/2 && got_zero == false) //got_zero is a flag that I have made it the waypoint and stopped - it is time to pivot to goal pose
+  cout << "set_vel step1: distError = " << getDistanceError() <<"  and FINAL desired heading error: " << final_desired_heading_error<< endl;
+  if (abs(getDistanceError()) >= DISTANCE_TOLERANCE / 2 && got_zero == false) //got_zero is a flag that I have made it the waypoint and have stopped - it is time to pivot to goal pose
   {
     location_met = false;
   }
-  else if (abs(getDistanceError()) < ANGULAR_TOLERANCE/3)
+  else if (abs(getDistanceError()) < DISTANCE_TOLERANCE/3)
   {
     location_met = true;
     if (got_zero == false)
@@ -160,6 +162,8 @@ void set_velocity()
     }
   }
 
+  cout << "set_vel step1: angularError = " << getAngularError() << endl;
+
   double angularError = (location_met == false) ? getAngularError() : final_desired_heading_error;
   if (abs(angularError) > ANGULAR_TOLERANCE)
   {
@@ -172,11 +176,14 @@ void set_velocity()
 
   if (waypointActive == true && angle_met == false)
   {
+    cout << "anglestuff 1" << endl;
     cmdVel.angular.z = Ka * angularError;
     cmdVel.linear.x = (abs(angularError) > ENROUTE_ANGULAR_TOLERANCE) ? 0 : Klv * getDistanceError() / 2;
   }
   else if (waypointActive == true && abs(getDistanceError()) >= DISTANCE_TOLERANCE && location_met == false)
   {
+        cout << "anglestuff 2" << endl;
+
     cmdVel.linear.x = Klv * getDistanceError();
     cmdVel.angular.z = (Ka * angularError);
   }
@@ -188,7 +195,7 @@ void set_velocity()
 
   if (location_met && abs(final_desired_heading_error) < ANGULAR_TOLERANCE)
   {
-    cout << "Target Achieved" << endl;
+    cout << "Target Achieved desired heading : odomHeading = " << getEuler(desired.pose)<<" : " << getEuler(odom.pose.pose) <<endl;
     waypointActive = false;
     got_zero = false;
   }
@@ -202,9 +209,9 @@ int main(int argc, char **argv)
   ros::NodeHandle node;
 
   //Subscribe to topics
-  ros::Subscriber subCurrentPose = node.subscribe("encoder/odom", 10, updatePose, ros::TransportHints().tcpNoDelay());
+  ros::Subscriber subCurrentPose = node.subscribe("odom", 10, updatePose, ros::TransportHints().tcpNoDelay());
   ros::Subscriber subDesiredPose = node.subscribe("planb_path", 1, updatePath, ros::TransportHints().tcpNoDelay());
-  pubVelocity = node.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+  pubVelocity = node.advertise<geometry_msgs::Twist>("planb_cmd_vel", 1);
 
   ros::Rate loop_rate(10);
   while (ros::ok())

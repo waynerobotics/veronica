@@ -192,9 +192,9 @@ void optimize(const nav_msgs::Path &path){
     //make sure at least one cell remains or planner will simply publish the start (current) and the robot won't move
     //todo This might be where to add a curved trajectory - might be nudging around curve
     //
-    if(furthestFreeCell == 0)
+    if(furthestFreeCell == 0 && newPath.poses.size() > 1)
     {
-        furthestFreeCell = 1;
+        furthestFreeCell = (newPath.poses.size() > 3) ? 3 : 1;
     }
 
     std::cout << "FOUND FURTHEST STRAIGHT LINE FROM START TO waypoint at x, y = " 
@@ -228,7 +228,7 @@ int main(int argc, char **argv)
     pathPub = node.advertise<nav_msgs::Path>("planb_path", 0);
     mapPub = node.advertise<nav_msgs::OccupancyGrid>("copied_map", 0);
 
-    ros::Rate loop_rate(1);
+    ros::Rate loop_rate(10);
     while (ros::ok())
     {
 

@@ -4,7 +4,7 @@ footprint: [[0.2, 0.305], [0.2, -0.305], [-0.741, -0.305], [-0.741, 0.305]]
 #footprint: [[0.19, 0.52], [0.19, -0.52], [-0.72, -0.52], [-0.72, 0.52]]
 footprint_padding: 0.2
 
-inflation_radius: 0.75
+inflation_radius: 0.7
 transform_tolerance: 1
 
 controller_patience: 2.0
@@ -22,5 +22,5 @@ obstacle_layer:
 inflation_layer:
   enabled: true
   cost_scaling_factor: 2 # exponential rate at which the obstacle cost drops off (default: 10)
-  inflation_radius: 0.75 # max distance from an obstacle at which costs are incurred for planning paths.
+  inflation_radius: 0.6 # max distance from an obstacle at which costs are incurred for planning paths.
 

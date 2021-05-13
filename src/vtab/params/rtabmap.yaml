@@ -54,9 +54,9 @@ Grid:
     FootprintLength: 0.66
     FootprintWidth: 1.0
     MaxGroundAngle: 45.0
-    MinGroundHeight: -0.5
+    MinGroundHeight: 0
     # MinGroundHeight: -0.5
-    MaxGroundHeight: 0.5
+    MaxGroundHeight: 0.35
     # MaxGroundHeight: -0.4
     MaxObstacleHeight: 2.0
     # MaxObstacleHeight: 0.1

@@ -5,10 +5,7 @@
 #include <iostream>
 
 //cells from other sources set above this will be considered 100% occupied
-const int OCCUPIED_THRESHOLD = 50;
-
-// distance from center of robot to furthest exterior point, in meters
-const double ROBOT_RADIUS = .2;
+const int OCCUPIED_THRESHOLD = 55;
 
 
 //x coordinate from index based on  index = ogm.info.width * (y + abs(originY)) + (x + abs(originX))

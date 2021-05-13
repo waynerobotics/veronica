@@ -54,6 +54,7 @@
 
         
         <param name="controller_frequency" value="5"/>
+        <param name="planner_frequency" value="5"/>
         <!--param name="use_dijkstra" value="true"/-->
         <rosparam file="$(find vtab)/params/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
         <rosparam file="$(find vtab)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
