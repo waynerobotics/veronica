@@ -47,6 +47,7 @@
         <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/>
         <param name="Reg/Force3DoF"    value="false" />  
         <param name="Optimizer/Slam2D" value="false" />
+        <param name="controller_frequency" value="5"/>
     </node>
 
 </launch>

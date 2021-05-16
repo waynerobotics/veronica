@@ -31,6 +31,7 @@ ros::Publisher mapPub;
 nav_msgs::OccupancyGrid::Ptr _map(new nav_msgs::OccupancyGrid());
 nav_msgs::Path myPath;
 
+const int LOOKAHEAD_NUM_CELLS = 20; //actual lookahead seems to be 1/2 of this number in cells?
 int originX;
 int originY;
 
@@ -100,99 +101,103 @@ void optimize(const nav_msgs::Path &path){
     //is there an obstacle between start and cell we're checking
     bool obstacle_on_line = true;
 
+    if(newPath.poses.size() < 2)
+    {
+        pathPub.publish(newPath);
+    }
+    else{
+
+    
     // path[0] = index of goal cell in path[] (not a map index - just index in the vector)
-    int furthestFreeCell = newPath.poses.size()-1;
+    int furthestFreeCell = min((int)(newPath.poses.size()-1), LOOKAHEAD_NUM_CELLS);
 
  //   for (int i = 0; i < path.poses.size(); i++){
  //       _map->data[getIndex(originX, originY, path.poses[i].pose.position.x / _map->info.resolution, 
  //                           path.poses[i].pose.position.y / _map->info.resolution, _map)] = 100;
  //   }
-   std:: cout << "in optimize() 2:  " << newPath.poses[furthestFreeCell].pose.position.x 
-    <<"..." << path.poses.front().pose.position.x << endl;
+   std:: cout << "in optimize() 2:  "<<endl;
 
     //starting at last goal (path[0]) and checking each waypoint until we find clear straight line to a cell
-    while (obstacle_on_line == true &&   newPath.poses[furthestFreeCell] != path.poses.front())
-    {
-        std::cout << "furthest free cell = " << furthestFreeCell << " and val = "
-             << (int)_map->data[getIndex(originX, originY, newPath.poses[furthestFreeCell].pose, _map)]
-             << "   and x, y = " << getX(newPath.poses[furthestFreeCell].pose, _map)
-             << ", " << getY(newPath.poses[furthestFreeCell].pose, _map) << endl;
+   while (obstacle_on_line == true && furthestFreeCell > 0)
+   {
+       std::cout << "furthest free cell = " << furthestFreeCell << " and val = "
+                 << (int)_map->data[getIndex(originX, originY, newPath.poses[furthestFreeCell].pose, _map)]
+                 << "   and x, y = " << getX(newPath.poses[furthestFreeCell].pose, _map)
+                 << ", " << getY(newPath.poses[furthestFreeCell].pose, _map) << endl;
 
+       //we're going to iterate between points. set our start and endpoints for iterating
+       int startX, endX, startY, endY;
+       if (getX(newPath.poses[0].pose, _map) <= getX(newPath.poses[furthestFreeCell].pose, _map))
+       //    newPath.poses[0].pose.position.x <= path.poses[furthestFreeCell].pose.position.x)
+       {
+           startX = getX(newPath.poses[0].pose, _map);
+           endX = getX(newPath.poses[furthestFreeCell].pose, _map);
+       }
+       else
+       {
+           startX = getX(newPath.poses[furthestFreeCell].pose, _map);
+           endX = getX(newPath.poses[0].pose, _map);
+       }
 
-        //we're going to iterate between points. set our start and endpoints for iterating
-        int startX, endX, startY, endY;
-        if (getX(newPath.poses[0].pose, _map) <= getX(newPath.poses[furthestFreeCell].pose, _map) )
-        //    newPath.poses[0].pose.position.x <= path.poses[furthestFreeCell].pose.position.x)
-        {
-            startX = getX(newPath.poses[0].pose, _map);
-            endX = getX(newPath.poses[furthestFreeCell].pose, _map);
-        }
-        else
-        {
-            startX = getX(newPath.poses[furthestFreeCell].pose, _map);
-            endX = getX(newPath.poses[0].pose, _map);
-        }
+       if (newPath.poses[0].pose.position.y <= path.poses[furthestFreeCell].pose.position.y)
+       {
+           startY = getY(newPath.poses[0].pose, _map);
+           endY = getY(newPath.poses[furthestFreeCell].pose, _map);
+       }
+       else
+       {
+           startY = getY(newPath.poses[furthestFreeCell].pose, _map);
+           endY = getY(newPath.poses[0].pose, _map);
+       }
 
-        if (newPath.poses[0].pose.position.y <= path.poses[furthestFreeCell].pose.position.y)
-        {
-            startY = getY(newPath.poses[0].pose, _map);
-            endY = getY(newPath.poses[furthestFreeCell].pose, _map);
-        }
-        else
-        {
-            startY = getY(newPath.poses[furthestFreeCell].pose, _map);
-            endY = getY(newPath.poses[0].pose, _map);
-        }
-
-        //if any one thing in for loop detects an obstacle, this will be set back to true
-        //if no obstacles detected, we have found an unobstructed straight line to a waypoint
-        obstacle_on_line = false;
-        //check every y for every x in range
-        for (int x = startX; x != endX && obstacle_on_line == false; x++)
-        {
-            //make sure we don't try to calculate slope of vertical line where y is always the same
-            if (startY == endY)
-            {
-                obstacle_on_line = is_obstacle(originX,  originY, x, startY, _map);
-            }
-            else
-            {
-                obstacle_on_line = is_obstacle(originX,  originY, x, 
-                    (int)get_y_intercept(
-                    newPath.poses[0].pose.position.x, 
-                    newPath.poses[0].pose.position.y, 
-                    newPath.poses[furthestFreeCell].pose.position.x, 
-                    newPath.poses[furthestFreeCell].pose.position.y, 
-                    x),  _map);
-            }
-        }
-        //check every x for every y in range
-        for (int y = startY; y != endY && obstacle_on_line == false; y++)
-        {
-            //handle horizontal lines
-            if (startX == endX)
-            {
-                obstacle_on_line = is_obstacle(originX,  originY, startX, y, _map);
-            }
-            else
-            {
-                obstacle_on_line = is_obstacle(originX,  originY, 
-                (int)get_x_intercept(
-                    newPath.poses[0].pose.position.x, 
-                newPath.poses[0].pose.position.y, 
-                newPath.poses[furthestFreeCell].pose.position.x, 
-                newPath.poses[furthestFreeCell].pose.position.y, y),
-                y, _map);
-            }
-        }
-        furthestFreeCell--;
+       //if any one thing in for loop detects an obstacle, this will be set back to true
+       //if no obstacles detected, we have found an unobstructed straight line to a waypoint
+       obstacle_on_line = false;
+       //check every y for every x in range
+       for (int x = startX; x != endX && obstacle_on_line == false; x++)
+       {
+           //make sure we don't try to calculate slope of vertical line where y is always the same
+           if (startY == endY)
+           {
+               obstacle_on_line = is_obstacle(originX, originY, x, startY, _map);
+           }
+           else
+           {
+               obstacle_on_line = is_obstacle(originX, originY, x,
+                                              (int)get_y_intercept(
+                                                  newPath.poses[0].pose.position.x,
+                                                  newPath.poses[0].pose.position.y,
+                                                  newPath.poses[furthestFreeCell].pose.position.x,
+                                                  newPath.poses[furthestFreeCell].pose.position.y,
+                                                  x),
+                                              _map);
+           }
+       }
+       //check every x for every y in range
+       for (int y = startY; y != endY && obstacle_on_line == false; y++)
+       {
+           //handle horizontal lines
+           if (startX == endX)
+           {
+               obstacle_on_line = is_obstacle(originX, originY, startX, y, _map);
+           }
+           else
+           {
+               obstacle_on_line = is_obstacle(originX, originY,
+                                              (int)get_x_intercept(
+                                                  newPath.poses[0].pose.position.x,
+                                                  newPath.poses[0].pose.position.y,
+                                                  newPath.poses[furthestFreeCell].pose.position.x,
+                                                  newPath.poses[furthestFreeCell].pose.position.y, y),
+                                              y, _map);
+           }
+       }
+       furthestFreeCell--;
     }
 
     //
     //make sure at least one cell remains or planner will simply publish the start (current) and the robot won't move
-    //todo This might be where to add a curved trajectory - might be nudging around curve
-    //
-    if(furthestFreeCell == 0 && newPath.poses.size() > 1)
+    if(furthestFreeCell <= 1 && newPath.poses.size() > 2)
     {
         furthestFreeCell = (newPath.poses.size() > 3) ? 3 : 1;
     }
@@ -203,12 +208,11 @@ void optimize(const nav_msgs::Path &path){
 
     //erase cells between start and the first obstacle-on-path encounter 
     //(leaving element 0 is for visual purposes - serve the furthest free cell to the drive controller (now element[1]))
+  
     newPath.poses.erase(newPath.poses.begin()+1, newPath.poses.begin()+furthestFreeCell);
-
-
-
-
+    
     pathPub.publish(newPath);
+    }
 }
 
 int main(int argc, char **argv)

@@ -7,6 +7,7 @@ Panels:
         - /2D Map1
         - /2D Map1/Status1
         - /Path1
+        - /Path2
         - /Map1
         - /Map1/Status1
       Splitter Ratio: 0.5
@@ -361,7 +362,7 @@ Visualization Manager:
       Buffer Length: 1
       Class: rviz/Path
       Color: 252; 233; 79
-      Enabled: false
+      Enabled: true
       Head Diameter: 0.30000001192092896
       Head Length: 0.20000000298023224
       Length: 0.30000001192092896
@@ -377,9 +378,9 @@ Visualization Manager:
       Radius: 0.029999999329447746
       Shaft Diameter: 0.10000000149011612
       Shaft Length: 0.10000000149011612
-      Topic: /move_base/TrajectoryPlannerROS/local_plan
+      Topic: /move_base/TrajectoryPlannerROS/global_plan
       Unreliable: false
-      Value: false
+      Value: true
     - Alpha: 0.699999988079071
       Class: rviz/Map
       Color Scheme: costmap
@@ -418,7 +419,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 4.351128101348877
+      Distance: 7.6681742668151855
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1

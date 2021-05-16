@@ -44,6 +44,7 @@ class PidVelocity():
         self.target = 0
         self.motor = 0
         self.vel = 0
+        self.lastVel = 0
         self.integral = 0
         self.error = 0
         self.derivative = 0
@@ -192,12 +193,14 @@ class PidVelocity():
 
         # IF this wheel is commanded (in any direction) but has not enough oomph to start moving,
         # give some oomph for this cycle proportional to the existing pwm command
-        if self.vel == 0 and self.motor > 0:
+        if (self.vel == 0 or self.lastVel == 0) and self.motor > 0:
             self.motor = self.out_max*.5
             #self.motor = self.motor * 1.5
-        elif self.vel == 0 and self.motor < 0:
+        elif (self.vel == 0 or self.lastVel == 0) and self.motor < 0:
             self.motor = self.out_min*.5
            # self.motor = self.motor * 1.5
+
+        self.lastVel = self.vel
 
 
 #####################################END my checking here END ###########################
@@ -230,7 +233,6 @@ class PidVelocity():
 #        rospy.logdebug("-D- %s wheelCallback msg.data= %0.3f wheel_latest = %0.3f mult=%0.3f" % (self.nodename, enc, self.wheel_latest, self.wheel_mult))
 
     ######################################################
-
 
     def targetCallback(self, msg):
         ######################################################

@@ -38,14 +38,6 @@
         <node name="rviz" pkg="rviz" type="rviz" args="-d $(find vtab)/rviz/zed-rtabmap.rviz" output="screen" /> 
     </group>
 
-    <include file="$(find veronica)/launch/base_drive.launch" />
-     <!--include file="$(find veronica)/launch/sensors.launch" /-->
-
-    <!--node pkg="veronica" type="path_optimizer" name="path_optimizer">
-        <remap from="costmap" to="/move_base/global_costmap/costmap"/>
-    </node-->
-
-    
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
         <remap from="openni_points" to="/zed/zed_node/point_cloud/cloud_registered"/> 
         <remap from="odom" to="zed/zed_node/odom" />
@@ -62,6 +54,19 @@
         <rosparam file="$(find vtab)/params/base_local_planner_params.yaml" command="load" />
         <!--param name="base_global_planner" value="astar_plugin/AStarPlanner"/-->
     </node>
+
+    <include file="$(find veronica)/launch/base_drive.launch" />
+     <!--include file="$(find veronica)/launch/sensors.launch" /-->
+
+    <node pkg="veronica" type="path_optimizer" name="path_optimizer">
+        <remap from="costmap" to="/move_base/global_costmap/costmap"/>
+    </node>
+
+    <node pkg="veronica" type="planb_drive" name="planb_drive">
+        <remap from="odom" to="/zed/zed_node/odom"/>
+    </node>
+
+    <node name="rviz" pkg="veronica" type="planb_drive" args="-d $(find vtab)/rviz/zed-rtabmap.rviz" />
 
 
 </launch>

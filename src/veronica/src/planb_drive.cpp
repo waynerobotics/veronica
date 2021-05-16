@@ -34,15 +34,18 @@ geometry_msgs::Twist cmdVel;
 geometry_msgs::PoseStamped desired;
 nav_msgs::Path path;
 const double PI = 3.141592;
-const double Ka = 0.25;
+const double Ka = 0.4;
 const double Kb = -.5;
-const double Klv = .5; //.4;
+const double Klv = .6; //.4;
 const double initialX = 0.0;
 const double initialY = 0.0;
-const double ANGULAR_TOLERANCE = .1;
-const double ENROUTE_ANGULAR_TOLERANCE = .4; //this is "close enough" to be moving toward goal
+const double ANGULAR_TOLERANCE = .15;
+const double ENROUTE_ANGULAR_TOLERANCE = .5; //this is "close enough" to be moving toward goal
 const double DISTANCE_TOLERANCE = .1;
 const double MAX_LINEAR_VEL = 2;
+const double MIN_PIVOT_VELOCITY = .15;
+
+
 
 bool waypointActive = false;
 bool odomInitialized = false;
@@ -63,6 +66,9 @@ void updatePose(const nav_msgs::Odometry &currentOdom)
 void getNewPath()
 {
   pubGoal.publish(path.poses.back());
+  cout << "ASKING FOR NEW PATH: " << path.poses.back().pose.position.x << ", "<<
+  path.poses.back().pose.position.y << endl;
+
 }
 
 void updatePath(const nav_msgs::Path &_path)
@@ -73,7 +79,6 @@ void updatePath(const nav_msgs::Path &_path)
   path.poses.resize(_path.poses.size());
   path.poses = _path.poses;
 
-  //todo This might be where to add a curved trajectory - might be nudging around curve
   if (path.poses.size() > 1)
   {
     desired.pose.position.x = path.poses[1].pose.position.x;
@@ -158,17 +163,17 @@ void set_velocity()
   //close enough to goal. issue stop
   else if (abs(getDistanceError()) < DISTANCE_TOLERANCE / 3)
   {
-    location_met = true;
-    if (got_zero == false)
-    {
-      pubVelocity.publish(cmdVel); //publish stop cmd
-
       //if our path size is greater than 2 (start and goal), then we ask the global planner
       //and path optimizer to recalculate and give us a new one.
       if (path.poses.size() > 2)
       {
         getNewPath();
       }
+
+    location_met = true;
+    if (got_zero == false)
+    {
+      pubVelocity.publish(cmdVel); //publish stop cmd
 
       if (odom.twist.twist.linear.x == 0 && odom.twist.twist.angular.z == 0)
       {
@@ -205,6 +210,9 @@ void set_velocity()
 
     cmdVel.linear.x = Klv * getDistanceError();
     cmdVel.angular.z = (Ka * angularError);
+    if(cmdVel.angular.z != 0 && abs(cmdVel.angular.z) < MIN_PIVOT_VELOCITY){
+      cmdVel.angular.z = (cmdVel.angular.z > 0) ? MIN_PIVOT_VELOCITY : 0 - MIN_PIVOT_VELOCITY;
+    }
   }
   else
   {

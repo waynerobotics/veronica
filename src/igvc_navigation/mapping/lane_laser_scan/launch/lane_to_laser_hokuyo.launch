@@ -1,12 +1,22 @@
 <launch>
   <node pkg="tf" type="static_transform_publisher" name="map2laser" args="0.0 0.0 0.0 0.0 0.0 0.0 laser map 10"/> 
   <node pkg="tf" type="static_transform_publisher" name="laser2baseLink" args="0.0 0.0 0.0 0.0 0.0 0.0 map global 10"/> 
-  <node pkg="tf" type="static_transform_publisher" name="laser2baseLinki" args="10.0 0.0 0.0 0.0 0.0 0.0 base_link laser 10"/> 
-  <node name="hokuyo_scan" pkg="urg_node" type="urg_node" />
-  <arg name="node_start_delay" default="2.0" />
+  <node pkg="tf" type="static_transform_publisher" name="laser2baseLinki" args="0.0 0.0 0.0 0.0 0.0 0.0 base_link laser 10"/> 
+  <!--node name="hokuyo_scan" pkg="urg_node" type="urg_node" /-->
+
+  <node name="usb_cam1" pkg="usb_cam" type="usb_cam_node" >
+    <param name="video_device" value="/dev/video1" />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="480" />
+    <param name="pixel_format" value="mjpeg" />
+    <param name="camera_frame_id" value="yuyv" />
+    <param name="io_method" value="mmap"/>
+  </node>
+  
+  <!--arg name="node_start_delay" default="2.0" /-->
   <node name="lane2laser" pkg="lane_laser_scan" type="lane2laser.py" />
-  <node pkg="lane_laser_scan" type="timed_roslaunch.sh" args="2 ira_laser_tools laserscan_multi_merger.launch" name="timed_roslaunch" output="screen" />
-  <node type="rviz" name="rviz" pkg="rviz_saved_conf" args="-d $(find lane_laser_scan)/rviz/merged_laser.rviz" />
+  <!--node pkg="lane_laser_scan" type="timed_roslaunch.sh" args="2 ira_laser_tools laserscan_multi_merger.launch" name="timed_roslaunch" output="screen" /-->
+  <!--node type="rviz" name="rviz" pkg="rviz_saved_conf" args="-d $(find lane_laser_scan)/rviz/merged_laser.rviz" /-->
 </launch>
 
 <!--

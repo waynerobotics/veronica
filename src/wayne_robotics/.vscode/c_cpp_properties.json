@@ -1,0 +1,31 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/warriorrobotics/catkin_ws/devel/include/**",
+        "/home/warriorrobotics/veronica/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/warriorrobotics/veronica/src/dependencies/cv_bridge/include/**",
+        "/home/warriorrobotics/veronica/src/dependencies/laser_proc/include/**",
+        "/home/warriorrobotics/veronica/src/realsense_gazebo_plugin-melodic-devel/include/**",
+        "/home/warriorrobotics/veronica/src/dependencies/robot_pose_ekf/include/**",
+        "/home/warriorrobotics/veronica/src/rosserial/rosserial_server/include/**",
+        "/home/warriorrobotics/veronica/src/rosserial/rosserial_test/include/**",
+        "/home/warriorrobotics/veronica/src/dependencies/rtk_gps/include/**",
+        "/home/warriorrobotics/veronica/src/dependencies/urg_node/include/**",
+        "/home/warriorrobotics/veronica/src/dependencies/usb_cam/include/**",
+        "/home/warriorrobotics/veronica/src/veronica/include/**",
+        "/home/warriorrobotics/veronica/src/veronica_rtab/include/**",
+        "/home/warriorrobotics/veronica/src/vtab/include/**",
+        "/home/warriorrobotics/catkin_ws/src/zed-ros-wrapper/zed_interfaces/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}
