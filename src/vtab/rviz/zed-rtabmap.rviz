@@ -9,7 +9,7 @@ Panels:
         - /Path1
         - /Path2
         - /Map1
-        - /Map1/Status1
+        - /LaserScan1
       Splitter Ratio: 0.5
     Tree Height: 455
   - Class: rviz/Selection
@@ -71,6 +71,7 @@ Visualization Manager:
         3D Map: false
         Grid: true
         Ground: true
+        LaserScan: true
         Map: true
         Obstacles: true
         Odometry: false
@@ -391,6 +392,36 @@ Visualization Manager:
       Unreliable: false
       Use Timestamp: false
       Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/LaserScan
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: LaserScan
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.029999999329447746
+      Style: Flat Squares
+      Topic: /scan
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 170; 170; 170
@@ -419,7 +450,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 7.6681742668151855
+      Distance: 15.76600170135498
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1

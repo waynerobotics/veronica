@@ -31,7 +31,7 @@ class image2laser:
   def __init__(self):
     self.bridge = CvBridge()
     self.image_sub = rospy.Subscriber(image_topic,Image,self.callback)
-    self.pub=rospy.Publisher('laser_scan_test', LaserScan,queue_size=10)
+    self.pub=rospy.Publisher('lane_to_scan', LaserScan,queue_size=10)
 
     self.ls = LaserScan()
     self.ls.header.frame_id = 'map'

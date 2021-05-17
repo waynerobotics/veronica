@@ -40,6 +40,7 @@
         <remap from="rgb/camera_info"   to="$(arg camera_info_topic)"/>
         <remap from="grid_map"          to="map" />
         <remap from="odom"              to="$(arg odom_topic)"/>
+        <remap from="scan"              to="/scan"/>
         <!-- localization mode -->
 
         <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>
@@ -48,6 +49,8 @@
         <param name="Reg/Force3DoF"    value="false" />  
         <param name="Optimizer/Slam2D" value="false" />
         <param name="controller_frequency" value="5"/>
+        <param name="subscribe_scan" value="true"/>
+        
     </node>
 
 </launch>

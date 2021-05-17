@@ -38,6 +38,17 @@
         <node name="rviz" pkg="rviz" type="rviz" args="-d $(find vtab)/rviz/zed-rtabmap.rviz" output="screen" /> 
     </group>
 
+    <node pkg="depthimage_to_laserscan" name="mydepthimage_to_laserscan" type="depthimage_to_laserscan" >
+        <remap from="image" to="/zed/zed_node/depth/depth_registered" />
+        <remap from="camera_info" to="/zed/zed_node/depth/camera_info" />
+        <param name="output_frame_id" value="zed_camera_center" />
+        <param name="range_min" value=".5" />
+        <param name="range_max" value="10" />
+        <param name="scan_height" value="120" /> 
+        <param name="scan_time" value=".033" />
+
+    </node>
+
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
         <remap from="openni_points" to="/zed/zed_node/point_cloud/cloud_registered"/> 
         <remap from="odom" to="zed/zed_node/odom" />

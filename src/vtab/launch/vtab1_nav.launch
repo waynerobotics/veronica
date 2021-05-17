@@ -8,7 +8,7 @@
     <arg name="camera_name"          default="zed" />
     <arg name="base_frame"           default="base_link" /> 
 
-    <!-- <include file="$(find vtab)/launch/zed_laserscan_nodelet.launch" /> -->
+    
 	
     <group ns="$(arg camera_name)">
         <!-- ZED Wrapper Node-->
@@ -21,7 +21,10 @@
             <arg name="base_frame"          value="$(arg base_frame)" />
             <arg name="publish_urdf"        value="$(arg publish_urdf)" />
         </include>    
-  
+
+
+
+
         <!-- RTAB-Map -->
         <arg name="custom_rtabmap_launch_file" default="$(find vtab)/launch/include/sl_rtabmap.launch.xml"/>
         <include file="$(arg custom_rtabmap_launch_file)">
