@@ -42,20 +42,18 @@ void map_handler(const nav_msgs::OccupancyGridPtr &costmap)
     //only do this stuff the first time a map is recieved.
  //   if (init_complete == false)
  //   {
-    _map = costmap;
-    _map->header.frame_id = costmap->header.frame_id;
-    _map->info.resolution = costmap->info.resolution;
-    _map->info.width = costmap->info.width;
-    _map->info.height = costmap->info.height;
-    _map->info.origin.position.x = costmap->info.origin.position.x;
-    _map->info.origin.position.y = costmap->info.origin.position.y;
-    _map->info.origin.orientation.x = costmap->info.origin.orientation.x;
-    _map->info.origin.orientation.y = costmap->info.origin.orientation.y;
-    _map->info.origin.orientation.z = costmap->info.origin.orientation.z;
-    _map->info.origin.orientation.w = costmap->info.origin.orientation.w;
-    if (_map->data.size() != costmap->data.size())
-    {
-        _map->data.resize(costmap->data.size());
+        _map->header.frame_id = costmap->header.frame_id;
+        _map->info.resolution = costmap->info.resolution;
+        _map->info.width = costmap->info.width;
+        _map->info.height = costmap->info.height;
+        _map->info.origin.position.x = costmap->info.origin.position.x;
+        _map->info.origin.position.y = costmap->info.origin.position.y;
+        _map->info.origin.orientation.x = costmap->info.origin.orientation.x;
+        _map->info.origin.orientation.y = costmap->info.origin.orientation.y;
+        _map->info.origin.orientation.z = costmap->info.origin.orientation.z;
+        _map->info.origin.orientation.w = costmap->info.origin.orientation.w;
+        if(_map->data.size() !=  costmap->data.size()){
+            _map->data.resize(costmap->data.size());
         }
         _map->data = costmap->data;
 
@@ -93,7 +91,7 @@ void map_handler(const nav_msgs::OccupancyGridPtr &costmap)
 
 //optimize path with the latest maps we have
 void optimize(const nav_msgs::Path &path){
-    std::cout << "in optimize() 1 -  GOT NEW PATH" << endl;
+    std::cout << "in optimize() 1" << endl;
     nav_msgs::Path newPath;
     newPath.header.frame_id = "map";
     newPath.header.stamp = ros::Time::now();
@@ -117,46 +115,40 @@ void optimize(const nav_msgs::Path &path){
  //       _map->data[getIndex(originX, originY, path.poses[i].pose.position.x / _map->info.resolution, 
  //                           path.poses[i].pose.position.y / _map->info.resolution, _map)] = 100;
  //   }
-    std::cout << "in optimize() 2: Path size and checking cell x:x  " << newPath.poses.size() << " : " << furthestFreeCell<< endl;
+   std:: cout << "in optimize() 2:  "<<endl;
 
     //starting at last goal (path[0]) and checking each waypoint until we find clear straight line to a cell
    while (obstacle_on_line == true && furthestFreeCell > 0 && _map != NULL)
    {
        std::cout << "furthest free cell = " << furthestFreeCell << " and val = "
-                 << (int)_map->data[getIndex(originX, originY, newPath.poses[furthestFreeCell].pose, _map)] << endl;
-       std::cout << "   and x, y = " << getX(newPath.poses[furthestFreeCell].pose, _map)
-       << ", " << getY(newPath.poses[furthestFreeCell].pose, _map) << endl;
+                 << (int)_map->data[getIndex(originX, originY, newPath.poses[furthestFreeCell].pose, _map)]
+                 << "   and x, y = " << getX(newPath.poses[furthestFreeCell].pose, _map)
+                 << ", " << getY(newPath.poses[furthestFreeCell].pose, _map) << endl;
 
        //we're going to iterate between points. set our start and endpoints for iterating
        int startX, endX, startY, endY;
        if (getX(newPath.poses[0].pose, _map) <= getX(newPath.poses[furthestFreeCell].pose, _map))
        //    newPath.poses[0].pose.position.x <= path.poses[furthestFreeCell].pose.position.x)
        {
-           cout << "DEBUG 1" << endl;
            startX = getX(newPath.poses[0].pose, _map);
            endX = getX(newPath.poses[furthestFreeCell].pose, _map);
        }
        else
        {
-           cout << "DEBUG 2" << endl;
            startX = getX(newPath.poses[furthestFreeCell].pose, _map);
            endX = getX(newPath.poses[0].pose, _map);
        }
-           cout << "DEBUG 3" << endl;
 
        if (newPath.poses[0].pose.position.y <= path.poses[furthestFreeCell].pose.position.y)
-       {           cout << "DEBUG 4" << endl;
-
+       {
            startY = getY(newPath.poses[0].pose, _map);
            endY = getY(newPath.poses[furthestFreeCell].pose, _map);
        }
        else
-       {           cout << "DEBUG 5" << endl;
-
+       {
            startY = getY(newPath.poses[furthestFreeCell].pose, _map);
            endY = getY(newPath.poses[0].pose, _map);
        }
-           cout << "DEBUG 6" << endl;
 
        //if any one thing in for loop detects an obstacle, this will be set back to true
        //if no obstacles detected, we have found an unobstructed straight line to a waypoint
@@ -168,13 +160,9 @@ void optimize(const nav_msgs::Path &path){
            if (startY == endY)
            {
                obstacle_on_line = is_obstacle(originX, originY, x, startY, _map);
-                          cout << "DEBUG 7" << endl;
-
            }
            else
            {
-                          cout << "DEBUG 8" << endl;
-
                obstacle_on_line = is_obstacle(originX, originY, x,
                                               (int)get_y_intercept(
                                                   newPath.poses[0].pose.position.x,
@@ -185,8 +173,6 @@ void optimize(const nav_msgs::Path &path){
                                               _map);
            }
        }
-                  cout << "DEBUG99" << endl;
-
        //check every x for every y in range
        for (int y = startY; y != endY && obstacle_on_line == false; y++)
        {
@@ -222,10 +208,8 @@ void optimize(const nav_msgs::Path &path){
 
     //erase cells between start and the first obstacle-on-path encounter 
     //(leaving element 0 is for visual purposes - serve the furthest free cell to the drive controller (now element[1]))
-    if(furthestFreeCell > 1){
-        newPath.poses.erase(newPath.poses.begin()+1, newPath.poses.begin()+furthestFreeCell);
-    }
-    
+  
+    newPath.poses.erase(newPath.poses.begin()+1, newPath.poses.begin()+furthestFreeCell);
     
     pathPub.publish(newPath);
     }

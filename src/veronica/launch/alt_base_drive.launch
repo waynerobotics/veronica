@@ -17,17 +17,17 @@
 </node>
 
 
-<rosparam param="base_width">2.2</rosparam> 
+<rosparam param="base_width">0.888</rosparam> 
 <node pkg="differential_drive" type="twist_to_motors.py" name="twist_to_motors" output="screen"> <!--cmd_vel to tgt_velocity in m/s -->
     <!--param name="base_width" value=".888" /-->
-    <param name="base_width" value="2.2" />
+    <param name="base_width" value="0.888" />
     <param name="rate" value="10" />
     <param name="x_min" value="-0.5" /> 
     <param name="x_max" value="1.5" />
     <param name="r_min" value="-0.08" />
     <param name="r_max" value=".08" />
     <param name="timeout_ticks" value="3" />
-    <remap from="twist" to="cmd_vel" />
+    <remap from="twist" to="planb_cmd_vel" />
 </node>
 
 <rosparam param="ticks_meter">1070</rosparam>
@@ -40,9 +40,9 @@
     <remap from="wheel_vtarget" to="lwheel_vtarget" />
     <remap from="alt_wheel_vtarget" to="rwheel_vtarget" />
     <remap from="alt_wheel_speed" to="rwheel_vel" />
-    <param name="Kp" value="150" />
-    <param name="Ki" value="60" />
-    <param name="Kd" value="20" />
+    <param name="Kp" value="350" />
+    <param name="Ki" value="150" />
+    <param name="Kd" value="100" />
     <param name="out_min" value="-140" />
     <param name="out_max" value="140" />
     <param name="rate" value="50" />
@@ -61,9 +61,9 @@
     <remap from="wheel_vtarget" to="rwheel_vtarget" />
     <remap from="alt_wheel_vtarget" to="lwheel_vtarget" />
     <remap from="alt_wheel_speed" to="lwheel_vel" />
-    <param name="Kp" value="185" />
-    <param name="Ki" value="75" />
-    <param name="Kd" value="20" />
+    <param name="Kp" value="370" />
+    <param name="Ki" value="150" />
+    <param name="Kd" value="100" />
     <param name="out_min" value="-140" />
     <param name="out_max" value="140" />
     <param name="rate" value="50" />

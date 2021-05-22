@@ -44,7 +44,7 @@
         <param name="output_frame_id" value="zed_camera_center" />
         <param name="range_min" value=".5" />
         <param name="range_max" value="10" />
-        <param name="scan_height" value="120" /> 
+        <param name="scan_height" value="150" /> 
         <param name="scan_time" value=".033" />
 
     </node>
@@ -53,6 +53,7 @@
         <remap from="openni_points" to="/zed/zed_node/point_cloud/cloud_registered"/> 
         <remap from="odom" to="zed/zed_node/odom" />
         <remap from="map" to="/zed/map" />
+        <remap from="cmd_vel" to="move_base_cmd_vel" />
 
         
         <param name="controller_frequency" value="5"/>
@@ -66,10 +67,10 @@
         <!--param name="base_global_planner" value="astar_plugin/AStarPlanner"/-->
     </node>
 
-    <include file="$(find veronica)/launch/base_drive.launch" />
+    <include file="$(find veronica)/launch/alt_base_drive.launch" />
      <!--include file="$(find veronica)/launch/sensors.launch" /-->
 
-    <node pkg="veronica" type="path_optimizer" name="path_optimizer">
+    <node pkg="veronica" type="path_optimizer" name="path_optimizer" output="log">
         <remap from="costmap" to="/move_base/global_costmap/costmap"/>
     </node>
 
@@ -77,7 +78,7 @@
         <remap from="odom" to="/zed/zed_node/odom"/>
     </node>
 
-    <node name="rviz" pkg="veronica" type="planb_drive" args="-d $(find vtab)/rviz/zed-rtabmap.rviz" />
+    <node name="rviz" pkg="veronica" type="rviz" args="-d $(find vtab)/rviz/zed-rtabmap.rviz" />
 
 
 </launch>

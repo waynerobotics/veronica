@@ -41,8 +41,13 @@ class PidVelocity():
         rospy.loginfo("%s started" % self.nodename)
 
         # initialize variables
-        self.altTarget = 0  # the opposite wheel target
-        self.alt_speed = 0  # the opposite wheel speed
+        self.alt_target = 0  # the opposite wheel target
+        self.alt_vel = 0  # the opposite wheel speed
+        self.prev_target = 0
+        self.alt_prev_target = 0
+        self.stopIssued = False
+        self.stopAchieved = False
+
         self.target = 0
         self.motor = 0
         self.vel = 0
@@ -82,7 +87,7 @@ class PidVelocity():
         # subscribers/publishers
         rospy.Subscriber("wheel", Int16, self.wheelCallback)
         rospy.Subscriber("wheel_vtarget", Float32, self.targetCallback)
-        rospy.Subscriber("alt_wheel_vtarget", Float32, self.altTargetCallback)
+        rospy.Subscriber("alt_wheel_vtarget", Float32, self._tCallback)
         rospy.Subscriber("alt_wheel_speed", Float32, self.altWheelCallback)
         self.pub_motor = rospy.Publisher('motor_cmd', Float32, queue_size=10)
         self.pub_vel = rospy.Publisher('wheel_vel', Float32, queue_size=10)
@@ -199,19 +204,36 @@ class PidVelocity():
 #####################################START my checking here START ###########################
 #####################################START my checking here START ###########################
 #####################################START my checking here START ###########################
-
+       # self.stopIssued = True
         # if comanded straight and forward
-        if self.target == self.altTarget and self.target > 0:
-            # get difference between this wheel speed and otherwheel
-            deltaVel = self.alt_speed - self.vel
-            # IF there is a difference in speed, apply extra oomph to this wheel to catch up
-            # (only applied when commanded straight and forward)
-            if deltaVel > 0:
-                self.motor = self.motor + (self.out_max * deltaVel * 5)
-        # ELSE IF this wheel is commanded (in any direction) but has not enough oomph to start moving,
-        # give some oomph for this cycle proportional to the existing pwm command
-        elif self.vel == 0 and abs(self.motor) > 0:
-            self.motor = self.motor * 3
+        if self.target == self.alt_target and self.target > 0 and self.prev_target != self.alt_prev_target:
+            # if self.prev_target != self.alt_prev_target:  # we were previously turning
+            self.stopIssued = True
+    ###       self.motor = 0
+        rospy.logdebug(self.target, " : ", self.alt_target)
+        if self.stopIssued == True:
+            if self.vel != self.alt_vel:
+                ###            self.motor = 0
+                self.integral = 0
+            else:
+                self.stopIssued = False
+                self.alt_prev_target = self.alt_target
+                self.prev_target = self.target
+        else:
+            self.alt_prev_target = self.alt_target
+            self.prev_target = self.target
+     #   else:        #############maybe this not needed with above stop cmd/check plus better pid tune
+     #       if self.target == self.alt_target and self.target > 0:
+     #           # get difference between this wheel speed and otherwheel
+     #           deltaVel = self.alt_vel - self.vel
+     #           # IF there is a difference in speed, apply extra oomph to this wheel to catch up
+     #           # (only applied when commanded straight and forward)
+     #           if deltaVel > 0:
+     #               self.motor = self.motor + (self.out_max * deltaVel * 5)
+     #       # ELSE IF this wheel is commanded (in any direction) but has not enough oomph to start moving,
+     #       # give some oomph for this cycle proportional to the existing pwm command
+     #       elif self.vel == 0 and abs(self.motor) > 0:
+     #           self.motor = self.motor * 3
 
 
 #####################################END my checking here END ###########################
@@ -245,15 +267,14 @@ class PidVelocity():
 
     ######################################################
 
-
     def targetCallback(self, msg):
         ######################################################
         self.target = msg.data
         self.ticks_since_target = 0
         # rospy.logdebug("-D- %s targetCallback " % (self.nodename))
 
-    def altTargetCallback(self, msg):
-        self.altTarget = msg.data
+    def _tCallback(self, msg):
+        self.alt_target = msg.data
 
     def altWheelCallback(self, msg):
         self.alt_speed = msg.data
