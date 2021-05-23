@@ -52,6 +52,8 @@ bool waypointActive = false;
 bool odomInitialized = false;
 bool gotNewGoal = false;
 
+double getDistanceError();
+
 void updatePose(const nav_msgs::Odometry &currentOdom)
 {
   odom.pose.pose.position.x = currentOdom.pose.pose.position.x;
@@ -71,11 +73,11 @@ void getNewPath()
   cout << "ASKING FOR NEW PATH TO: " << path.poses.back().pose.position.x << ", "<<
   path.poses.back().pose.position.y << endl;
 
-}
+} 
 
 void updatePath(const nav_msgs::Path &_path)
 {
-
+  
   path.header.frame_id = _path.header.frame_id;
   path.header.stamp = _path.header.stamp;
   path.poses.resize(_path.poses.size());
@@ -84,23 +86,39 @@ void updatePath(const nav_msgs::Path &_path)
   if(path.poses.back().pose.position.x != lastGoal.pose.position.x || 
     path.poses.back().pose.position.y != lastGoal.pose.position.y ){
     gotNewGoal = true;
-  }else{
+    cout << "GOT NEW PATH IN DRIVE.CPP" << endl;
+  }
+  else
+  {
+    cout << "GOT SAME OLD PATH IN DRIVE.CPP" << endl;
     gotNewGoal = false;
   }
 
   if (path.poses.size() > 1)
   {
-    desired.pose.position.x = path.poses[1].pose.position.x;
-    desired.pose.position.y = path.poses[1].pose.position.y;
-    desired.pose.orientation.x = path.poses[1].pose.orientation.x;
-    desired.pose.orientation.y = path.poses[1].pose.orientation.y;
-    desired.pose.orientation.z = path.poses[1].pose.orientation.z;
-    desired.pose.orientation.w = path.poses[1].pose.orientation.w;
+      cout << "PATH SIZE > 1 .. old / new goals :  " << desired.pose.position.x << ", " << desired.pose.position.y
+       << "..." << path.poses[1].pose.position.x << ", " << path.poses[1].pose.position.y << endl;
+      int i = 1;
+      desired.pose.position.x = path.poses[1].pose.position.x;
+      desired.pose.position.y = path.poses[1].pose.position.y;
+      while(i < path.poses.size() -1 && getDistanceError() <= DISTANCE_TOLERANCE){
+        desired.pose.position.x = path.poses[i].pose.position.x;
+        desired.pose.position.y = path.poses[i].pose.position.y;
+        i++;
+      }
+
+      desired.pose.orientation.x = path.poses[i].pose.orientation.x;
+      desired.pose.orientation.y = path.poses[i].pose.orientation.y;
+      desired.pose.orientation.z = path.poses[i].pose.orientation.z;
+      desired.pose.orientation.w = path.poses[i].pose.orientation.w;
+
     waypointActive = true;
-    cout << "waypoint active set true" << endl;
+    cout << "waypoint active set true i= " << i<< " .. final desired pose = " << path.poses[1].pose.position.x << ", " << path.poses[1].pose.position.y << endl;
   }
   else if (path.poses.size() == 1)
   {
+      cout << " (PATH SIZE = 1 .. old / new goals :  " << desired.pose.position.x << ", " << desired.pose.position.y
+       << "..." << path.poses[0].pose.position.x << ", " << path.poses[0].pose.position.y << endl;
     desired.pose.position.x = path.poses[0].pose.position.x;
     desired.pose.position.y = path.poses[0].pose.position.y;
     desired.pose.orientation.x = path.poses[0].pose.orientation.x;
@@ -176,13 +194,13 @@ void set_velocity()
   if (path.poses.size() > 2  && ros::Time::now().toSec() - lastPathRequest > 0.5
         && gotNewGoal == false )
   {
-    getNewPath();
+   // getNewPath();
     lastPathRequest = ros::Time::now().toSec();
   }
 
   cout << "set_vel step1: distError = " << getDistanceError() << "  and FINAL desired heading error: " << final_desired_heading_error << endl;
   //not at position - keep moving
-  if (abs(getDistanceError()) >= DISTANCE_TOLERANCE*2  && got_zero == false) //got_zero is a flag that I have made it the waypoint and have stopped - it is time to pivot to goal pose
+  if (abs(getDistanceError()) >= DISTANCE_TOLERANCE  && got_zero == false) //got_zero is a flag that I have made it the waypoint and have stopped - it is time to pivot to goal pose
   {
     location_met = false;
   }
@@ -190,19 +208,24 @@ void set_velocity()
   else if (abs(getDistanceError()) < DISTANCE_TOLERANCE )
   {
     location_met = true;
+    cout << "A. LOCATION MET = TRUE .. ";
     if (got_zero == false)
     {
       pubVelocity.publish(cmdVel); //publish stop cmd
+      cout << "got zero is false so issuing stop cmdVel .. ";
 
       if (odom.twist.twist.linear.x == 0 && odom.twist.twist.angular.z == 0)
       {
         got_zero = true; //wheels have stopped.
+        cout << "the wheels have stopped..setting gotzero true ..";
       }
       else
       {
+        cout << "wheels have not stopped so returning ";
         return;
       }
     }
+    cout << endl;
   }
 
   cout << "set_vel step1: angularError = " << getAngularError() << endl;
@@ -219,24 +242,26 @@ void set_velocity()
   }
 
   //if not at waypoint AND not aiming toward waypoint
+  cout << "MADE IT PAST INITIAL STOP STUFF waypointactive/anglemet//locationmet = " 
+      << waypointActive<< ".." << angle_met<< " .. " << location_met<< endl;
   if (waypointActive == true && angle_met == false)
   {
-    cout << "anglestuff 1" << endl;
+    cout << "anglestuff 1 ANGLE_MET = FALSE" << endl;
     cmdVel.angular.z = Ka * angularError;
     //if heading way off, pivot. If heading sorta close, move forward while turning
-    cmdVel.linear.x = (abs(angularError) > ENROUTE_ANGULAR_TOLERANCE) ? 0 : Klv * getDistanceError() / 2;
+    cmdVel.linear.x = (abs(angularError) > ENROUTE_ANGULAR_TOLERANCE) ? 0 : Klv * getDistanceError() / 3;
   }
   //else if not at waypoint but heading is within tolerance (robot is aiming at waypoint)
   else if (waypointActive == true && abs(getDistanceError()) >= DISTANCE_TOLERANCE && location_met == false)
   {
-    cout << "anglestuff 2" << endl;
+    cout << "anglestuff 2 (ANGLE_MET) FORWARD PLUS HEADING CORRECTION" << endl;
   //go forward fully and keep tweaking heading toward it as well
     cmdVel.linear.x = Klv * getDistanceError();
     cmdVel.angular.z = (Ka * angularError / 2);
   }
   else //at waypoint, set final heading *****DISABLE SET FINAL HEADING FOR THIS VERSION -> NO HEADING DATA IN STANDARD PATH MSG *****
   {
-    cout << "********I'm HERE, now set final desired heading! **********" << endl;
+    cout << "********I'm HERE, SETTING WAYPOINT ACTIVE = FALSE (this is where we used to turn and pivot to final desired heading)**********" << endl;
     location_met = true;
     waypointActive = false; // remove from here and uncomment if section directly below to reenable final heading pivots
     got_zero = false;       // remove from here and uncomment section below to reenable final heading pivots

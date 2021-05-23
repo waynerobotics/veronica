@@ -42,9 +42,9 @@
         <remap from="image" to="/zed/zed_node/depth/depth_registered" />
         <remap from="camera_info" to="/zed/zed_node/depth/camera_info" />
         <param name="output_frame_id" value="zed_camera_center" />
-        <param name="range_min" value=".5" />
+        <param name="range_min" value=".6" />
         <param name="range_max" value="10" />
-        <param name="scan_height" value="150" /> 
+        <param name="scan_height" value="50" /> 
         <param name="scan_time" value=".033" />
 
     </node>

@@ -1,0 +1,29 @@
+<launch>
+<!-- http://wiki.ros.org/iav_depthimage_to_laserscan -->
+<!-- https://github.com/IntelRealSense/realsense-ros/issues/1163 -->
+<!-- https://github.com/lbrombach/practical_robot/tree/master/practical_nav/launch -->
+
+really, we need it launch gmaooing an have that connected to lane to laser scan message, 
+then make sure the other topics/frames/params all match
+
+so.. also tell it NOT to publish map odom tf - I think that's a param for gmapping. 
+base_link → odom.... use  the zed odom frame. OK, its still odom
+.In that case make sure you chaneg the names of "map" and "odom" frames to gmap_odom and gmap_map
+I take it back. juct change this map_frame param or well have two thing publishing that transform..and thats bad
+OK.. I gotta run for the evening. 
+I'll leave a light on in he garage with a white board in view
+
+<!-- launch lane to laser -->
+<include file="$(find igvc_navigation)/mapping/lane_laser_scan/launch/lane_to_laser_hokuyo.launch" /> 
+<!-- launch planb -->
+<include file="$(find veronica)/src/vtab/launch/vtab_planb.launch" /> 
+<!-- launch gmapping -->
+<node pkg="gmapping" type="slam_gmapping" name="gmapping_thing" output="screen" >
+  <!-- scan message -->
+  <remap from="scan" to="/lane_to_scan" />
+  <param name="odom_frame" value="odom"/>
+  <param name="base_frame" value="base_link"/>
+  <param name="map_frame" value="map"/>
+</node>
+
+</launch>

@@ -41,6 +41,7 @@
         <remap from="grid_map"          to="map" />
         <remap from="odom"              to="$(arg odom_topic)"/>
         <remap from="scan"              to="/scan"/>
+        <remap from="scan_cloud"        to="/zed/zed_node/point_cloud/cloud_registered"/>
         <!-- localization mode -->
 
         <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>
@@ -50,6 +51,7 @@
         <param name="Optimizer/Slam2D" value="false" />
         <param name="controller_frequency" value="5"/>
         <param name="subscribe_scan" value="true"/>
+        <param name="subscribe_scan_cloud" value="true"/>
         
     </node>
 

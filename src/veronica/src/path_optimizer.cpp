@@ -31,7 +31,7 @@ ros::Publisher mapPub;
 nav_msgs::OccupancyGrid::Ptr _map(new nav_msgs::OccupancyGrid());
 nav_msgs::Path myPath;
 
-const int LOOKAHEAD_NUM_CELLS = 14; //actual lookahead seems to be 1/2 of this number in cells?
+const int LOOKAHEAD_NUM_CELLS = 16; //actual lookahead seems to be 1/2 of this number in cells?
 int originX;
 int originY;
 

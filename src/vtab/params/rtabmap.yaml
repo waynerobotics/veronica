@@ -3,7 +3,7 @@
 subscribe_depth: true
 subscribe_rgbd: false
 subscribe_stereo: false
-subscribe_scan: true
+subscribe_scan: false
 subscribe_scan_cloud: false
 subscribe_user_data: false
 subscribe_odom_info: false
@@ -54,14 +54,14 @@ Grid:
     FootprintLength: 0.66
     FootprintWidth: 1.0
     MaxGroundAngle: 45.0
-    MinGroundHeight: 0
-    # MinGroundHeight: -0.5
-    MaxGroundHeight: 0.35
+    #MinGroundHeight: 0
+    MinGroundHeight: -0.5
+    MaxGroundHeight: 0.4
     # MaxGroundHeight: -0.4
     MaxObstacleHeight: 2.0
     # MaxObstacleHeight: 0.1
-    NoiseFilteringMinNeighbors: 3
-    NoiseFilteringRadius: 0.1
+    NoiseFilteringMinNeighbors: 4
+    NoiseFilteringRadius: 0.2
     NormalK: 20
     RangeMin: 0.7
     RangeMax: 6.0
