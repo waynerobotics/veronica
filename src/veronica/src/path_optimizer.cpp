@@ -165,11 +165,11 @@ void optimize(const nav_msgs::Path &path){
        for (int x = startX; x != endX && obstacle_on_line == false; x++)
        {
            //make sure we don't try to calculate slope of vertical line where y is always the same
-           if (startY == endY)
+           if (startY == endY || newPath.poses[0].pose.position.y == newPath.poses[furthestFreeCell].pose.position.y)
            {
+                cout << "DEBUG 7" << endl;
                obstacle_on_line = is_obstacle(originX, originY, x, startY, _map);
-                          cout << "DEBUG 7" << endl;
-
+                cout << "DEBUG 7.2" << endl;                        
            }
            else
            {
@@ -216,16 +216,16 @@ void optimize(const nav_msgs::Path &path){
         furthestFreeCell = (newPath.poses.size() > 3) ? 3 : 1;
     }
 
-    std::cout << "FOUND FURTHEST STRAIGHT LINE FROM START TO waypoint at x, y = " 
-    << path.poses[furthestFreeCell].pose.position.x << ", " 
-    << path.poses[furthestFreeCell].pose.position.y << endl;
+  
 
     //erase cells between start and the first obstacle-on-path encounter 
     //(leaving element 0 is for visual purposes - serve the furthest free cell to the drive controller (now element[1]))
     if(furthestFreeCell > 1){
         newPath.poses.erase(newPath.poses.begin()+1, newPath.poses.begin()+furthestFreeCell);
     }
-    
+      std::cout << "FOUND FURTHEST STRAIGHT LINE FROM START TO waypoint publishing path starting at x, y = " 
+    << path.poses[furthestFreeCell].pose.position.x << ", " 
+    << path.poses[furthestFreeCell].pose.position.y << endl;
     
     pathPub.publish(newPath);
     }
@@ -248,7 +248,7 @@ int main(int argc, char **argv)
     pathPub = node.advertise<nav_msgs::Path>("planb_path", 0);
     mapPub = node.advertise<nav_msgs::OccupancyGrid>("copied_map", 0);
 
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(5);
     while (ros::ok())
     {
 

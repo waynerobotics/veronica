@@ -55,6 +55,13 @@ bool is_obstacle(int originX, int originY, int x, int y, const nav_msgs::Occupan
   return ((int)map->data[getIndex( originX,  originY, x, y, map)] > OCCUPIED_THRESHOLD);
 }
 
+bool is_in_bounds(){
+  //dsjfnakjngr;kargne;
+ // awegrlnrewagkn
+ //     awefgnkja;
+ // gern;raggknh
+}
+
 //helper to return map resolution
 double map_resolution(const nav_msgs::OccupancyGridPtr &map)
 {
@@ -91,6 +98,7 @@ double get_b(double x1, double y1, double x2, double y2)
 //****DOES NOT HANDLE VERTICAL LINES****
 double get_y_intercept(double x1, double y1, double x2, double y2, double checkX)
 {
+  std::cout << "IN get_y_intercept, checking " << x1 << ", " << y1 << " .. " << x2 << ", " << y2 << " and checking X= " << checkX<< std::endl;
   double m = get_m(x1, y1, x2, y2);
   double b = get_b(x1, y1, x2, y2);
   return m * checkX + b;

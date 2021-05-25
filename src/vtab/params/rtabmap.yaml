@@ -26,7 +26,7 @@ odom_sensor_sync: false
 wait_for_transform_duration: 0.2
 approx_sync: true
 
-queue_size: 10
+queue_size: 2
 
 scan_normal_k: 0
 
@@ -43,7 +43,7 @@ Grid:
     GroundIsObstacle: false
     PreVoxelFiltering: true
     RayTracing: true
-    FromDepth: true
+    FromDepth: false
     NormalsSegmentation: false
     CellSize: 0.1
     ClusterRadius: 0.2

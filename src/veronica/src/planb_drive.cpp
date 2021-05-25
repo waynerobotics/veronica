@@ -20,6 +20,7 @@
 #include "nav_msgs/Path.h"
 #include <nav_msgs/Odometry.h>
 #include <tf/transform_broadcaster.h>
+#include <tf/transform_listener.h>
 #include <cstdlib>
 #include <math.h>
 #include <iostream>
@@ -47,7 +48,7 @@ const double MAX_LINEAR_VEL = 1.5;
 const double MIN_PIVOT_VELOCITY = 0.1;
 const double MAX_ANGULAR_VELOCITY = 0.15;
 
-
+double lastPathRequest;
 bool waypointActive = false;
 bool odomInitialized = false;
 bool gotNewGoal = false;
@@ -56,22 +57,26 @@ double getDistanceError();
 
 void updatePose(const nav_msgs::Odometry &currentOdom)
 {
-  odom.pose.pose.position.x = currentOdom.pose.pose.position.x;
-  odom.pose.pose.position.y = currentOdom.pose.pose.position.y;
-  odom.pose.pose.orientation.x = currentOdom.pose.pose.orientation.x;
-  odom.pose.pose.orientation.y = currentOdom.pose.pose.orientation.y;
-  odom.pose.pose.orientation.z = currentOdom.pose.pose.orientation.z;
-  odom.pose.pose.orientation.w = currentOdom.pose.pose.orientation.w;
-  odomInitialized = true;
+ // odom.pose.pose.position.x = currentOdom.pose.pose.position.x;
+ // odom.pose.pose.position.y = currentOdom.pose.pose.position.y;
+ // odom.pose.pose.orientation.x = currentOdom.pose.pose.orientation.x;
+ // odom.pose.pose.orientation.y = currentOdom.pose.pose.orientation.y;
+ // odom.pose.pose.orientation.z = currentOdom.pose.pose.orientation.z;
+//  odom.pose.pose.orientation.w = currentOdom.pose.pose.orientation.w;
+//  odomInitialized = true;
 }
 
 //after reaching a waypoint, this is called to publish the original final goal in the path so
 //the global planner and path optimizer provide a new path
 void getNewPath()
 {
-  pubGoal.publish(path.poses.back());
-  cout << "ASKING FOR NEW PATH TO: " << path.poses.back().pose.position.x << ", "<<
-  path.poses.back().pose.position.y << endl;
+  //pubGoal.publish(path.poses.back());
+  if(ros::Time::now().toSec() - lastPathRequest > 2.0){
+    pubGoal.publish(path.poses[path.poses.size()-2]);
+    lastPathRequest = ros::Time::now().toSec();
+    cout << "ASKING FOR NEW PATH TO: " << path.poses.back().pose.position.x << ", " << path.poses.back().pose.position.y << endl;
+  }
+  
 
 } 
 
@@ -87,6 +92,7 @@ void updatePath(const nav_msgs::Path &_path)
     path.poses.back().pose.position.y != lastGoal.pose.position.y ){
     gotNewGoal = true;
     cout << "GOT NEW PATH IN DRIVE.CPP" << endl;
+    waypointActive = true;
   }
   else
   {
@@ -106,7 +112,9 @@ void updatePath(const nav_msgs::Path &_path)
         desired.pose.position.y = path.poses[i].pose.position.y;
         i++;
       }
-
+      if(i>1){
+        getNewPath();
+      }
       desired.pose.orientation.x = path.poses[i].pose.orientation.x;
       desired.pose.orientation.y = path.poses[i].pose.orientation.y;
       desired.pose.orientation.z = path.poses[i].pose.orientation.z;
@@ -190,13 +198,13 @@ void set_velocity()
 
   //if our path size is greater than 2 (start and goal), then we ask the global planner
   //and path optimizer to recalculate and give us a new one.
-  static double lastPathRequest = ros::Time::now().toSec();
-  if (path.poses.size() > 2  && ros::Time::now().toSec() - lastPathRequest > 0.5
-        && gotNewGoal == false )
-  {
+  
+  //if (path.poses.size() > 2  && ros::Time::now().toSec() - lastPathRequest > 0.5
+  //      && gotNewGoal == false )
+ // {
    // getNewPath();
-    lastPathRequest = ros::Time::now().toSec();
-  }
+  //  lastPathRequest = ros::Time::now().toSec();
+  //}
 
   cout << "set_vel step1: distError = " << getDistanceError() << "  and FINAL desired heading error: " << final_desired_heading_error << endl;
   //not at position - keep moving
@@ -257,7 +265,7 @@ void set_velocity()
     cout << "anglestuff 2 (ANGLE_MET) FORWARD PLUS HEADING CORRECTION" << endl;
   //go forward fully and keep tweaking heading toward it as well
     cmdVel.linear.x = Klv * getDistanceError();
-    cmdVel.angular.z = (Ka * angularError / 2);
+    cmdVel.angular.z = (Ka * angularError / 2.5);
   }
   else //at waypoint, set final heading *****DISABLE SET FINAL HEADING FOR THIS VERSION -> NO HEADING DATA IN STANDARD PATH MSG *****
   {
@@ -265,6 +273,7 @@ void set_velocity()
     location_met = true;
     waypointActive = false; // remove from here and uncomment if section directly below to reenable final heading pivots
     got_zero = false;       // remove from here and uncomment section below to reenable final heading pivots
+    getNewPath();
   }
 
   // uncomment to reenable setting final heading, but need to somehow pass final heading because it is not present in path msg
@@ -294,12 +303,37 @@ void updateGoal(const geometry_msgs::PoseStamped &_goal)
   }
 }
 
+tf::StampedTransform get_map_base_tf(){
+
+    static tf::TransformListener listener;
+    static tf::StampedTransform map_base_tf;
+
+    if(listener.canTransform("map","base_link", ros::Time(0), NULL))
+    {
+        listener.lookupTransform("map", "base_link", ros::Time(0), map_base_tf);
+        odom.pose.pose.position.x = map_base_tf.getOrigin().getX();
+        odom.pose.pose.position.y = map_base_tf.getOrigin().getY();
+        odom.pose.pose.orientation.x = map_base_tf.getRotation().getX();
+        odom.pose.pose.orientation.y = map_base_tf.getRotation().getY();
+        odom.pose.pose.orientation.z = map_base_tf.getRotation().getZ();
+        odom.pose.pose.orientation.w = map_base_tf.getRotation().getW();
+        odomInitialized = true;
+    }
+    else
+    {
+        cout<<"UNABLE TO LOOKUP MAP -> BASE TRANSFORM "<<endl;
+    }
+    return map_base_tf;
+}
+
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "planb_drive_controller");
+  ros::init(argc, argv, "planb_drive");
   ros::NodeHandle node;
+  tf::StampedTransform map_base_tf();
   lastGoal.pose.position.x = 99999;
   lastGoal.pose.position.y = 99999;
+  lastPathRequest = ros::Time::now().toSec();
   //Subscribe to topics
   ros::Subscriber subCurrentPose = node.subscribe("odom", 10, updatePose, ros::TransportHints().tcpNoDelay());
   ros::Subscriber subDesiredPose = node.subscribe("planb_path", 1, updatePath, ros::TransportHints().tcpNoDelay());
@@ -307,18 +341,22 @@ int main(int argc, char **argv)
   pubVelocity = node.advertise<geometry_msgs::Twist>("planb_cmd_vel", 1);
   pubGoal = node.advertise<geometry_msgs::PoseStamped>("move_base_simple/goal", 1);
 
-  ros::Rate loop_rate(20);
+  ros::Rate loop_rate(10);
   while (ros::ok())
   {
     ros::spinOnce();
+
+    get_map_base_tf();
     if (odomInitialized && waypointActive)
     {
       set_velocity();
+    }else if (path.poses.size()>1){
+      getNewPath();
     }
     cout << "goal = " << desired.pose.position.x << ", " << desired.pose.position.y << endl
          << "current x,y = " << odom.pose.pose.position.x << ", " << odom.pose.pose.position.y << endl
          << "  Distance error = " << getDistanceError() << endl;
-    cout << "cmd_vel = " << cmdVel.linear.x << " ,  " << cmdVel.angular.z << endl;
+    cout << "cmd_vel = " << cmdVel.linear.x << " ,  " << cmdVel.angular.z << "  waypointactive = " <<waypointActive <<endl;
     loop_rate.sleep();
   }
 

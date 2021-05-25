@@ -44,7 +44,7 @@
         <param name="output_frame_id" value="zed_camera_center" />
         <param name="range_min" value=".6" />
         <param name="range_max" value="10" />
-        <param name="scan_height" value="50" /> 
+        <param name="scan_height" value="100" /> 
         <param name="scan_time" value=".033" />
 
     </node>
@@ -74,7 +74,7 @@
         <remap from="costmap" to="/move_base/global_costmap/costmap"/>
     </node>
 
-    <node pkg="veronica" type="planb_drive" name="planb_drive">
+    <node pkg="veronica" type="planb_drive" name="planb_drive" output="log">
         <remap from="odom" to="/zed/zed_node/odom"/>
     </node>
 

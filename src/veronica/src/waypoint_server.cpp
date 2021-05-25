@@ -13,11 +13,16 @@ using namespace std;
 const double CLOSE_ENOUGH_DISTANCE = .5; //meters
 const string FILE_PATH = "/home/warriorrobotics/veronica/src/veronica/params/waypoints.txt";
 ros::Publisher wptPub;
+ros::Subscriber subMap;
 tf::StampedTransform map_base_tf;
 tf::StampedTransform map_odom_tf;
 
 vector<geometry_msgs::PoseStamped> waypoints;
 bool waypointReached = false;
+
+nav_msgs::OccupancyGrid::Ptr _map(new nav_msgs::OccupancyGrid());
+int originX;
+int originY;
 
 //todo make this lookup transform and return waypoint in map frame
 geometry_msgs::PoseStamped getWaypointInMapFrame(geometry_msgs::PoseStamped temp){
@@ -28,7 +33,7 @@ bool isCloseENough(geometry_msgs::PoseStamped waypoint)
 {
   double deltaX = waypoint.pose.position.x - map_base_tf.getOrigin().getX();
   double deltaY = waypoint.pose.position.y - map_base_tf.getOrigin().getY();
-  cout << "Distance error = " << sqrt(pow(deltaX, 2) + pow(deltaY, 2)) << endl;
+  cout << "waypoint_server Distance error = " << sqrt(pow(deltaX, 2) + pow(deltaY, 2)) << endl;
   return sqrt(pow(deltaX, 2) + pow(deltaY, 2)) < CLOSE_ENOUGH_DISTANCE;
 }
 
@@ -68,6 +73,48 @@ bool readFile()
     }
     inFile.close();
     return true;
+}
+
+//copy the supplied costmap to a new _map we can access freely
+void map_handler(const nav_msgs::OccupancyGridPtr &costmap)
+{
+    static bool init_complete = false;
+    //only do this stuff the first time a map is recieved.
+ //   if (init_complete == false)
+ //   {
+    _map = costmap;
+    _map->header.frame_id = costmap->header.frame_id;
+    _map->info.resolution = costmap->info.resolution;
+    _map->info.width = costmap->info.width;
+    _map->info.height = costmap->info.height;
+    _map->info.origin.position.x = costmap->info.origin.position.x;
+    _map->info.origin.position.y = costmap->info.origin.position.y;
+    _map->info.origin.orientation.x = costmap->info.origin.orientation.x;
+    _map->info.origin.orientation.y = costmap->info.origin.orientation.y;
+    _map->info.origin.orientation.z = costmap->info.origin.orientation.z;
+    _map->info.origin.orientation.w = costmap->info.origin.orientation.w;
+    if (_map->data.size() != costmap->data.size())
+    {
+        _map->data.resize(costmap->data.size());
+        }
+        _map->data = costmap->data;
+
+
+            //origins in cells instead of meters.
+            originX = _map->info.origin.position.x / _map->info.resolution;
+            originY = _map->info.origin.position.y / _map->info.resolution;
+
+            if (!init_complete)
+            {
+                std::cout << "Map recieved. Initializing _map size "
+                     << _map->info.width << " x " << _map->info.height << " = " << costmap->data.size() << "  at resolution "
+                     << _map->info.resolution << "\nOrigin: "
+                     << _map->info.origin.position.x << ", " << _map->info.origin.position.y << endl
+                     << "originx,y: " << originX << ", " << originY << endl;
+
+                init_complete = true;
+              }
+
 }
 
 
@@ -115,7 +162,7 @@ int main(int argc, char **argv)
     //update_start_cell();
 
     //subscribe to _map and pose
-    //subMap = node.subscribe("costmap", 1, map_handler);
+    subMap = node.subscribe("costmap", 1, map_handler);
     //subPath = node.subscribe("/move_base/TrajectoryPlannerROS/global_plan", 0, optimize);
 
     //advertise publisher
@@ -130,10 +177,19 @@ int main(int argc, char **argv)
         ros::spinOnce();
         update_map_base_link_tf();
         update_map_odom_link_tf();
+        static bool toggled = false;
 
         if (!waypoints.empty())
         {
           nextWaypoint = waypoints.back();
+          
+          if(toggled){
+            nextWaypoint.pose.position.x = nextWaypoint.pose.position.x + 0.11;
+          }else{
+            nextWaypoint.pose.position.x = nextWaypoint.pose.position.x - 0.11;            
+          }
+          toggled = !toggled;
+
           wptPub.publish(getWaypointInMapFrame(nextWaypoint));
           cout << "Publishing WPT at Frame_ID:  " << nextWaypoint.header.frame_id << "   " << nextWaypoint.pose.position.x << ", " << nextWaypoint.pose.position.y << endl;
 

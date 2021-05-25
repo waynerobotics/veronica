@@ -7,6 +7,7 @@ Panels:
         - /2D Map1/Status1
         - /Ground1
         - /Path1
+        - /TF1
         - /TF1/Frames1
         - /TF1/Tree1
       Splitter Ratio: 0.5
@@ -288,13 +289,13 @@ Visualization Manager:
         zed_baro_link:
           Value: false
         zed_camera_center:
-          Value: true
+          Value: false
         zed_imu_link:
-          Value: true
+          Value: false
         zed_left_camera_frame:
-          Value: true
+          Value: false
         zed_left_camera_optical_frame:
-          Value: true
+          Value: false
         zed_mag_link:
           Value: false
         zed_right_camera_frame:
@@ -432,25 +433,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 21.8139591217041
+      Distance: 18.352169036865234
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: 5.139996528625488
+        Y: 6.995222091674805
+        Z: 0.005710601806640625
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.324796199798584
+      Pitch: 1.3847965002059937
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.608586072921753
+      Yaw: 3.1182668209075928
     Saved: ~
 Window Geometry:
   Camera:
