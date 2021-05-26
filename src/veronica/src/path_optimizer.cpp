@@ -177,8 +177,8 @@ void optimize(const nav_msgs::Path &path){
 
                obstacle_on_line = is_obstacle(originX, originY, x,
                                               (int)get_y_intercept(
-                                                  newPath.poses[0].pose.position.x,
-                                                  newPath.poses[0].pose.position.y,
+                                                  newPath.poses[0].pose.position.x/_map->info.resolution,
+                                                  newPath.poses[0].pose.position.y/_map->info.resolution,
                                                   newPath.poses[furthestFreeCell].pose.position.x,
                                                   newPath.poses[furthestFreeCell].pose.position.y,
                                                   x),

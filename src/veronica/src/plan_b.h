@@ -51,7 +51,9 @@ bool is_unknown(int originX, int originY, int x, int y, const nav_msgs::Occupanc
 //helper to check if cell is to be considered an obstacle
 bool is_obstacle(int originX, int originY, int x, int y, const nav_msgs::OccupancyGridPtr &map)
 {
-  //   std::cout<<x<<", "<<y<< " .... "<<(int)map->data[getIndex(x, y, map)]<<std::endl;
+  std::cout << "In isobstacle()  " << x << ", " << y  << std::endl;
+  std::cout<< "index: "<<getIndex(originX, originY, x, y, map)<< "  and value = "<<(int)map->data[getIndex(originX, originY, x, y, map)] << std::endl;
+
   return ((int)map->data[getIndex( originX,  originY, x, y, map)] > OCCUPIED_THRESHOLD);
 }
 
@@ -103,6 +105,7 @@ double get_y_intercept(double x1, double y1, double x2, double y2, double checkX
   double b = get_b(x1, y1, x2, y2);
   return m * checkX + b;
 }
+
 
 //returns where y falls on a line between two supplied points, for the given y
 //returns x from slope intercept forumula y=m*x+b, given y. for x= (y-b)/m
