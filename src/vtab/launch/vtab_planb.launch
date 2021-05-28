@@ -31,6 +31,7 @@
             <arg name="depth_topic"             default="$(arg zed_node_name)/depth/depth_registered" />
             <arg name="camera_info_topic"       default="$(arg zed_node_name)/rgb/camera_info" />
             <arg name="depth_camera_info_topic" default="$(arg zed_node_name)/depth/camera_info" />
+            <!--remap from="/zed/gps/fix" to="/fix" /   not working - remap in gps launch file  -->
 
         </include>   
 
@@ -56,8 +57,8 @@
         <remap from="cmd_vel" to="move_base_cmd_vel" />
 
         
-        <param name="controller_frequency" value="5"/>
-        <param name="planner_frequency" value="5"/>
+        <param name="controller_frequency" value="10"/>
+        <param name="planner_frequency" value="10"/>
         <!--param name="use_dijkstra" value="true"/-->
         <rosparam file="$(find vtab)/params/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
         <rosparam file="$(find vtab)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
@@ -68,7 +69,8 @@
     </node>
 
     <include file="$(find veronica)/launch/alt_base_drive.launch" />
-     <!--include file="$(find veronica)/launch/sensors.launch" /-->
+    <!--include file="$(find veronica)/launch/sensors.launch" /--><!-- this is gps stuff plus robot_pose_ekf ... prefer robot localisation-->
+    <include file="$(find veronica)/launch/v_localization.launch" />
 
     <node pkg="veronica" type="path_optimizer" name="path_optimizer" output="log">
         <remap from="costmap" to="/move_base/global_costmap/costmap"/>
@@ -77,6 +79,8 @@
     <node pkg="veronica" type="planb_drive" name="planb_drive" output="log">
         <remap from="odom" to="/zed/zed_node/odom"/>
     </node>
+
+
 
     <node name="rviz" pkg="veronica" type="rviz" args="-d $(find vtab)/rviz/zed-rtabmap.rviz" />
 

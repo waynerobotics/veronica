@@ -54,6 +54,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
      <!-- <arg name="cam_pitch"             default="-0.15" /> -->     <!-- default was 0.0 wait -5.5-->
     <arg name="cam_yaw"               default="0.0" />
 
+    <node pkg="tf" type="static_transform_publisher" name="zed_imu_base_tf" 
+                  args="$(arg cam_pos_x) $(arg cam_pos_y) $(arg cam_pos_z) 
+                        $(arg cam_roll) $(arg cam_pitch) $(arg cam_yaw) base_link zed_imu_link 200"/>
+
     <!-- ROS URDF description of the ZED -->
     <group if="$(arg publish_urdf)">
         <param name="$(arg camera_name)_description"
@@ -75,8 +79,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </group>
 
     <node name="$(arg node_name)" pkg="zed_wrapper" type="zed_wrapper_node" output="screen" required="true"><!-- launch-prefix="valgrind" -->
-        <rosparam file="$(find zed_wrapper)/params/common.yaml" command="load" />
-        <!--rosparam file="$(find vtab)/params/zed_common.yaml" command="load" /-->
+        <!--rosparam file="$(find /zed-ros-wrapper/zed_wrapper)/params/common.yaml" command="load" /-->
+        <rosparam file="/home/warriorrobotics/veronica/src/zed-ros-wrapper/zed_wrapper/params/common.yaml" command="load" />
       <!--  /////////Heyyyy ... find the zed_common in zed_wrapper and set max distance to maybe 10 -->
        <!-- /////////(edit, maybe doesn't matter since mapping is false)-->
        <!-- /////////then check any params in zed2 .yaml. Try to reduce any extra data.. consider -->

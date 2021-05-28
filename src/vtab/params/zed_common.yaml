@@ -43,7 +43,7 @@ depth:
     depth_downsample_factor: 1.0 # Resample factor for depth data matrices [0.01,1.0] The SDK works with native data sizes, but publishes rescaled matrices (depth map, point cloud, ...)
 
 pos_tracking:
-    publish_tf: true # publish `odom -> base_link` TF
+    publish_tf: false # publish `odom -> base_link` TF
     publish_map_tf: false # publish `map -> odom` TF
     map_frame: "map"
     odometry_frame: "odom"

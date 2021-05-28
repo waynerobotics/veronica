@@ -3,13 +3,14 @@
 
 
 <!-- #############    GPS -  UNCOMMENT THE correct LOCATION FOR THE MISSION  ##############-->
-<include file="$(find rtk_gps)/launch/ntrip_mcors_detroit1.launch" />
+<!--include file="$(find rtk_gps)/launch/ntrip_mcors_detroit1.launch" /-->
+<include file="$(find rtk_gps)/launch/ntrip_mcors_auburn.launch" />
 
 
+  <node pkg="tf" type="static_transform_publisher" name="gps_base_tf" args="-72.0 -19.0 157 0.0 0.0 0.0 base_link gps_link 10"/>
 
-
+  
   <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
-    <remap from="vo" to="zed_node/odom"/>
     <remap from="imu_data" to="zed_node/imu/data"/>
     <param name="output_frame" value="odom"/>
     <param name="freq" value="30.0"/>
@@ -19,6 +20,13 @@
     <param name="vo_used" value="true"/>
     <param name="debug" value="false"/>
     <param name="self_diagnose" value="false"/>
+  </node>
+
+  <node pkg="gps_common" type="utm_odometry_node" name="utm_odometry_node" >
+    <remap from="odom" to="vo"/><!-- For robot pose EKF node -->-->
+    <param name="rot_covariance" value="99999" />
+    <param name="frame_id" value="gps_link" />
+    <param name="child_frame_id" value="base_link" />
   </node>
 
 

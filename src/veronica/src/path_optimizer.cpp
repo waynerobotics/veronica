@@ -241,14 +241,14 @@ int main(int argc, char **argv)
 
     //subscribe to _map and goal location
     subMap = node.subscribe("costmap", 1, map_handler);
-    subPath = node.subscribe("/move_base/TrajectoryPlannerROS/global_plan", 0, optimize);
+    subPath = node.subscribe("/move_base/TrajectoryPlannerROS/global_plan", 1, optimize);
 
     //advertise publisher
-    wptPub = node.advertise<geometry_msgs::PoseStamped>("waypoint_2d", 0);
-    pathPub = node.advertise<nav_msgs::Path>("planb_path", 0);
-    mapPub = node.advertise<nav_msgs::OccupancyGrid>("copied_map", 0);
+    wptPub = node.advertise<geometry_msgs::PoseStamped>("waypoint_2d", 1);
+    pathPub = node.advertise<nav_msgs::Path>("planb_path", 1);
+    mapPub = node.advertise<nav_msgs::OccupancyGrid>("copied_map", 1);
 
-    ros::Rate loop_rate(5);
+    ros::Rate loop_rate(10);
     while (ros::ok())
     {
 
