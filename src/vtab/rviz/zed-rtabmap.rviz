@@ -5,9 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /2D Map1/Status1
-        - /Ground1
-        - /Path1
-        - /TF1
+        - /Odometry1
         - /TF1/Frames1
         - /TF1/Tree1
       Splitter Ratio: 0.5
@@ -282,10 +280,14 @@ Visualization Manager:
         All Enabled: false
         base_link:
           Value: true
+        gps:
+          Value: true
         map:
           Value: true
         odom:
           Value: true
+        utm:
+          Value: false
         zed_baro_link:
           Value: false
         zed_camera_center:
@@ -315,6 +317,8 @@ Visualization Manager:
         map:
           odom:
             base_link:
+              gps:
+                {}
               zed_camera_center:
                 zed_baro_link:
                   {}
@@ -332,6 +336,8 @@ Visualization Manager:
                     {}
                   zed_temp_right_link:
                     {}
+            utm:
+              {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -433,25 +439,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 18.352169036865234
+      Distance: 18.387502670288086
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 5.139996528625488
-        Y: 6.995222091674805
-        Z: 0.005710601806640625
-      Focal Shape Fixed Size: true
+        X: 3.861804962158203
+        Y: 6.073098182678223
+        Z: 0.0036678314208984375
+      Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.3847965002059937
+      Pitch: 1.4897964000701904
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.1182668209075928
+      Yaw: 3.0683915615081787
     Saved: ~
 Window Geometry:
   Camera:

@@ -56,7 +56,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <node pkg="tf" type="static_transform_publisher" name="zed_imu_base_tf" 
                   args="$(arg cam_pos_x) $(arg cam_pos_y) $(arg cam_pos_z) 
-                        $(arg cam_roll) $(arg cam_pitch) $(arg cam_yaw) base_link zed_imu_link 200"/>
+                        $(arg cam_roll) $(arg cam_pitch) $(arg cam_yaw) base_link zed_imu_link 5000"/>
 
     <!-- ROS URDF description of the ZED -->
     <group if="$(arg publish_urdf)">

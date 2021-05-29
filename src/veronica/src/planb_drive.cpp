@@ -34,7 +34,9 @@ nav_msgs::Odometry odom;
 geometry_msgs::Twist cmdVel;
 geometry_msgs::PoseStamped desired;
 geometry_msgs::PoseStamped lastGoal;
+tf::StampedTransform map_odom_tf;
 nav_msgs::Path path;
+
 const double PI = 3.141592;
 const double Ka = 0.45;
 const double Kb = -.5;
@@ -55,8 +57,8 @@ bool gotNewGoal = false;
 
 double getDistanceError();
 
-void updatePose(const nav_msgs::Odometry &currentOdom)
-{
+//void updatePose(const nav_msgs::Odometry &currentOdom)
+//{
  // odom.pose.pose.position.x = currentOdom.pose.pose.position.x;
  // odom.pose.pose.position.y = currentOdom.pose.pose.position.y;
  // odom.pose.pose.orientation.x = currentOdom.pose.pose.orientation.x;
@@ -64,7 +66,7 @@ void updatePose(const nav_msgs::Odometry &currentOdom)
  // odom.pose.pose.orientation.z = currentOdom.pose.pose.orientation.z;
 //  odom.pose.pose.orientation.w = currentOdom.pose.pose.orientation.w;
 //  odomInitialized = true;
-}
+//}
 
 //after reaching a waypoint, this is called to publish the original final goal in the path so
 //the global planner and path optimizer provide a new path
@@ -82,6 +84,7 @@ void getNewPath()
 
 void updatePath(const nav_msgs::Path &_path)
 {
+  
   
   path.header.frame_id = _path.header.frame_id;
   path.header.stamp = _path.header.stamp;
@@ -335,13 +338,14 @@ int main(int argc, char **argv)
   lastGoal.pose.position.y = 99999;
   lastPathRequest = ros::Time::now().toSec();
   //Subscribe to topics
-  ros::Subscriber subCurrentPose = node.subscribe("odom", 10, updatePose, ros::TransportHints().tcpNoDelay());
+  //using tf lookup instead of odom msg
+ // ros::Subscriber subCurrentPose = node.subscribe("odom", 10, updatePose, ros::TransportHints().tcpNoDelay());
   ros::Subscriber subDesiredPose = node.subscribe("planb_path", 1, updatePath, ros::TransportHints().tcpNoDelay());
   ros::Subscriber subGoal = node.subscribe("move_base_simple/goal", 1, updateGoal, ros::TransportHints().tcpNoDelay());
   pubVelocity = node.advertise<geometry_msgs::Twist>("planb_cmd_vel", 1);
   pubGoal = node.advertise<geometry_msgs::PoseStamped>("move_base_simple/goal", 1);
 
-  ros::Rate loop_rate(10);
+  ros::Rate loop_rate(20);
   while (ros::ok())
   {
     ros::spinOnce();
@@ -349,7 +353,7 @@ int main(int argc, char **argv)
     get_map_base_tf();
     if (odomInitialized && waypointActive)
     {
-      set_velocity();
+      set_velocity(); 
     }else if (path.poses.size()>1){
       getNewPath();
     }

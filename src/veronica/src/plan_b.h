@@ -13,7 +13,7 @@ int getX(int originX, int index, const nav_msgs::OccupancyGridPtr &map)
 {
   return (index % map->info.width) + abs(originX);
 }
-//occupancy grid x from coordinate pair in form of pose message based on  index = ogm.info.width * (y + abs(originY)) + (x + abs(originX))
+//occupancy grid x from coordinate pair in form of pose message based on  index = ogm.info.width * (y + abs(originY)) + (x + abs())
 int getX( geometry_msgs::Pose pose, const nav_msgs::OccupancyGridPtr &map){
   return (int) (pose.position.x / map->info.resolution);
 }
@@ -28,15 +28,32 @@ int getY( geometry_msgs::Pose pose, const nav_msgs::OccupancyGridPtr &map){
   return (int) (pose.position.y / map->info.resolution);
 }
 
-
+//origins in cells instead of meters.
+// originX = _map->info.origin.position.x / _map->info.resolution;
+// originY = _map->info.origin.position.y / _map->info.resolution;
 //occupancy grid vector index from x, y coordinates based on  index = ogm.info.width * (y + abs(originY)) + (x + abs(originX))
 int getIndex(int originX, int originY, int x, int y, const nav_msgs::OccupancyGridPtr &map)
 {
   return map->info.width * (y + abs(originY)) + (x + abs(originX)) ;
 }
 
+//should be able to replace above overload with this but needs testing
+int getIndex(int x, int y, const nav_msgs::OccupancyGridPtr &map)
+{
+  int originX = map->info.origin.position.x / map->info.resolution;
+  int originY = map->info.origin.position.y / map->info.resolution;
+  return map->info.width * (y + abs(originY)) + (x + abs(originX)) ;
+}
+
 //occupancy grid vector index from coordinate pair (in pose msg) based on  index = ogm.info.width * (y + abs(originY)) + (x + abs(originX))
 int getIndex(int originX, int originY, geometry_msgs::Pose pose, const nav_msgs::OccupancyGridPtr &map){
+  return map->info.width * (getY(pose, map) + abs(originY)) + (getX(pose, map) + abs(originX)) ;
+}
+
+//should be able to replace above overload with this but needs testing
+int getIndex(geometry_msgs::Pose pose, const nav_msgs::OccupancyGridPtr &map){
+  int originX = map->info.origin.position.x / map->info.resolution;
+  int originY = map->info.origin.position.y / map->info.resolution;
   return map->info.width * (getY(pose, map) + abs(originY)) + (getX(pose, map) + abs(originX)) ;
 }
 
@@ -57,11 +74,23 @@ bool is_obstacle(int originX, int originY, int x, int y, const nav_msgs::Occupan
   return ((int)map->data[getIndex( originX,  originY, x, y, map)] > OCCUPIED_THRESHOLD);
 }
 
-bool is_in_bounds(){
-  //dsjfnakjngr;kargne;
- // awegrlnrewagkn
- //     awefgnkja;
- // gern;raggknh
+//should be able to replace above overload with this but needs testing
+bool isObstacle(int x, int y, const nav_msgs::OccupancyGridPtr &map){
+  int originX = map->info.origin.position.x / map->info.resolution;
+  int originY = map->info.origin.position.y / map->info.resolution;
+  return ((int)map->data[getIndex( originX,  originY, x, y, map)] > OCCUPIED_THRESHOLD);
+}
+
+bool is_in_bounds(geometry_msgs::Pose pose, const nav_msgs::OccupancyGridPtr &map){
+  int originX = map->info.origin.position.x / map->info.resolution;
+  int originY = map->info.origin.position.y / map->info.resolution;
+  int maxX = originX + map->info.width;
+  int maxY = originY + map->info.height;
+
+  return pose.position.x/map->info.resolution > originX 
+          && pose.position.x/map->info.resolution < maxX
+          && pose.position.y/map->info.resolution > originY
+          && pose.position.y/map->info.resolution < maxY;
 }
 
 //helper to return map resolution

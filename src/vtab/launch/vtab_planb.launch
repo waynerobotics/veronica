@@ -44,21 +44,22 @@
         <remap from="camera_info" to="/zed/zed_node/depth/camera_info" />
         <param name="output_frame_id" value="zed_camera_center" />
         <param name="range_min" value=".6" />
-        <param name="range_max" value="10" />
+        <param name="range_max" value="5" />
         <param name="scan_height" value="100" /> 
-        <param name="scan_time" value=".033" />
+        <param name="scan_time" value=".1" />
 
     </node>
 
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
         <remap from="openni_points" to="/zed/zed_node/point_cloud/cloud_registered"/> 
-        <remap from="odom" to="zed/zed_node/odom" />
+        <!--remap from="odom" to="zed/zed_node/odom" /-->
+        <remap from="odom" to="/odom/filtered/global" />
         <remap from="map" to="/zed/map" />
         <remap from="cmd_vel" to="move_base_cmd_vel" />
 
         
-        <param name="controller_frequency" value="10"/>
-        <param name="planner_frequency" value="10"/>
+        <param name="controller_frequency" value="5"/>
+        <param name="planner_frequency" value="5"/>
         <!--param name="use_dijkstra" value="true"/-->
         <rosparam file="$(find vtab)/params/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
         <rosparam file="$(find vtab)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
@@ -77,7 +78,8 @@
     </node>
 
     <node pkg="veronica" type="planb_drive" name="planb_drive" output="log">
-        <remap from="odom" to="/zed/zed_node/odom"/>
+        <!--remap from="odom" to="/zed/zed_node/odom"/-->
+        <remap from="odom" to="/odom/filtered/global"/>
     </node>
 
 

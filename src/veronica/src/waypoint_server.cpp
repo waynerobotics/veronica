@@ -128,7 +128,7 @@ void update_map_base_link_tf(){
     }
     else
     {
-        cout<<"UNABLE TO LOOKUP MAP -> BASE_LINK TRANSFORM "<<endl;
+        cout<<"WAYPOINT SERVER UNABLE TO LOOKUP MAP -> BASE_LINK TRANSFORM "<<endl;
     }
 }
 
@@ -142,7 +142,7 @@ void update_map_odom_link_tf(){
     }
     else
     {
-        cout<<"UNABLE TO LOOKUP MAP -> ODOM TRANSFORM "<<endl;
+        cout<<"WAYPOINT SERVER UNABLE TO LOOKUP MAP -> ODOM TRANSFORM "<<endl;
     }
 }
 
@@ -172,7 +172,7 @@ int main(int argc, char **argv)
 
     geometry_msgs::PoseStamped nextWaypoint;
     ros::Rate loop_rate(2);
-    while (ros::ok())
+    while (ros::ok() && !waypoints.empty() )
     {
         ros::spinOnce();
         update_map_base_link_tf();
@@ -201,6 +201,6 @@ int main(int argc, char **argv)
 
         loop_rate.sleep();
     }
-
+    cout<<"Waypoints list empty - exiting"<<endl;
     return 0;
 }

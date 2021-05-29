@@ -21,7 +21,7 @@
 <node pkg="differential_drive" type="twist_to_motors.py" name="twist_to_motors" output="screen"> <!--cmd_vel to tgt_velocity in m/s -->
     <!--param name="base_width" value=".888" /-->
     <param name="base_width" value="0.888" />
-    <param name="rate" value="10" />
+    <param name="rate" value="20" />
     <param name="x_min" value="-0.5" /> 
     <param name="x_max" value="1.5" />
     <param name="r_min" value="-0.08" />
