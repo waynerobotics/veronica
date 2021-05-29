@@ -82,7 +82,7 @@ geometry_msgs::PoseStamped utmToMap(geometry_msgs::PoseStamped utmPose){
   double deltaY = utmPose.pose.position.y - utm_map_tf.getOrigin().getY();
   double distance = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
   double tfRads = utm_map_tf.getRotation().getAngle();
-  double thetaBearing = atan2(deltaY, deltaX) - tfRads;
+  double thetaBearing = atan2(deltaY, deltaX) - 1.57;
   //double mapX = distance * cos(thetaBearing);
   //double mapY = distance * sin(thetaBearing);
   cout<<"in deltax, deltay                 == "<<deltaX<<" .. "<<deltaY<<endl;

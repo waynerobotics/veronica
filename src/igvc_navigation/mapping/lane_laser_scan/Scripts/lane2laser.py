@@ -81,6 +81,7 @@ class image2laser:
       
       img = cv2.blur(img, (5,5))  
       img, _, _, _, _ = combined_thresh(img)
+      
       img, _, _, _ = perspective_transform(img)
 
       self.ls.ranges = self.laserScan(img, xc, yc, self.ls.angle_increment, self.ls.angle_min, self.ls.angle_max)
