@@ -5,6 +5,7 @@
 #include <tf/transform_listener.h>
 #include <vector>
 #include <math.h>
+#include <string.h>
 #include <iostream>
 #include <fstream>
 
@@ -16,6 +17,7 @@ ros::Publisher wptPub;
 ros::Subscriber subMap;
 tf::StampedTransform map_base_tf;
 tf::StampedTransform map_odom_tf;
+tf::StampedTransform utm_map_tf;
 
 vector<geometry_msgs::PoseStamped> waypoints;
 bool waypointReached = false;
@@ -24,8 +26,81 @@ nav_msgs::OccupancyGrid::Ptr _map(new nav_msgs::OccupancyGrid());
 int originX;
 int originY;
 
+
+void update_map_base_link_tf(){
+
+    static tf::TransformListener listener;
+
+    if(listener.canTransform("map","base_link", ros::Time(0), NULL))
+    {
+        listener.lookupTransform("map", "base_link", ros::Time(0), map_base_tf);
+    }
+    else
+    {
+        cout<<"WAYPOINT SERVER UNABLE TO LOOKUP MAP -> BASE_LINK TRANSFORM "<<endl;
+    }
+}
+
+void update_map_odom_link_tf(){
+
+    static tf::TransformListener listener;
+
+    if(listener.canTransform("map","odom", ros::Time(0), NULL))
+    {
+        listener.lookupTransform("map", "odom", ros::Time(0), map_odom_tf);
+    }
+    else
+    {
+        cout<<"WAYPOINT SERVER UNABLE TO LOOKUP MAP -> ODOM TRANSFORM "<<endl;
+    }
+}
+
+bool update_utm_map_tf(){
+
+    static tf::TransformListener listener;
+
+    if(listener.canTransform("utm","map", ros::Time(0), NULL))
+    {
+        listener.lookupTransform("utm", "map", ros::Time(0), utm_map_tf);
+        return true;
+    }
+    else
+    {
+        cout<<"WAYPOINT SERVER UNABLE TO LOOKUP UTM -> MAP TRANSFORM "<<endl;
+        return false;
+    }
+}
+
+
+
+//converts utm frame pose coordinates to map frame coordinates
+geometry_msgs::PoseStamped utmToMap(geometry_msgs::PoseStamped utmPose){
+  update_utm_map_tf();
+  geometry_msgs::PoseStamped mapPose = utmPose;
+  mapPose.header.frame_id = "map";
+  double deltaX = utmPose.pose.position.x - utm_map_tf.getOrigin().getX();
+  double deltaY = utmPose.pose.position.y - utm_map_tf.getOrigin().getY();
+  double distance = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
+  double tfRads = utm_map_tf.getRotation().getAngle();
+  double thetaBearing = atan2(deltaY, deltaX) - tfRads;
+  //double mapX = distance * cos(thetaBearing);
+  //double mapY = distance * sin(thetaBearing);
+  cout<<"in deltax, deltay                 == "<<deltaX<<" .. "<<deltaY<<endl;
+  cout<<"in tfConversion dis, thetaBearing == "<<distance<<" .. "<<thetaBearing<<endl;
+
+  mapPose.pose.position.x = distance * cos(thetaBearing);
+  mapPose.pose.position.y = distance * sin(thetaBearing);
+
+  cout<< "utm->map tf = "<<tfRads<<"rads..." <<utm_map_tf.getOrigin().getX()<<", "<<utm_map_tf.getOrigin().getY()<<endl;
+  return mapPose;
+}
+
 //todo make this lookup transform and return waypoint in map frame
 geometry_msgs::PoseStamped getWaypointInMapFrame(geometry_msgs::PoseStamped temp){
+
+  if(temp.header.frame_id == "utm"){
+    return utmToMap(temp);
+  }
   return temp;
 }
 
@@ -118,38 +193,12 @@ void map_handler(const nav_msgs::OccupancyGridPtr &costmap)
 }
 
 
-void update_map_base_link_tf(){
-
-    static tf::TransformListener listener;
-
-    if(listener.canTransform("map","base_link", ros::Time(0), NULL))
-    {
-        listener.lookupTransform("map", "base_link", ros::Time(0), map_base_tf);
-    }
-    else
-    {
-        cout<<"WAYPOINT SERVER UNABLE TO LOOKUP MAP -> BASE_LINK TRANSFORM "<<endl;
-    }
-}
-
-void update_map_odom_link_tf(){
-
-    static tf::TransformListener listener;
-
-    if(listener.canTransform("map","odom", ros::Time(0), NULL))
-    {
-        listener.lookupTransform("map", "odom", ros::Time(0), map_odom_tf);
-    }
-    else
-    {
-        cout<<"WAYPOINT SERVER UNABLE TO LOOKUP MAP -> ODOM TRANSFORM "<<endl;
-    }
-}
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "waypoint_server");
     ros::NodeHandle node;
+    update_utm_map_tf();
 
     readFile();
 
@@ -169,9 +218,11 @@ int main(int argc, char **argv)
     wptPub = node.advertise<geometry_msgs::PoseStamped>("move_base_simple/goal", 1);
     //pathPub = node.advertise<nav_msgs::Path>("planb_path", 1);
    // mapPub = node.advertise<nav_msgs::OccupancyGrid>("copied_map", 1);
+   ros::Rate loop_rate(2);
+   while(!update_utm_map_tf()){loop_rate.sleep();}
 
     geometry_msgs::PoseStamped nextWaypoint;
-    ros::Rate loop_rate(2);
+ //   ros::Rate loop_rate(2);
     while (ros::ok() && !waypoints.empty() )
     {
         ros::spinOnce();
@@ -190,7 +241,10 @@ int main(int argc, char **argv)
           }
           toggled = !toggled;
 
-          wptPub.publish(getWaypointInMapFrame(nextWaypoint));
+          cout << "NEXT WPT at Frame_ID:  " << nextWaypoint.header.frame_id << "   " << nextWaypoint.pose.position.x << ", " << nextWaypoint.pose.position.y << endl;
+
+          nextWaypoint = getWaypointInMapFrame(nextWaypoint);
+          wptPub.publish(nextWaypoint);
           cout << "Publishing WPT at Frame_ID:  " << nextWaypoint.header.frame_id << "   " << nextWaypoint.pose.position.x << ", " << nextWaypoint.pose.position.y << endl;
 
           if(isCloseENough(nextWaypoint)){

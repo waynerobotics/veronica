@@ -54,6 +54,7 @@ double lastPathRequest;
 bool waypointActive = false;
 bool odomInitialized = false;
 bool gotNewGoal = false;
+bool gotMapOdomTransform = false;
 
 double getDistanceError();
 
@@ -82,9 +83,10 @@ void getNewPath()
 
 } 
 
+
 void updatePath(const nav_msgs::Path &_path)
 {
-  
+
   
   path.header.frame_id = _path.header.frame_id;
   path.header.stamp = _path.header.stamp;
@@ -182,6 +184,16 @@ double getAngularError()
   angularError = (angularError < -PI) ? angularError + (2 * PI) : angularError;
   cout << "odomHeading: " << odomEuler << "  ...  angular error = " << angularError << endl;
   return angularError;
+}
+
+void stop(){
+  cmdVel.linear.x = 0;
+  cmdVel.linear.y = 0;
+  cmdVel.linear.z = 0;
+  cmdVel.angular.x = 0;
+  cmdVel.angular.y = 0;
+  cmdVel.angular.z = 0;
+  pubVelocity.publish(cmdVel); //publish stop cmd
 }
 
 void set_velocity()
@@ -329,14 +341,32 @@ tf::StampedTransform get_map_base_tf(){
     return map_base_tf;
 }
 
+bool update_map_odom_tf(){
+
+    static tf::TransformListener listener;
+
+    if(listener.canTransform("map","odom", ros::Time(0), NULL))
+    {
+        listener.lookupTransform("map", "odom", ros::Time(0), map_odom_tf);
+        gotMapOdomTransform = true;
+        return true;
+    }
+    else
+    {
+        cout<<"WAYPOINT SERVER UNABLE TO LOOKUP MAP -> ODOM TRANSFORM "<<endl;
+        gotMapOdomTransform = false;
+        return false;
+    }
+}
+
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "planb_drive");
   ros::NodeHandle node;
-  tf::StampedTransform map_base_tf();
   lastGoal.pose.position.x = 99999;
   lastGoal.pose.position.y = 99999;
   lastPathRequest = ros::Time::now().toSec();
+  update_map_odom_tf();
   //Subscribe to topics
   //using tf lookup instead of odom msg
  // ros::Subscriber subCurrentPose = node.subscribe("odom", 10, updatePose, ros::TransportHints().tcpNoDelay());
@@ -351,12 +381,17 @@ int main(int argc, char **argv)
     ros::spinOnce();
 
     get_map_base_tf();
-    if (odomInitialized && waypointActive)
+    if (odomInitialized && waypointActive && gotMapOdomTransform)
     {
       set_velocity(); 
-    }else if (path.poses.size()>1){
+    }else {
+      pubVelocity.publish(cmdVel); //publish stop cmd
+      if (path.poses.size()>1){
       getNewPath();
-    }
+      }
+    } 
+     
+    
     cout << "goal = " << desired.pose.position.x << ", " << desired.pose.position.y << endl
          << "current x,y = " << odom.pose.pose.position.x << ", " << odom.pose.pose.position.y << endl
          << "  Distance error = " << getDistanceError() << endl;
