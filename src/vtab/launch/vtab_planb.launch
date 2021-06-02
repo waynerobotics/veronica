@@ -46,7 +46,7 @@
         <param name="range_min" value=".6" />
         <param name="range_max" value="5" />
         <param name="scan_height" value="100" /> 
-        <param name="scan_time" value=".1" />
+        <param name="scan_time" value=".06666" />
 
     </node>
 

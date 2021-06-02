@@ -189,7 +189,7 @@ double getAngularError()
 void stop(){
   cmdVel.linear.x = 0;
   cmdVel.linear.y = 0;
-  cmdVel.linear.z = 0;
+  cmdVel.linear.z = 99999;
   cmdVel.angular.x = 0;
   cmdVel.angular.y = 0;
   cmdVel.angular.z = 0;
@@ -201,7 +201,7 @@ void set_velocity()
   
   cmdVel.linear.x = 0;
   cmdVel.linear.y = 0;
-  cmdVel.linear.z = 0;
+  cmdVel.linear.z = 99999;
   cmdVel.angular.x = 0;
   cmdVel.angular.y = 0;
   cmdVel.angular.z = 0;
@@ -234,6 +234,7 @@ void set_velocity()
     cout << "A. LOCATION MET = TRUE .. ";
     if (got_zero == false)
     {
+      cmdVel.linear.z = 99999;
       pubVelocity.publish(cmdVel); //publish stop cmd
       cout << "got zero is false so issuing stop cmdVel .. ";
 
@@ -305,7 +306,8 @@ void set_velocity()
     if(abs(cmdVel.angular.z) > MAX_ANGULAR_VELOCITY){
       cmdVel.angular.z = (cmdVel.angular.z > 0) ? MAX_ANGULAR_VELOCITY : 0 - MAX_ANGULAR_VELOCITY;
     }
-  pubVelocity.publish(cmdVel);
+    cmdVel.linear.z = 99999;
+    pubVelocity.publish(cmdVel);
 }
 
 void updateGoal(const geometry_msgs::PoseStamped &_goal)
@@ -385,9 +387,12 @@ int main(int argc, char **argv)
     {
       set_velocity(); 
     }else {
-      pubVelocity.publish(cmdVel); //publish stop cmd
-      if (path.poses.size()>1){
-      getNewPath();
+     update_map_odom_tf();
+     cmdVel.linear.z = 99999;
+     pubVelocity.publish(cmdVel); //publish stop cmd
+     if (path.poses.size() > 1)
+     {
+       getNewPath();
       }
     } 
      

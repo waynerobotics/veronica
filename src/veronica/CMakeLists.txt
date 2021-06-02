@@ -217,3 +217,6 @@ target_link_libraries(planb_drive ${catkin_LIBRARIES})
 
 add_executable(waypoint_server src/waypoint_server.cpp)
 target_link_libraries(waypoint_server ${catkin_LIBRARIES})
+
+add_executable(waypoint_converter_util src/waypoint_converter_util.cpp)
+target_link_libraries(waypoint_converter_util ${catkin_LIBRARIES})

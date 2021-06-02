@@ -54,9 +54,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
      <!-- <arg name="cam_pitch"             default="-0.15" /> -->     <!-- default was 0.0 wait -5.5-->
     <arg name="cam_yaw"               default="0.0" />
 
-    <node pkg="tf" type="static_transform_publisher" name="zed_imu_base_tf" 
+    <!--node pkg="tf" type="static_transform_publisher" name="zed_imu_base_tf" 
                   args="$(arg cam_pos_x) $(arg cam_pos_y) $(arg cam_pos_z) 
-                        $(arg cam_roll) $(arg cam_pitch) $(arg cam_yaw) base_link zed_imu_link 5000"/>
+                        $(arg cam_roll) $(arg cam_pitch) $(arg cam_yaw) base_link zed_imu_link 5000"/-->
 
     <!-- ROS URDF description of the ZED -->
     <group if="$(arg publish_urdf)">

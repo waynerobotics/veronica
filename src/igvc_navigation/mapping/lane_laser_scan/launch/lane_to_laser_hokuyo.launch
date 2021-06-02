@@ -1,5 +1,5 @@
 <launch>
-  <!--node pkg="tf" type="static_transform_publisher" name="laser2baseLink" args="0.0 0.0 0.0 0.0 0.0 0.0 map global 10"/--> 
+  <node pkg="tf" type="static_transform_publisher" name="laser2baseLink" args="0.0 0.0 0.0 0.0 0.0 0.0 map global 10"/> 
   <node pkg="tf" type="static_transform_publisher" name="laser2baseLinki" args="0.0 0.0 0.0 0.0 0.0 0.0 base_link laser 10"/> 
   <!--node name="hokuyo_scan" pkg="urg_node" type="urg_node" /-->
 
