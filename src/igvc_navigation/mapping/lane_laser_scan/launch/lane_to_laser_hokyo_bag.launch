@@ -15,4 +15,6 @@
 <arg name="node_start_delay" default="1.0" />  
 <node name="listener" pkg="roscpp_tutorials" type="listener" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' " />
 rosrun tf static_transform_publisher 0.0 0.0 0.0 0.0 0.0 0.0 map global 10
+  <node pkg="image_view" type="image_view" name = "image_viewer_bag_file" args="image:=/usb_cam1/image_raw"/>
+
 -->

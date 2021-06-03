@@ -21,10 +21,10 @@ import os
 
 image_topic = '/usb_cam1/image_raw'
 count = 0
-pi = 3.14
-fov = 20 #blind angle in one quadrant = 90-70; 140 total field of view
+pi = np.pi
+fov = np.radians(20) # blind angle in one quadrant = 90-70 => 140 total field of view. 70 is the actual field of view
 xc = (640-1)/2
-yc = -480.0 - xc*tan(fov*pi/180)
+yc = -480.0 - xc*tan(fov*pi/180) # image top left corner is (0, 0)
 
 class image2laser:
 

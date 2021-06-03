@@ -3,4 +3,4 @@
 /bags
 /ignore
 .gitignore
-
+*.pyc
