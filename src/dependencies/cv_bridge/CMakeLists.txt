@@ -13,13 +13,16 @@ if(NOT ANDROID)
 else()
 find_package(Boost REQUIRED)
 endif()
-find_package(OpenCV 3 REQUIRED
-  COMPONENTS
-    opencv_core
-    opencv_imgproc
-    opencv_imgcodecs
-  CONFIG
-)
+
+#find_package(OpenCV 3 REQUIRED
+#  COMPONENTS
+#    opencv_core
+#    opencv_imgproc
+#    opencv_imgcodecs
+#  CONFIG
+#)
+
+find_package(OpenCV REQUIRED) # and don't look anywhere else
 
 catkin_package(
   INCLUDE_DIRS include
