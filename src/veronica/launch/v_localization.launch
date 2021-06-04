@@ -2,8 +2,8 @@
 
 <!-- #############    GPS -  UNCOMMENT THE correct LOCATION FOR THE MISSION  ##############-->
 <!--include file="$(find rtk_gps)/launch/ntrip_mcors_detroit1.launch" /-->
-<!--include file="$(find rtk_gps)/launch/ntrip_mcors_auburn.launch" /-->
-<include file="$(find rtk_gps)/launch/ntrip_mcors_warren.launch" />
+<include file="$(find rtk_gps)/launch/ntrip_mcors_auburn.launch" />
+<!--include file="$(find rtk_gps)/launch/ntrip_mcors_warren.launch" /-->
 
 
  <node pkg="tf" type="static_transform_publisher" name="gps_base_tf" 

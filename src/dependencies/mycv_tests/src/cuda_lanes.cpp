@@ -66,7 +66,7 @@ void handle_image(const sensor_msgs::ImageConstPtr &img)
         }
     }
     threshSample /= sampleSize;
-    threshSample += (255 - threshSample)/2;
+    threshSample += (255 - threshSample)/3;
     //threshBand = threshSample/3;
     }
     cout<<"thresh values = "<<threshSample<<"  and band of "<<threshBand<<endl;

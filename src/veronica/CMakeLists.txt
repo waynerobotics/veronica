@@ -220,3 +220,6 @@ target_link_libraries(waypoint_server ${catkin_LIBRARIES})
 
 add_executable(waypoint_converter_util src/waypoint_converter_util.cpp)
 target_link_libraries(waypoint_converter_util ${catkin_LIBRARIES})
+
+add_executable(coordinate_saver src/coordinate_saver.cpp)
+target_link_libraries(coordinate_saver ${catkin_LIBRARIES})
