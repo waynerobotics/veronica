@@ -13,6 +13,9 @@
 
 image_transport::Subscriber image_sub;
 image_transport::Publisher image_pub;
+int threshhole = 225;
+int threshBand = 10;
+int iteration = 0;
 
 using namespace std;
 using namespace cv;
@@ -30,20 +33,46 @@ void handle_image(const sensor_msgs::ImageConstPtr &img)
    // src.upload(image);
 
     //crop image .. zed rect output is 1920 x 1080 and I want bottom 2/5, so trying  0,height/5*3, width, height/5*2
-    Mat cropped = gray(Rect(0,img->height*3/5, img->width ,img->height*2/5-1));
+    // this line for zed?  Mat cropped = gray(Rect(0,img->height*3/5, img->width ,img->height*2/5-1));
+    Mat cropped = gray(Rect(0,img->height*.5, img->width ,img->height*.5-1));
    
     //scale
     resize(cropped, shrunk, Size(), .5, .5, INTER_LINEAR);
     
     //medianBlur(shrunk, blur, 5);
     GaussianBlur(shrunk, blur, Size(5, 5), 1.1);
+    
 
     //void Canny(InputArray src, OutputArray dst, double threshold1 (lower),
     //	double threshold2 (upper), int aperatureSize=3,
     //	bool L2gradient = false)
     //Canny(blur, canny, 75, 125, 3);
-    //threshold(blur, canny, 50, 255, THRESH_BINARY);
-    threshold(blur, canny, 175, 255, THRESH_BINARY_INV);
+
+    
+
+    
+
+    int threshSample=0;
+    int sampleSize = 0;
+    int STEP_SIZE = 5;
+
+    //here we sample the entire (cropped , grayed, and blurred) image and find an average pixel value
+    //then use some factor of that for the threshold. Intent to be able to adapt on the fly to changing lighing conditions
+    if(iteration % 5 == 0){
+    for (int col = 0; col< blur.size().width - STEP_SIZE; col+= STEP_SIZE){
+        for(int row = 0; row < blur.size().height - STEP_SIZE; row+=STEP_SIZE){
+            threshSample +=  (int)blur.at<uchar>(row, col);
+            sampleSize ++;
+        }
+    }
+    threshSample /= sampleSize;
+    threshSample += (255 - threshSample)/2;
+    //threshBand = threshSample/3;
+    }
+    cout<<"thresh values = "<<threshSample<<"  and band of "<<threshBand<<endl;
+
+    threshold(blur, canny, threshSample , 255, THRESH_BINARY);
+    //threshold(blur, canny, 175, 255, THRESH_BINARY_INV);
 
 
     //use cv_bridge to convert opencv image to ros image message
