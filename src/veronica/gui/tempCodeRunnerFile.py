@@ -1,0 +1,2 @@
+
+        self.centralwidget.setObjectName("centralwidget")
