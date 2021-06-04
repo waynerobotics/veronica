@@ -10,7 +10,6 @@
 #include <ros.h>
 #include <std_msgs/Float32.h>
 #include <std_msgs/Bool.h>
-#include <std_msgs/Int16.h>
 
 #define PWM_RIGHT 5 //6   // PWM output pin for right motor
 #define DIR_RIGHT 3 // 3   // Direction output pin for right motor
@@ -21,20 +20,20 @@
 #define MAX_PWM 150   //adjust to set max speed
 #define PWM_CHANGE_INCREMENT 2  //adjust to change how quickly output changes
 
-#define LIGHT_PIN A2 
+
 
 int left_cmd = 0;
 int right_cmd = 0;
 
-volatile unsigned long lastLightToggle = 0;
+unsigned long lastLightToggle = millis();
 bool lightOn = true;
 
 
 ros::NodeHandle nh;
 
-std_msgs::Int16 left;
-std_msgs::Int16 right;
-ros::Publisher pubLeft("left", &left);
+//std_msgs::Int16 left;
+//std_msgs::Int16 right;
+//ros::Publisher pubLeft("left", &left);
 
 bool get_requested_direction(int requested_pwm)
 {
@@ -85,25 +84,34 @@ void leftMessageCb(const std_msgs::Float32 &request_pwm)
 
 
 
-void autoCallback(bool &autoIsActive){
-  if(autoIsActive && millis() - lastLightToggle > 1500){
+void autoCB(std_msgs::Bool &autoIsActive) {
+  if (autoIsActive.data && (millis() - lastLightToggle) > 1000) {
     lightOn = !lightOn;
-    digitalWrite(LIGHT_PIN, lightOn);
+    digitalWrite(A2, lightOn);
     lastLightToggle = millis();
   }
-  else{
-    digitalWrite(LIGHT_PIN, 0);    
-  }
+ // else {
+ //   digitalWrite(A2, 1);
+ // }
+  //digitalWrite(A2, 1);
 }
 
+
+
 //subscribe to cmd_vel
+ros::Subscriber<std_msgs::Bool> subAuto("/autonomous_active", &autoCB);
+
 ros::Subscriber<std_msgs::Float32> subRight("rmotor_pwm_cmd", &rightMessageCb);
 ros::Subscriber<std_msgs::Float32> subLeft("lmotor_pwm_cmd", &leftMessageCb);
-ros::Subscriber<std_msgs::Bool> subAutonomousModeActive("autonomous_active", &autoCallback);
 
 void setup()
 {
+  lastLightToggle = millis();
   // Serial.begin(9600);
+
+  pinMode(A2, OUTPUT);
+  digitalWrite(A2, 0);
+
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, 0);
   digitalWrite(LED_BUILTIN, 1);
@@ -117,8 +125,8 @@ void setup()
   delay(500);
   digitalWrite(LED_BUILTIN, 0);
 
-  pinMode(LIGHT_PIN, OUTPUT);
-  digitalWrite(LIGHT_PIN, 0);
+  digitalWrite(A2, 1);
+
 
   pinMode(PWM_RIGHT, OUTPUT);
   pinMode(DIR_RIGHT, OUTPUT);
@@ -129,12 +137,12 @@ void setup()
   digitalWrite(DIR_LEFT, 0);
   digitalWrite(DIR_RIGHT, 0);
 
- // Serial.begin(9600);
- // nh.getHardware()->setBaud(9600);
+  // Serial.begin(9600);
+  // nh.getHardware()->setBaud(9600);
   nh.initNode();
   nh.subscribe(subRight);
   nh.subscribe(subLeft);
-nh.advertise(pubLeft);
+  nh.subscribe(subAuto);
 }
 
 
@@ -154,19 +162,19 @@ void loop()
   int nextLeft = get_new_pwm_out(left_cmd, lastLeft);
   int nextRight = get_new_pwm_out(right_cmd, lastRight);
 
-  left.data = nextLeft;
-  pubLeft.publish(&left);
+  // left.data = nextLeft;
+  // pubLeft.publish(&left);
 
   //set direction pins - invert get_requested_dir() output if motor runs backwards
-  if(abs(nextLeft) <= PWM_CHANGE_INCREMENT)
+  if (abs(nextLeft) <= PWM_CHANGE_INCREMENT)
   {
     digitalWrite(DIR_LEFT, get_requested_direction(nextLeft));
   }
-    if(abs(nextRight) <= PWM_CHANGE_INCREMENT)
+  if (abs(nextRight) <= PWM_CHANGE_INCREMENT)
   {
     digitalWrite(DIR_RIGHT, get_requested_direction(nextRight));
-  }  
-  
+  }
+
 
 
   //actually output pwm values
