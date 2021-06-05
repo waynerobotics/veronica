@@ -48,7 +48,7 @@ class image2laser:
     self.ls.time_increment = 0.0001
     self.ls.scan_time = 0.00001
     self.ls.range_min = 0.5
-    self.ls.range_max = 4.0
+    self.ls.range_max = 15.0
     self.CURRENT_SCAN_RATE = 0
 
 
@@ -57,7 +57,7 @@ class image2laser:
     xm_per_pix = 0.4/250
     ym_per_pix = 0.6/100
     ranges_length = int(2*amax//inc)
-    ranges = np.ones([ranges_length], dtype=float)*10.0  #Initialize all to 4 meter range
+    ranges = np.ones([ranges_length], dtype=float)*self.ls.range_max  #Initialize all to max range
     ranges = ranges.tolist()
     for i in range(0, img.shape[1]-1, img_scan_resolution_i): # width - columns - X
         for j in range(0, img.shape[0], img_scan_resolution_j): #height - rows - Y
@@ -89,7 +89,7 @@ class image2laser:
       img, _, _, _, _ = combined_thresh(img)
       img, _, _, _ = perspective_transform(img)
       
-      self.binary_lane_img.publish(self.bridge.cv2_to_imgmsg(img, "mono8"))
+      self.binary_lane_img.publish(self.bridge.cv2_to_imgmsg(img*255, "mono8"))
       
       self.ls.ranges = self.laserScan(img, xc, yc, self.ls.angle_increment, self.ls.angle_min, self.ls.angle_max)
       self.ls.header.stamp.secs = rospy.get_rostime().secs
