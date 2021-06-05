@@ -111,16 +111,18 @@ def hls_thresh_red(img):
 
 def combined_thresh(img):  #WORKING for white gauges
 
-		abs_bin = abs_sobel_thresh(img, orient='x', thresh_min=50, thresh_max=255)
-		mag_bin = mag_thresh(img, sobel_kernel=3, mag_thresh=(50, 255))
-		dir_bin = dir_threshold(img, sobel_kernel=15, thresh=(0.7, 1.3))
-		hls_bin = hls_thresh2(img)
-		kernel = np.ones((5,5),np.uint8)
-		mag_bin = cv2.dilate(mag_bin , kernel, iterations=1)
-		combined = hls_bin
+	abs_bin = abs_sobel_thresh(img, orient='x', thresh_min=50, thresh_max=255)
+	mag_bin = mag_thresh(img, sobel_kernel=3, mag_thresh=(50, 255))
+	dir_bin = dir_threshold(img, sobel_kernel=15, thresh=(0.7, 1.3))
+	hls_bin = hls_thresh2(img)
+	kernel = np.ones((5,5),np.uint8)
+	mag_bin = cv2.dilate(mag_bin , kernel, iterations=1)
+	combined = np.zeros_like(dir_bin)
+	combined[(abs_bin == 1 | ((mag_bin == 1) & (dir_bin == 1) )) & hls_bin == 1] = 1
+	
 
-		#combined = cv2.bitwise_and(mag_bin,mag_bin, mask = hls_bin)
-		return combined, abs_bin, mag_bin, dir_bin, hls_bin # DEBUG datatype
+	#combined = cv2.bitwise_and(mag_bin,mag_bin, mask = hls_bin)
+	return combined, abs_bin, mag_bin, dir_bin, hls_bin # DEBUG datatype
 
 ##def combined_thresh(img):  #For red guages.
 ##	abs_bin = abs_sobel_thresh(img, orient='x', thresh_min=50, thresh_max=255)
@@ -134,7 +136,7 @@ def combined_thresh(img):  #WORKING for white gauges
 ##	return combined, abs_bin, mag_bin, dir_bin, hls_bin # DEBUG datatype
 
 if __name__ == '__main__':
-	img_file = os.path.dirname(os.path.abspath(__file__))+'/saves/frame0001_home.jpg' #2019-12-19-153614.jpg
+	img_file = os.path.dirname(os.path.abspath(__file__))+'/saves/snake_far.jpg' #2019-12-19-153614.jpg
 	img = mpimg.imread(img_file)
 	if img.dtype == 'float32':
 		img = np.array(img)*255
@@ -147,7 +149,7 @@ if __name__ == '__main__':
 	img = cv2.blur(img, (5,5))
 	# img = cv2.undistort(img, mtx, dist, None, mtx)
 	combined, abs_bin, mag_bin, dir_bin, hls_bin = combined_thresh(img)
-	print(abs_bin.dtype,mag_bin.dtype,dir_bin.dtype,combined.dtype, hls_bin.dtype)
+	print(abs_bin.dtype, mag_bin.dtype, dir_bin.dtype, combined.dtype, hls_bin.dtype)
 	
 	plt.subplot(2, 3, 1)
 	plt.title("Absolute Binary")
