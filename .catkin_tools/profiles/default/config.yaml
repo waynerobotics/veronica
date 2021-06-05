@@ -1,7 +1,6 @@
 blacklist: []
 build_space: build
 catkin_make_args: []
-<<<<<<< HEAD
 cmake_args:
 - -DPYTHON_EXECUTABLE=/usr/bin/python3.6
 - -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m
@@ -10,13 +9,6 @@ devel_layout: linked
 devel_space: devel
 extend_path: null
 install: true
-=======
-cmake_args: []
-devel_layout: linked
-devel_space: devel
-extend_path: null
-install: false
->>>>>>> origin/feature/lane_laser_v2
 install_space: install
 isolate_install: false
 jobs_args: []
