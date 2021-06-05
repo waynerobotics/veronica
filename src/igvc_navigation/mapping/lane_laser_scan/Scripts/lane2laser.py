@@ -49,6 +49,7 @@ class image2laser:
     self.ls.scan_time = 0.00001
     self.ls.range_min = 0.5
     self.ls.range_max = 4.0
+    self.CURRENT_SCAN_RATE = 0
 
 
 
@@ -75,6 +76,7 @@ class image2laser:
 
 
   def callback(self,data):
+    current_time = rospy.get_rostime().nsecs
     global count
     try:
       img = self.bridge.imgmsg_to_cv2(data, desired_encoding = "bgr8")
@@ -88,9 +90,14 @@ class image2laser:
       img, _, _, _ = perspective_transform(img)
       
       self.binary_lane_img.publish(self.bridge.cv2_to_imgmsg(img, "mono8"))
+      
       self.ls.ranges = self.laserScan(img, xc, yc, self.ls.angle_increment, self.ls.angle_min, self.ls.angle_max)
       self.ls.header.stamp.secs = rospy.get_rostime().secs
       self.ls.header.stamp.nsecs = rospy.get_rostime().nsecs
+      try:
+        rospy.loginfo("Current lane2laser scan rate is {}".format(1e9/(self.ls.header.stamp.nsecs - current_time)))
+      except ZeroDivisionError:
+        pass
       self.pub.publish(self.ls)
 
       # cv2.imshow("Image window", img.astype(np.float32))
@@ -105,7 +112,7 @@ class image2laser:
     
 
 def main():
-    rospy.init_node('lane2laser', anonymous=True)
+    rospy.init_node('lane2laser', anonymous=True, log_level=rospy.DEBUG)
     il = image2laser()
     try:
         rospy.spin()
