@@ -1,0 +1,10 @@
+1 status 2 .. service 1 lat/long: 42.668309, -83.21817
+          UTM->map transform -4703032.4, -410658.21
+2 status 2 .. service 1 lat/long: 42.668309, -83.21817
+          UTM->map transform -4703032.4, -410658.21
+3 status 2 .. service 1 lat/long: 42.668306, -83.218023
+          UTM->map transform -4703032.4, -410658.21
+4 status 2 .. service 1 lat/long: 42.668188, -83.218085
+          UTM->map transform -4703032.4, -410658.21
+5 status 2 .. service 1 lat/long: 42.668194, -83.218171
+          UTM->map transform -4703032.4, -410658.21
