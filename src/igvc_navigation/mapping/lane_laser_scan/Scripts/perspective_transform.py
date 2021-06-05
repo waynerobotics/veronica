@@ -20,16 +20,16 @@ def perspective_transform(img):
 	# 	 [525, 177],
 	# 	 [0, 315], #20
 	# 	 [640, 315]])
-	# src = np.float32(
-	# 	[[190, 210], #60 -- First time with ribbons Sep 8
-	# 	 [620-190, 210],
-	# 	 [0, 480], #20
-	# 	 [620, 480]])
 	src = np.float32(
-		[[190, 210], #60 -- Nnamdi's bedroom
+		[[190, 210], #60 -- First time with ribbons Sep 8
 		 [620-190, 210],
 		 [0, 480], #20
 		 [620, 480]])
+	# src = np.float32(
+	# 	[[190, 210], #60 -- Nnamdi's bedroom
+	# 	 [620-190, 210],
+	# 	 [0, 480], #20
+	# 	 [620, 480]])
 
 	dst = np.float32(
 		 [[0, 0],
@@ -47,7 +47,7 @@ def perspective_transform(img):
 
 
 if __name__ == '__main__':
-	img_file = os.path.dirname(os.path.abspath(__file__))+'/saves/frame0001_home.jpg' #2019-12-19-153614.jpg
+	img_file = os.path.dirname(os.path.abspath(__file__))+'/saves/bridge_close.jpg' #2019-12-19-153614.jpg
 
 	with open(os.path.dirname(os.path.abspath(__file__))+'/calibrate_camera.p', 'rb') as f:
 		save_dict = pickle.load(f)
@@ -55,24 +55,36 @@ if __name__ == '__main__':
 	dist = save_dict['dist']
 
 	img = mpimg.imread(img_file)
+
+	plt.subplot(2, 3, 1)
+	plt.title("Original")
 	plt.imshow(img)
-	plt.show()
+
 	if img.dtype == 'float32':
 		img = np.array(img)*255
 		img = np.uint8(img)
 	img = cv2.blur(img, (5,5))
 	img = cv2.undistort(img, mtx, dist, None, mtx)
+
+	plt.subplot(2, 3, 2)
+	plt.title("Undistorted")
 	plt.imshow(img)
-	plt.show()
+
 	img, _, _, _, _ = combined_thresh(img)
 	warped, unwarped, m, m_inv = perspective_transform(img)
 
-	plt.subplot(3,1,1)
+	plt.subplot(2,3,4)
+	plt.title("Thresholded")
 	plt.imshow(img, cmap='gray',)
-	plt.subplot(3,1,2)
+
+	plt.subplot(2,3,5)
+	plt.title("ROI masked")
 	plt.imshow(unwarped, cmap='gray', vmin=0, vmax=1)
-	plt.subplot(3,1,3)
+
+	plt.subplot(2,3,6)
+	plt.title("Warped")
 	plt.imshow(warped, cmap='gray', vmin=0, vmax=1)
+
 	fig = plt.gcf()
 	fig.set_size_inches(18.5, 10.5)
 	plt.show()

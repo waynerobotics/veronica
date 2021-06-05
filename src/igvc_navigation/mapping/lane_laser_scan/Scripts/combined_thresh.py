@@ -69,8 +69,8 @@ def dir_threshold(img, sobel_kernel=3, thresh=(0,np.pi)):
 	#print(absgraddir)
 	binary_output =  np.zeros_like(absgraddir)
 	binary_output[(absgraddir >= -0.8) & (absgraddir <= 0.8)] = 1
-	#ret, binary_output = cv2.threshold(absgraddir, -0.8, 0.8, cv2.THRESH_BINARY)
-	#binary_output = binary_output.astype(np.uint8)
+	ret, binary_output = cv2.threshold(absgraddir, -0.8, 0.8, cv2.THRESH_BINARY)
+	binary_output = binary_output.astype(np.uint8)
 	# Return the binary image
 	return binary_output
 
@@ -136,7 +136,7 @@ def combined_thresh(img):  #WORKING for white gauges
 ##	return combined, abs_bin, mag_bin, dir_bin, hls_bin # DEBUG datatype
 
 if __name__ == '__main__':
-	img_file = os.path.dirname(os.path.abspath(__file__))+'/saves/snake_far.jpg' #2019-12-19-153614.jpg
+	img_file = os.path.dirname(os.path.abspath(__file__))+'/saves/lane_with_barrel.jpg' #2019-12-19-153614.jpg
 	img = mpimg.imread(img_file)
 	if img.dtype == 'float32':
 		img = np.array(img)*255
@@ -149,7 +149,7 @@ if __name__ == '__main__':
 	img = cv2.blur(img, (5,5))
 	# img = cv2.undistort(img, mtx, dist, None, mtx)
 	combined, abs_bin, mag_bin, dir_bin, hls_bin = combined_thresh(img)
-	print(abs_bin.dtype, mag_bin.dtype, dir_bin.dtype, combined.dtype, hls_bin.dtype)
+	print(abs_bin.dtype, mag_bin.dtype, dir_bin.dtype,  hls_bin.dtype, combined.dtype)
 	
 	plt.subplot(2, 3, 1)
 	plt.title("Absolute Binary")
