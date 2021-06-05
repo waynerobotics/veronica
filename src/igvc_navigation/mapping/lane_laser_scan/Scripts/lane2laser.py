@@ -25,6 +25,8 @@ pi = np.pi
 fov = np.radians(20) # blind angle in one quadrant = 90-70 => 140 total field of view. 70 is the actual field of view
 xc = (640-1)/2
 yc = -480.0 - xc*tan(fov) # image top left corner is (0, 0)
+img_scan_resolution_i = 3
+img_scan_resolution_j = 3
 
 
 class image2laser:
@@ -54,10 +56,10 @@ class image2laser:
     xm_per_pix = 0.4/250
     ym_per_pix = 0.6/100
     ranges_length = int(2*amax//inc)
-    ranges = np.ones([ranges_length], dtype=float)*4.0  #Initialize all to 4 meter range
+    ranges = np.ones([ranges_length], dtype=float)*10.0  #Initialize all to 4 meter range
     ranges = ranges.tolist()
-    for i in range(img.shape[1]-1): # width - columns - X
-        for j in range(img.shape[0]): #height - rows - Y
+    for i in range(0, img.shape[1]-1, img_scan_resolution_i): # width - columns - X
+        for j in range(0, img.shape[0], img_scan_resolution_j): #height - rows - Y
             if img[j][i]:
                 try:
                   slope = atan((yc+j)/(xc-i))
