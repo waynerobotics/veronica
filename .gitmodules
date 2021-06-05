@@ -1,0 +1,3 @@
+[submodule "src/igvc_navigation/mapping/LaneNetRos"]
+	path = src/igvc_navigation/mapping/LaneNetRos
+	url = https://github.com/waynerobotics/LaneNetRos 
