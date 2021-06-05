@@ -1,8 +1,0 @@
-prefix=/home/warriorrobotics/veronica/install
-
-Name: information
-Description: Description of information
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
