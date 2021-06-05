@@ -1,0 +1,26 @@
+1 status 2 .. service 1 lat/long: 42.66823, -83.216399
+          UTM->map transform -4435762.3, -1603338.4
+2 status 2 .. service 1 lat/long: 42.668228, -83.216398
+          UTM->map transform -4435762.3, -1603338.4
+3 status 2 .. service 1 lat/long: 42.668205, -83.2164
+          UTM->map transform -4435762.3, -1603338.4
+4 status 2 .. service 1 lat/long: 42.668181, -83.216399
+          UTM->map transform -4435762.3, -1603338.4
+5 status 2 .. service 1 lat/long: 42.6681, -83.216379
+          UTM->map transform -4435762.3, -1603338.4
+6 status 2 .. service 1 lat/long: 42.667986, -83.216574
+          UTM->map transform -4435762.3, -1603338.4
+7 status 2 .. service 1 lat/long: 42.668182, -83.216827
+          UTM->map transform -4435762.3, -1603338.4
+8 status 2 .. service 1 lat/long: 42.668319, -83.216835
+          UTM->map transform -4435762.3, -1603338.4
+9 status 2 .. service 1 lat/long: 42.668388, -83.216632
+          UTM->map transform -4435762.3, -1603338.4
+10 status 2 .. service 1 lat/long: 42.668388, -83.216632
+          UTM->map transform -4435762.3, -1603338.4
+11 status 2 .. service 1 lat/long: 42.668389, -83.216631
+          UTM->map transform -4435762.3, -1603338.4
+12 status 2 .. service 1 lat/long: 42.668318, -83.216398
+          UTM->map transform -4435762.3, -1603338.4
+13 status 2 .. service 1 lat/long: 42.668318, -83.216399
+          UTM->map transform -4435762.3, -1603338.4
