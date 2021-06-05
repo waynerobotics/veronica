@@ -1,8 +1,0 @@
-prefix=/home/warriorrobotics/veronica/install
-
-Name: lane_laser_scan
-Description: Description of lane_laser_scan
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

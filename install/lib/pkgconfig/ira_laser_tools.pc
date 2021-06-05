@@ -1,8 +1,0 @@
-prefix=/home/warriorrobotics/veronica/install
-
-Name: ira_laser_tools
-Description: Description of ira_laser_tools
-Version: 1.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib 
-Requires: 

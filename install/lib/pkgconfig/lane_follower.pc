@@ -1,8 +1,0 @@
-prefix=/home/warriorrobotics/veronica/install
-
-Name: lane_follower
-Description: Description of lane_follower
-Version: 0.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib 
-Requires: 
