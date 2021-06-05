@@ -24,19 +24,20 @@ count = 0
 pi = np.pi
 fov = np.radians(20) # blind angle in one quadrant = 90-70 => 140 total field of view. 70 is the actual field of view
 xc = (640-1)/2
-yc = -480.0 - xc*tan(fov*pi/180) # image top left corner is (0, 0)
+yc = -480.0 - xc*tan(fov) # image top left corner is (0, 0)
 
 class image2laser:
 
   def __init__(self):
     self.bridge = CvBridge()
-    self.image_sub = rospy.Subscriber(image_topic,Image,self.callback)
-    self.pub=rospy.Publisher('lane_to_scan', LaserScan,queue_size=10)
+    self.image_sub = rospy.Subscriber(image_topic, Image, self.callback)
+    self.binary_lane_img = rospy.Publisher("binary_lane_img", Image, queue_size=10)
+    self.pub=rospy.Publisher('lane_to_scan', LaserScan, queue_size=10)
 
     self.ls = LaserScan()
     self.ls.header.frame_id = 'map'
     self.ls.angle_increment = 0.02 # For Hokuyo LiDAR
-    amin = -pi/2 + fov*pi/180 #20 implies 70 deg field of view in one quadrant
+    amin = -pi/2 + fov #20 implies 70 deg field of view in one quadrant
     amax = -float(amin)
     self.ls.angle_max = amax
     self.ls.angle_min = amin
@@ -51,9 +52,8 @@ class image2laser:
   def laserScan(self, img, xc, yc, inc, amin, amax):
     xm_per_pix = 0.4/250
     ym_per_pix = 0.6/100
-    ranges = np.ones([int(2*amax//inc)], dtype=float)*4.0  #Initialize all to 4 meter range
-    ranges = ranges.tolist()
-    ranges = np.ones([int(2*amax//inc)], dtype=float)*4.0
+    ranges_length = int(2*amax//inc)
+    ranges = np.ones([ranges_length], dtype=float)*4.0  #Initialize all to 4 meter range
     ranges = ranges.tolist()
     for i in range(img.shape[1]-1): # width - columns - X
         for j in range(img.shape[0]): #height - rows - Y
@@ -64,9 +64,10 @@ class image2laser:
                   slope = pi/2
                 angle = (-1)**(slope>0)*pi/2 + slope  #*180/pi
                 r = (((yc+j)*ym_per_pix)**2 + ((xc-i)*xm_per_pix)**2)**0.5
-                rangeIndex = int((angle + amax)/inc) 
+                rangeIndex = min(ranges_length - 1, int((angle + amax)//inc))
                 # print(i,j,rangeIndex)
-                if r<ranges[rangeIndex]: ranges[rangeIndex] = r
+                if r < ranges[rangeIndex]:
+                  ranges[rangeIndex] = r
     return ranges
 
 
@@ -82,7 +83,8 @@ class image2laser:
       img = cv2.blur(img, (5,5))  
       img, _, _, _, _ = combined_thresh(img)
       img, _, _, _ = perspective_transform(img)
-
+      
+      self.binary_lane_img.publish(self.bridge.cv2_to_imgmsg(img, "mono8"))
       self.ls.ranges = self.laserScan(img, xc, yc, self.ls.angle_increment, self.ls.angle_min, self.ls.angle_max)
       self.ls.header.stamp.secs = rospy.get_rostime().secs
       self.ls.header.stamp.nsecs = rospy.get_rostime().nsecs
