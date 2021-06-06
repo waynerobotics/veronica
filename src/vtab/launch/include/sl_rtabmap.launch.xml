@@ -40,7 +40,7 @@
         <remap from="rgb/camera_info"   to="$(arg camera_info_topic)"/>
         <remap from="grid_map"          to="map" />
         <remap from="odom"              to="$(arg odom_topic)"/>
-        <remap from="scan"              to="/scan"/>
+        <remap from="scan"              to="/merged_scan"/>
         <remap from="scan_cloud"        to="/zed/zed_node/point_cloud/cloud_registered"/>
         <remap from="gps/fix" to="/fix" />
         <remap from="imu" to="/zed/zed_node/imu/data" />
