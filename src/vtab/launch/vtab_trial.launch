@@ -1,0 +1,92 @@
+<?xml version="1.0"?> 
+<launch>
+    <arg name="svo_file"             default="" /> <!-- <arg name="svo_file" default="path/to/svo/file.svo"> -->
+    <arg name="stream"               default="" /> <!-- <arg name="stream" default="<ip_address>:<port>"> -->
+    <arg name="zed_node_name"        default="zed_node" />
+    <arg name="camera_model"         default="zed2" />
+    <arg name="publish_urdf"         default="true" />
+    <arg name="camera_name"          default="zed" />
+    <arg name="base_frame"           default="base_link" /> 
+
+    <!-- <include file="$(find vtab)/launch/zed_laserscan_nodelet.launch" /> -->
+	
+    <group ns="$(arg camera_name)">
+        <!-- ZED Wrapper Node-->
+        <include file="$(find vtab)/launch/include/zed_camera.launch.xml">
+            <arg name="camera_name"         value="$(arg camera_name)" />
+            <arg name="svo_file"            value="$(arg svo_file)" />
+            <arg name="stream"              value="$(arg stream)" />
+            <arg name="node_name"           value="$(arg zed_node_name)" />
+            <arg name="camera_model"        value="$(arg camera_model)" />
+            <arg name="base_frame"          value="$(arg base_frame)" />
+            <arg name="publish_urdf"        value="$(arg publish_urdf)" />
+        </include>    
+  
+        <!-- RTAB-Map -->
+        <arg name="custom_rtabmap_launch_file" default="$(find vtab)/launch/include/sl_rtabmap.launch.xml"/>
+        <include file="$(arg custom_rtabmap_launch_file)">
+            <arg name="localization"            default="false" />
+            <arg name="odom_topic"              default="$(arg zed_node_name)/odom" />
+            <arg name="rgb_topic"               default="$(arg zed_node_name)/rgb/image_rect_color" />
+            <arg name="depth_topic"             default="$(arg zed_node_name)/depth/depth_registered" />
+            <arg name="camera_info_topic"       default="$(arg zed_node_name)/rgb/camera_info" />
+            <arg name="depth_camera_info_topic" default="$(arg zed_node_name)/depth/camera_info" />
+            <!--remap from="/zed/gps/fix" to="/fix" /   not working - remap in gps launch file  -->
+
+        </include>   
+
+        <!-- Rviz -->
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find vtab)/rviz/zed-rtabmap.rviz" output="screen" /> 
+    </group>
+
+    <node pkg="depthimage_to_laserscan" name="mydepthimage_to_laserscan" type="depthimage_to_laserscan" >
+        <remap from="image" to="/zed/zed_node/depth/depth_registered" />
+        <remap from="camera_info" to="/zed/zed_node/depth/camera_info" />
+        <param name="output_frame_id" value="zed_camera_center" />
+        <param name="range_min" value=".6" />
+        <param name="range_max" value="5" />
+        <param name="scan_height" value="100" /> 
+        <param name="scan_time" value=".06666" />
+
+    </node>
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <remap from="openni_points" to="/zed/zed_node/point_cloud/cloud_registered"/> 
+        <!--remap from="odom" to="zed/zed_node/odom" /-->
+        <remap from="odom" to="/odom/filtered/global" />
+        <remap from="map" to="/zed/map" />
+        <remap from="cmd_vel" to="move_base_cmd_vel" />
+
+        
+        <param name="controller_frequency" value="5"/>
+        <param name="planner_frequency" value="5"/>
+        <!--param name="use_dijkstra" value="true"/-->
+        <rosparam file="$(find vtab)/params/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+        <rosparam file="$(find vtab)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find vtab)/params/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find vtab)/params/global_costmap_params.yaml" command="load" /> 
+        <rosparam file="$(find vtab)/params/base_local_planner_params.yaml" command="load" />
+        <!--param name="base_global_planner" value="astar_plugin/AStarPlanner"/-->
+    </node>
+
+    <include file="$(find veronica)/launch/alt_base_drive.launch" />
+    <!--include file="$(find veronica)/launch/sensors.launch" /--><!-- this is gps stuff plus robot_pose_ekf ... prefer robot localisation-->
+    <include file="$(find veronica)/launch/v_localization.launch" />
+    <include file="/home/warriorrobotics/veronica/src/igvc_navigation/mapping/lane_laser_scan/launch/lane_to_laser_hokuyo.launch" />
+
+    <node pkg="veronica" type="path_optimizer" name="path_optimizer" output="log">
+        <remap from="costmap" to="/move_base/global_costmap/costmap"/>
+    </node>
+
+    <node pkg="veronica" type="planb_drive" name="planb_drive" output="log">
+        <!--remap from="odom" to="/zed/zed_node/odom"/-->
+        <remap from="odom" to="/odom/filtered/global"/>
+    </node>
+
+    <node pkg="veronica" type="waypoint_server" name="waypoint_server" />
+
+
+    <!--node name="rviz" pkg="veronica" type="rviz" args="-d $(find vtab)/rviz/zed-rtabmap.rviz" /-->
+
+
+</launch>
