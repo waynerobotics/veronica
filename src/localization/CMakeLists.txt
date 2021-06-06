@@ -218,15 +218,9 @@ target_link_libraries (manual_pose_and_goal_pub ${catkin_LIBRARIES})
 add_executable(rviz_click_to_2d src/rviz_click_to_2d.cpp)
 target_link_libraries (rviz_click_to_2d ${catkin_LIBRARIES})
 
-add_executable(gps src/gps.cpp)
-target_link_libraries(gps  ${catkin_LIBRARIES})
+add_executable(gps_datum_setter src/gps_datum_setter.cpp)
+target_link_libraries(gps_datum_setter  ${catkin_LIBRARIES})
 
-add_executable(imu src/imu.cpp)
-target_link_libraries(imu  ${catkin_LIBRARIES})
-
-
-add_executable(kalman_filter src/kalman_filter.cpp)
-target_link_libraries(kalman_filter  ${catkin_LIBRARIES})
 
 add_executable(tf_pub src/tf_pub.cpp)
 target_link_libraries(tf_pub ${catkin_LIBRARIES})

@@ -14,8 +14,8 @@
     <!--more params and descriptions in navsat_transform.yaml-->
     <param name="magnetic_declination_radians" value="-.1309"/>
     <param name="yaw_offset" value="1.5707693"/>
-    <param name="wait_for_datum" value="true"/>
-    <rosparam param="datum">[42.520046333,-83.128071667, 0.0, map, base_link] </rosparam>
+    <param name="wait_for_datum" value="false"/>
+    <!--rosparam param="datum">[42.520046333,-83.128071667, 0.0, map, base_link] </rosparam-->
 
     <remap from="/imu/data" to="/zed/zed_node/imu/data" />
     <remap from="/gps/fix" to="/fix" />
