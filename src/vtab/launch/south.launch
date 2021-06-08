@@ -90,7 +90,7 @@
     <!--node name="rviz" pkg="veronica" type="rviz" args="-d $(find vtab)/rviz/zed-rtabmap.rviz" /-->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find vtab)/rviz/zed-rtabmap.rviz" output="screen" /> 
 
-    <node pkg="veronica" type="waypoint_server" name="waypoint_server" />
+    <node pkg="veronica" type="waypoint_server_south" name="waypoint_server" />
 
 
 </launch>

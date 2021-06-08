@@ -2,8 +2,8 @@
 
 <!-- #############    GPS -  UNCOMMENT THE correct LOCATION FOR THE MISSION  ##############-->
 <!--include file="$(find rtk_gps)/launch/ntrip_mcors_detroit1.launch" /-->
-<!--include file="$(find rtk_gps)/launch/ntrip_mcors_auburn.launch" /-->
-<include file="$(find rtk_gps)/launch/ntrip_mcors_warren.launch" />
+<include file="$(find rtk_gps)/launch/ntrip_mcors_auburn.launch" />
+<!--include file="$(find rtk_gps)/launch/ntrip_mcors_warren.launch" /-->
 
 
  <node pkg="tf" type="static_transform_publisher" name="gps_base_tf" 
@@ -19,7 +19,7 @@
 
     <remap from="/imu/data" to="/zed/zed_node/imu/data" />
     <remap from="/gps/fix" to="/fix" />
-    <remap from="/odometry/filtered" to="/zed/zed_node/odom" /> <!-- input for transforming gps to odom pose-->
+    <!--remap from="/odometry/filtered" to="/zed/zed_node/odom" /--> <!-- input for transforming gps to odom pose-->
     <param name="broadcast_utm_transform" value="true"/>
     <param name="publish_filtered_gps" value="true"/>
     <!-- will output an odom message on topic = odometry/gps-->
@@ -33,7 +33,7 @@
      <param name="transform_timeout" value="0.001"/>
      <param name="two_d_mode" value="true"/>
 
-     <param name="publish_tf" value="false"/><!--tf between world frame and it's child (probably odom->base_link)-->
+     <param name="publish_tf" value="true"/><!--tf between world frame and it's child (probably odom->base_link)-->
      <param name="map_frame" value="map"/>
      <param name="odom_frame" value="odom"/>
      <param name="base_link_frame" value="base_link"/>

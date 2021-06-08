@@ -12,7 +12,7 @@
 using namespace std;
 
 const double CLOSE_ENOUGH_DISTANCE = 2; //meters
-const string FILE_PATH = "/home/warriorrobotics/veronica/src/veronica/params/waypoints.txt";
+const string FILE_PATH = "/home/warriorrobotics/veronica/src/veronica/params/waypoints_south.txt";
 ros::Publisher wptPub;
 ros::Subscriber subMap;
 tf::StampedTransform map_base_tf;

@@ -38,9 +38,9 @@ tf::StampedTransform map_odom_tf;
 nav_msgs::Path path;
 
 const double PI = 3.141592;
-const double Ka = 0.45;
+const double Ka = .35; //0.45;
 const double Kb = -.5;
-const double Klv = .5; //.4;
+const double Klv = .4; //.4;
 const double initialX = 0.0;
 const double initialY = 0.0;
 const double ANGULAR_TOLERANCE = .15;

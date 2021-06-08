@@ -1,5 +1,5 @@
 <launch>
-  <node pkg="tf" type="static_transform_publisher" name="laser2baseLinki" args="0.5 0.0 0.0 0.0 0.0 0.0 base_link image_laser 10"/> 
+  <node pkg="tf" type="static_transform_publisher" name="laser2baseLinki" args="0.5 0.0 0.9 0.0 0.0 0.0 base_link image_laser 10"/> 
   <!--node name="hokuyo_scan" pkg="urg_node" type="urg_node" /-->
 
   <node name="usb_cam1" pkg="usb_cam" type="usb_cam_node" >
@@ -7,7 +7,7 @@
     <param name="image_width" value="640" />
     <param name="image_height" value="480" />
     <param name="pixel_format" value="mjpeg" />
-    <param name="camera_frame_id" value="yuyv" />
+    <param name="camera_frame_id" value="yuyv"/>
     <param name="framerate" value="10" />
     <param name="io_method" value="mmap"/>
   </node>

@@ -227,9 +227,9 @@ void optimize(const nav_msgs::Path &path)
 
         //
         //make sure at least one cell remains or planner will simply publish the start (current) and the robot won't move
-        if (furthestFreeCell <= 1 && newPath.poses.size() > 2)
+        if (furthestFreeCell <= 1 && newPath.poses.size() > 3)
         {
-            furthestFreeCell = (newPath.poses.size() > 3) ? 3 : 1;
+            furthestFreeCell = (newPath.poses.size() > 4) ? 4 : 1;
         }
 
         //erase cells between start and the first obstacle-on-path encounter

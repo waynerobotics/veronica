@@ -9,6 +9,8 @@ Panels:
         - /TF1/Frames1
         - /TF1/Tree1
         - /LaserScan1
+        - /Odometry2
+        - /Odometry2/Shape1
       Splitter Ratio: 0.5
     Tree Height: 358
   - Class: rviz/Selection
@@ -29,7 +31,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Camera
+    SyncSource: Image
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -72,7 +74,7 @@ Visualization Manager:
         Image: true
         LaserScan: true
         Map: true
-        Odometry: false
+        Odometry: true
         Path: true
         Polygon: true
         Prob. Map: true
@@ -282,8 +284,6 @@ Visualization Manager:
         All Enabled: false
         base_link:
           Value: true
-        global:
-          Value: true
         gps:
           Value: true
         image_laser:
@@ -297,8 +297,6 @@ Visualization Manager:
         zed_baro_link:
           Value: false
         zed_camera_center:
-          Value: false
-        zed_imu_link:
           Value: false
         zed_left_camera_frame:
           Value: false
@@ -321,31 +319,7 @@ Visualization Manager:
       Show Names: true
       Tree:
         map:
-          global:
-            {}
           odom:
-            base_link:
-              gps:
-                {}
-              image_laser:
-                {}
-              zed_camera_center:
-                zed_baro_link:
-                  {}
-                zed_left_camera_frame:
-                  zed_imu_link:
-                    {}
-                  zed_left_camera_optical_frame:
-                    {}
-                  zed_temp_left_link:
-                    {}
-                zed_mag_link:
-                  {}
-                zed_right_camera_frame:
-                  zed_right_camera_optical_frame:
-                    {}
-                  zed_temp_right_link:
-                    {}
             utm:
               {}
       Update Interval: 0
@@ -433,6 +407,40 @@ Visualization Manager:
       Transport Hint: raw
       Unreliable: false
       Value: true
+    - Angle Tolerance: 0.10000000149011612
+      Class: rviz/Odometry
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Keep: 1
+      Name: Odometry
+      Position Tolerance: 0.10000000149011612
+      Shape:
+        Alpha: 1
+        Axes Length: 1
+        Axes Radius: 0.10000000149011612
+        Color: 115; 210; 22
+        Head Length: 0.30000001192092896
+        Head Radius: 0.10000000149011612
+        Shaft Length: 1
+        Shaft Radius: 0.05000000074505806
+        Value: Arrow
+      Topic: /odometry/filtered/global
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 170; 170; 170
@@ -461,7 +469,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 10.086997032165527
+      Distance: 12.114348411560059
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -476,10 +484,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.4812722206115723
+      Pitch: 0.6112725138664246
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.1652841567993164
+      Yaw: 2.8602840900421143
     Saved: ~
 Window Geometry:
   Camera:

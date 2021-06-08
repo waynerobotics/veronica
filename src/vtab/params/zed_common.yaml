@@ -22,7 +22,7 @@ general:
     camera_name: zed # A name for the camera (can be different from camera model and node name)
     zed_id: 0
     serial_number: 0
-    resolution: 2 # '0': HD2K, '1': HD1080, '2': HD720, '3': VGA
+    resolution: 1 # '0': HD2K, '1': HD1080, '2': HD720, '3': VGA
     grab_frame_rate: 30 # Frequency of frame grabbing for internal SDK operations
     gpu_id: -1
     base_frame: "base_link" # must be equal to the frame_id used in the URDF file
@@ -48,7 +48,7 @@ pos_tracking:
     map_frame: "map"
     odometry_frame: "odom"
     area_memory_db_path: ""
-    area_memory: true # Enable to detect loop closure
+    area_memory: false # Enable to detect loop closure
     floor_alignment: false # Enable to automatically calculate camera/floor offset
     initial_base_pose: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # Initial position of the `base_frame` -> [X, Y, Z, R, P, Y]
     init_odom_with_first_valid_pose: true # Enable to initialize the odometry with the first valid pose
